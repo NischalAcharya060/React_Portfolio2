@@ -1,14 +1,12 @@
 // src/components/About.jsx
 import React, { useState } from 'react';
-import { Container, Row, Col, Button, ProgressBar } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import {
     FaDownload,
     FaCode,
-    FaPalette,
-    FaMobile,
     FaRocket,
     FaAward,
     FaProjectDiagram,
@@ -49,18 +47,18 @@ const About = () => {
     };
 
     const stats = [
-        { icon: FaAward, value: '3+', label: 'Years Experience' },
-        { icon: FaProjectDiagram, value: '50+', label: 'Projects Completed' },
-        { icon: FaUsers, value: '30+', label: 'Happy Clients' },
+        { icon: FaAward, value: '2+', label: 'Years Experience' },
+        { icon: FaProjectDiagram, value: '20+', label: 'Projects Completed' },
+        { icon: FaUsers, value: '15+', label: 'Happy Clients' },
         { icon: FaCalendarAlt, value: '100%', label: 'Meeting Deadlines' }
     ];
 
     const skills = [
-        { name: 'Frontend Development', level: 90, color: 'var(--primary-color)' },
-        { name: 'Backend Development', level: 85, color: 'var(--secondary-color)' },
-        { name: 'UI/UX Design', level: 75, color: '#ff6b6b' },
-        { name: 'Mobile Development', level: 70, color: '#4ecdc4' },
-        { name: 'DevOps & Cloud', level: 65, color: '#45b7d1' }
+        { name: 'Frontend Development', level: 80, color: 'var(--primary-color)' },
+        { name: 'Backend Development', level: 60, color: 'var(--secondary-color)' },
+        { name: 'UI/UX Design', level: 50, color: '#ff6b6b' },
+        { name: 'Mobile Development', level: 20, color: '#4ecdc4' },
+        { name: 'DevOps & Cloud', level: 40, color: '#45b7d1' }
     ];
 
     const technologies = {
@@ -69,47 +67,16 @@ const About = () => {
         tools: ['Git', 'Docker', 'AWS', 'Figma', 'Webpack']
     };
 
-    const handleDownloadResume = () => {
-        const resumeFile = '/resume/Nischal_Acharya_Resume.pdf';
-        const link = document.createElement('a');
-        link.href = resumeFile;
-        link.download = 'Nischal_Acharya_Resume.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
     return (
         <section
             id="about"
             ref={ref}
-            className="section-padding position-relative overflow-hidden"
-            style={{
-                background: 'linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%)'
-            }}
+            className="about-section section-padding position-relative overflow-hidden"
         >
             {/* Background Elements */}
-            <div className="position-absolute top-0 start-0 w-100 h-100">
-                <div style={{
-                    position: 'absolute',
-                    top: '10%',
-                    right: '5%',
-                    width: '300px',
-                    height: '300px',
-                    background: 'radial-gradient(circle, var(--primary-color) 0%, transparent 70%)',
-                    opacity: 0.03,
-                    borderRadius: '50%'
-                }} />
-                <div style={{
-                    position: 'absolute',
-                    bottom: '20%',
-                    left: '5%',
-                    width: '200px',
-                    height: '200px',
-                    background: 'radial-gradient(circle, var(--secondary-color) 0%, transparent 70%)',
-                    opacity: 0.03,
-                    borderRadius: '50%'
-                }} />
+            <div className="background-elements">
+                <div className="bg-blob primary-blob" />
+                <div className="bg-blob secondary-blob" />
             </div>
 
             <Container>
@@ -121,14 +88,20 @@ const About = () => {
                     {/* Section Header */}
                     <motion.div
                         variants={itemVariants}
-                        className="text-center mb-5"
+                        className="section-header text-center mb-6"
                     >
-                        <span className="section-badge">About Me</span>
-                        <h2 className="display-4 fw-bold mb-3">
+                        <motion.span
+                            className="section-badge"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                        >
+                            About Me
+                        </motion.span>
+                        <h2 className="section-title gradient-heading mb-4">
                             Crafting Digital
                             <span className="gradient-text"> Experiences</span>
                         </h2>
-                        <p className="lead text-muted max-w-600 mx-auto">
+                        <p className="section-subtitle">
                             Passionate full-stack developer with 3+ years of experience creating
                             innovative digital solutions that drive business success
                         </p>
@@ -136,25 +109,20 @@ const About = () => {
 
                     <Row className="align-items-center gy-5">
                         {/* Profile Image Column */}
-                        <Col lg={5} className="mb-4 mb-lg-0">
+                        <Col lg={5} className="profile-column">
                             <motion.div
                                 variants={itemVariants}
-                                className="position-relative"
+                                className="profile-container"
                             >
-                                <div className="profile-image-container">
+                                <div className="profile-image-wrapper">
                                     <img
                                         src="/api/placeholder/profile.jpeg"
                                         alt="Nischal Acharya"
-                                        className="profile-image img-fluid rounded-4"
+                                        className="profile-image"
                                     />
                                     {/* Floating Elements */}
                                     <motion.div
-                                        className="floating-card"
-                                        style={{
-                                            top: '20%',
-                                            right: '-20px',
-                                            background: 'var(--primary-color)'
-                                        }}
+                                        className="floating-element primary-float"
                                         animate={{
                                             y: [-10, 10, -10],
                                             rotate: [0, 5, 0]
@@ -165,15 +133,10 @@ const About = () => {
                                             ease: "easeInOut"
                                         }}
                                     >
-                                        <FaCode size={24} color="white" />
+                                        <FaCode size={24} />
                                     </motion.div>
                                     <motion.div
-                                        className="floating-card"
-                                        style={{
-                                            bottom: '30%',
-                                            left: '-20px',
-                                            background: 'var(--secondary-color)'
-                                        }}
+                                        className="floating-element secondary-float"
                                         animate={{
                                             y: [10, -10, 10],
                                             rotate: [0, -5, 0]
@@ -185,7 +148,7 @@ const About = () => {
                                             delay: 1
                                         }}
                                     >
-                                        <FaRocket size={24} color="white" />
+                                        <FaRocket size={24} />
                                     </motion.div>
                                 </div>
                             </motion.div>
@@ -195,47 +158,46 @@ const About = () => {
                         <Col lg={7}>
                             <motion.div variants={itemVariants}>
                                 {/* Stats Grid */}
-                                <Row className="g-3 mb-5">
+                                <Row className="stats-grid">
                                     {stats.map((stat, index) => (
                                         <Col key={index} sm={6}>
                                             <motion.div
-                                                className="stat-card text-center p-3 rounded-4"
+                                                className="stat-card"
                                                 whileHover={{ scale: 1.05, y: -5 }}
                                                 transition={{ type: "spring", stiffness: 300 }}
                                             >
                                                 <stat.icon
                                                     size={32}
-                                                    className="mb-2"
-                                                    style={{ color: 'var(--primary-color)' }}
+                                                    className="stat-icon"
                                                 />
-                                                <h4 className="fw-bold mb-1">{stat.value}</h4>
-                                                <p className="text-muted small mb-0">{stat.label}</p>
+                                                <h4 className="stat-value">{stat.value}</h4>
+                                                <p className="stat-label">{stat.label}</p>
                                             </motion.div>
                                         </Col>
                                     ))}
                                 </Row>
 
                                 {/* Bio Text */}
-                                <div className="mb-5">
-                                    <p className="mb-3">
+                                <div className="bio-section">
+                                    <p className="bio-text">
                                         I'm a passionate full-stack developer from <strong>Gauradaha-Jhapa, Nepal</strong>,
                                         specializing in creating digital experiences that blend cutting-edge technology
                                         with beautiful design.
                                     </p>
-                                    <p className="mb-3">
+                                    <p className="bio-text">
                                         My expertise spans across modern web technologies, cloud platforms, and
                                         agile development methodologies. I believe in writing clean, maintainable
                                         code and creating user-centric solutions that solve real-world problems.
                                     </p>
-                                    <p>
+                                    <p className="bio-text">
                                         When I'm not coding, you'll find me exploring new technologies, contributing
                                         to open-source projects, or sharing knowledge with the developer community.
                                     </p>
                                 </div>
 
                                 {/* Skills & Technologies Tabs */}
-                                <div className="mb-4">
-                                    <div className="d-flex gap-2 mb-4">
+                                <div className="tabs-section">
+                                    <div className="tabs-header">
                                         {['skills', 'technologies'].map((tab) => (
                                             <button
                                                 key={tab}
@@ -250,14 +212,14 @@ const About = () => {
                                     {activeTab === 'skills' && (
                                         <div className="skills-container">
                                             {skills.map((skill, index) => (
-                                                <div key={index} className="skill-item mb-3">
-                                                    <div className="d-flex justify-content-between mb-2">
-                                                        <span className="fw-semibold">{skill.name}</span>
-                                                        <span className="text-muted">{skill.level}%</span>
+                                                <div key={index} className="skill-item">
+                                                    <div className="skill-header">
+                                                        <span className="skill-name">{skill.name}</span>
+                                                        <span className="skill-percentage">{skill.level}%</span>
                                                     </div>
-                                                    <div className="progress" style={{ height: '8px', backgroundColor: 'var(--border-color)' }}>
+                                                    <div className="skill-progress">
                                                         <motion.div
-                                                            className="progress-bar rounded-pill"
+                                                            className="skill-progress-bar"
                                                             style={{ backgroundColor: skill.color }}
                                                             initial={{ width: 0 }}
                                                             animate={{ width: `${skill.level}%` }}
@@ -270,13 +232,13 @@ const About = () => {
                                     )}
 
                                     {activeTab === 'technologies' && (
-                                        <div className="technologies-grid">
+                                        <div className="technologies-container">
                                             {Object.entries(technologies).map(([category, items]) => (
-                                                <div key={category} className="tech-category mb-3">
-                                                    <h6 className="text-uppercase fw-bold mb-2 text-muted">
+                                                <div key={category} className="tech-category">
+                                                    <h6 className="tech-category-title">
                                                         {category}
                                                     </h6>
-                                                    <div className="d-flex flex-wrap gap-2">
+                                                    <div className="tech-tags">
                                                         {items.map((tech, index) => (
                                                             <motion.span
                                                                 key={tech}
@@ -296,157 +258,451 @@ const About = () => {
                                     )}
                                 </div>
 
-                                {/* Action Buttons */}
-                                <div className="d-flex flex-wrap gap-3">
-                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button
-                                            size="lg"
-                                            className="btn-primary-gradient"
-                                            onClick={handleDownloadResume}
-                                        >
-                                            <FaDownload className="me-2" />
-                                            Download Resume
-                                        </Button>
-                                    </motion.div>
-                                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                        <Button
-                                            variant="outline"
-                                            size="lg"
-                                            className="btn-outline-primary"
-                                            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
-                                        >
-                                            Let's Talk
-                                        </Button>
-                                    </motion.div>
-                                </div>
                             </motion.div>
                         </Col>
                     </Row>
                 </motion.div>
             </Container>
 
-            <style>
-                {`
-                    .section-badge {
-                        display: inline-block;
-                        background: rgba(var(--primary-rgb), 0.1);
-                        color: var(--primary-color);
-                        padding: 0.5rem 1rem;
-                        border-radius: 50px;
-                        font-size: 0.9rem;
-                        font-weight: 600;
-                        margin-bottom: 1rem;
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
+            <style jsx>{`
+                .about-section {
+                    background: linear-gradient(135deg, 
+                        var(--background-color) 0%, 
+                        var(--surface-color) 50%, 
+                        var(--background-color) 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .background-elements {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                }
+
+                .bg-blob {
+                    position: absolute;
+                    border-radius: 50%;
+                    opacity: 0.03;
+                }
+
+                .primary-blob {
+                    top: 10%;
+                    right: 5%;
+                    width: 300px;
+                    height: 300px;
+                    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+                }
+
+                .secondary-blob {
+                    bottom: 20%;
+                    left: 5%;
+                    width: 200px;
+                    height: 200px;
+                    background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+                }
+
+                .section-header {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .section-badge {
+                    display: inline-block;
+                    background: linear-gradient(135deg, 
+                        rgba(var(--primary-rgb), 0.15) 0%, 
+                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    color: var(--primary-color);
+                    padding: var(--spacing-sm) var(--spacing-xl);
+                    border-radius: 50px;
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                    margin-bottom: var(--spacing-lg);
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    border: 1px solid rgba(var(--primary-rgb), 0.2);
+                    backdrop-filter: blur(10px);
+                    cursor: default;
+                }
+
+                .section-title {
+                    font-size: var(--font-size-4xl);
+                    font-weight: 800;
+                    margin-bottom: var(--spacing-md);
+                    background: linear-gradient(135deg, var(--text-color) 0%, var(--text-muted) 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .gradient-text {
+                    background: var(--gradient-primary);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .section-subtitle {
+                    font-size: var(--font-size-lg);
+                    color: var(--text-muted);
+                    max-width: 600px;
+                    margin: 0 auto;
+                    line-height: 1.7;
+                }
+
+                /* Profile Section */
+                .profile-column {
+                    margin-bottom: var(--spacing-xl);
+                }
+
+                @media (min-width: 992px) {
+                    .profile-column {
+                        margin-bottom: 0;
+                    }
+                }
+
+                .profile-container {
+                    position: relative;
+                    text-align: center;
+                }
+
+                @media (min-width: 992px) {
+                    .profile-container {
+                        text-align: left;
+                    }
+                }
+
+                .profile-image-wrapper {
+                    position: relative;
+                    padding: var(--spacing-md);
+                    background: var(--gradient-primary);
+                    border-radius: var(--radius-2xl);
+                    display: inline-block;
+                }
+
+                .profile-image {
+                    border-radius: var(--radius-xl);
+                    box-shadow: var(--shadow-xl);
+                    position: relative;
+                    z-index: 2;
+                    width: 100%;
+                    max-width: 400px;
+                    height: auto;
+                }
+
+                .floating-element {
+                    position: absolute;
+                    width: 60px;
+                    height: 60px;
+                    border-radius: var(--radius-lg);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: var(--shadow-lg);
+                    z-index: 3;
+                    color: white;
+                }
+
+                .primary-float {
+                    top: 20%;
+                    right: -20px;
+                    background: var(--primary-color);
+                }
+
+                .secondary-float {
+                    bottom: 30%;
+                    left: -20px;
+                    background: var(--secondary-color);
+                }
+
+                /* Stats Grid */
+                .stats-grid {
+                    margin-bottom: var(--spacing-xl);
+                }
+
+                .stat-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-lg);
+                    padding: var(--spacing-lg);
+                    text-align: center;
+                    transition: all var(--transition-base);
+                    backdrop-filter: blur(10px);
+                }
+
+                .stat-card:hover {
+                    border-color: var(--primary-color);
+                    box-shadow: var(--shadow-lg);
+                }
+
+                .stat-icon {
+                    color: var(--primary-color);
+                    margin-bottom: var(--spacing-sm);
+                }
+
+                .stat-value {
+                    font-size: var(--font-size-2xl);
+                    font-weight: 800;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-xs);
+                }
+
+                .stat-label {
+                    color: var(--text-muted);
+                    font-size: var(--font-size-sm);
+                    margin: 0;
+                }
+
+                /* Bio Section */
+                .bio-section {
+                    margin-bottom: var(--spacing-xl);
+                }
+
+                .bio-text {
+                    color: var(--text-color);
+                    line-height: 1.7;
+                    margin-bottom: var(--spacing-md);
+                }
+
+                .bio-text strong {
+                    color: var(--primary-color);
+                }
+
+                /* Tabs Section */
+                .tabs-section {
+                    margin-bottom: var(--spacing-xl);
+                }
+
+                .tabs-header {
+                    display: flex;
+                    gap: var(--spacing-sm);
+                    margin-bottom: var(--spacing-lg);
+                }
+
+                .tab-button {
+                    padding: var(--spacing-md) var(--spacing-xl);
+                    border: none;
+                    background: var(--surface-color);
+                    color: var(--text-muted);
+                    border-radius: var(--radius-lg);
+                    font-weight: 600;
+                    font-size: var(--font-size-sm);
+                    transition: all var(--transition-base);
+                    cursor: pointer;
+                }
+
+                .tab-button.active {
+                    background: var(--gradient-primary);
+                    color: white;
+                }
+
+                .tab-button:not(.active):hover {
+                    background: var(--card-bg);
+                    color: var(--text-color);
+                }
+
+                /* Skills Container */
+                .skills-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: var(--spacing-lg);
+                }
+
+                .skill-item {
+                    width: 100%;
+                }
+
+                .skill-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: var(--spacing-sm);
+                }
+
+                .skill-name {
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                    color: var(--text-color);
+                }
+
+                .skill-percentage {
+                    font-size: var(--font-size-sm);
+                    color: var(--text-muted);
+                    font-weight: 600;
+                }
+
+                .skill-progress {
+                    width: 100%;
+                    height: 8px;
+                    background-color: var(--surface-color);
+                    border-radius: var(--radius-lg);
+                    overflow: hidden;
+                }
+
+                .skill-progress-bar {
+                    height: 100%;
+                    border-radius: var(--radius-lg);
+                    transition: width 1.5s ease-in-out;
+                }
+
+                /* Technologies Container */
+                .technologies-container {
+                    display: flex;
+                    flex-direction: column;
+                    gap: var(--spacing-lg);
+                }
+
+                .tech-category {
+                    width: 100%;
+                }
+
+                .tech-category-title {
+                    font-size: var(--font-size-sm);
+                    font-weight: 700;
+                    color: var(--text-muted);
+                    text-transform: uppercase;
+                    margin-bottom: var(--spacing-sm);
+                    letter-spacing: 0.5px;
+                }
+
+                .tech-tags {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: var(--spacing-sm);
+                }
+
+                .tech-tag {
+                    background: var(--surface-color);
+                    color: var(--text-color);
+                    padding: var(--spacing-sm) var(--spacing-md);
+                    border-radius: var(--radius-lg);
+                    font-size: var(--font-size-sm);
+                    font-weight: 500;
+                    border: 1px solid var(--border-color);
+                    transition: all var(--transition-base);
+                    backdrop-filter: blur(10px);
+                }
+
+                .tech-tag:hover {
+                    background: var(--primary-color);
+                    color: white;
+                    border-color: var(--primary-color);
+                    transform: translateY(-1px);
+                }
+
+                /* Action Buttons */
+                .action-buttons {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: var(--spacing-md);
+                }
+
+                .primary-button {
+                    background: var(--gradient-primary);
+                    border: none;
+                    color: white;
+                    padding: var(--spacing-md) var(--spacing-xl);
+                    border-radius: var(--radius-lg);
+                    font-weight: 600;
+                    font-size: var(--font-size-base);
+                    transition: all var(--transition-base);
+                }
+
+                .primary-button:hover {
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow-lg);
+                }
+
+                .outline-button {
+                    border: 2px solid var(--primary-color);
+                    color: var(--primary-color);
+                    background: transparent;
+                    padding: var(--spacing-md) var(--spacing-xl);
+                    border-radius: var(--radius-lg);
+                    font-weight: 600;
+                    font-size: var(--font-size-base);
+                    transition: all var(--transition-base);
+                }
+
+                .outline-button:hover {
+                    background: var(--primary-color);
+                    color: white;
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow-lg);
+                }
+
+                .button-icon {
+                    margin-right: var(--spacing-sm);
+                }
+
+                /* Responsive Design */
+                @media (max-width: 768px) {
+                    .section-title {
+                        font-size: var(--font-size-3xl);
                     }
 
-                    .profile-image-container {
-                        position: relative;
-                        padding: 15px;
-                        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                        border-radius: 20px;
-                        display: inline-block;
-                    }
-
-                    .profile-image {
-                        border-radius: 15px;
-                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-                        position: relative;
-                        z-index: 2;
-                    }
-
-                    .floating-card {
-                        position: absolute;
-                        width: 60px;
-                        height: 60px;
-                        border-radius: 15px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                        z-index: 3;
+                    .stats-grid {
+                        margin-bottom: var(--spacing-lg);
                     }
 
                     .stat-card {
-                        background: var(--card-bg);
-                        border: 1px solid var(--border-color);
-                        transition: all 0.3s ease;
+                        padding: var(--spacing-md);
                     }
 
-                    .stat-card:hover {
-                        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                        border-color: var(--primary-color);
+                    .floating-element {
+                        width: 50px;
+                        height: 50px;
+                    }
+
+                    .primary-float {
+                        right: -10px;
+                    }
+
+                    .secondary-float {
+                        left: -10px;
+                    }
+
+                    .tabs-header {
+                        justify-content: center;
+                    }
+
+                    .action-buttons {
+                        justify-content: center;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .section-title {
+                        font-size: var(--font-size-2xl);
+                    }
+
+                    .profile-image-wrapper {
+                        padding: var(--spacing-sm);
                     }
 
                     .tab-button {
-                        padding: 0.75rem 1.5rem;
-                        border: none;
-                        background: transparent;
-                        color: var(--text-muted);
-                        border-radius: 50px;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
+                        padding: var(--spacing-sm) var(--spacing-lg);
+                        font-size: var(--font-size-xs);
                     }
 
-                    .tab-button.active {
-                        background: var(--primary-color);
-                        color: white;
+                    .primary-button,
+                    .outline-button {
+                        width: 100%;
+                        justify-content: center;
                     }
 
-                    .tab-button:not(.active):hover {
-                        background: var(--surface-color);
-                        color: var(--text-color);
+                    .tech-tags {
+                        justify-content: center;
                     }
 
-                    .tech-tag {
-                        background: var(--surface-color);
-                        color: var(--text-color);
-                        padding: 0.5rem 1rem;
-                        border-radius: 50px;
-                        font-size: 0.9rem;
-                        font-weight: 500;
-                        border: 1px solid var(--border-color);
-                        transition: all 0.3s ease;
+                    .tech-category-title {
+                        text-align: center;
                     }
-
-                    .tech-tag:hover {
-                        background: var(--primary-color);
-                        color: white;
-                        border-color: var(--primary-color);
-                    }
-
-                    .btn-primary-gradient {
-                        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                        border: none;
-                        color: white;
-                        padding: 0.75rem 2rem;
-                        border-radius: 50px;
-                        font-weight: 600;
-                    }
-
-                    .btn-outline-primary {
-                        border: 2px solid var(--primary-color);
-                        color: var(--primary-color);
-                        background: transparent;
-                        padding: 0.75rem 2rem;
-                        border-radius: 50px;
-                        font-weight: 600;
-                    }
-
-                    .btn-outline-primary:hover {
-                        background: var(--primary-color);
-                        color: white;
-                    }
-
-                    .max-w-600 {
-                        max-width: 600px;
-                    }
-
-                    .progress-bar {
-                        transition: width 1.5s ease-in-out;
-                    }
-                `}
-            </style>
+                }
+            `}</style>
         </section>
     );
 };

@@ -4,7 +4,6 @@ import { Navbar, Nav, Container } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaSun, FaMoon, FaCode, FaHome, FaUser, FaTools, FaProjectDiagram, FaBriefcase, FaEnvelope } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
-import './css/Navigation.css';
 
 const Navigation = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -57,7 +56,7 @@ const Navigation = () => {
     const scrollToSection = (href) => {
         const element = document.querySelector(href);
         if (element) {
-            const offset = 80; // Account for fixed navbar height
+            const offset = 80;
             const elementPosition = element.offsetTop - offset;
             window.scrollTo({
                 top: elementPosition,
@@ -118,18 +117,18 @@ const Navigation = () => {
                 ref={navRef}
                 expand="lg"
                 fixed="top"
-                className={`modern-navbar ${scrolled ? 'navbar-scrolled' : ''} ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}
+                className={`custom-navbar ${scrolled ? 'scrolled' : ''}`}
             >
                 <Container>
                     {/* Animated Logo */}
                     <motion.div
-                        className="navbar-brand-container"
+                        className="logo-container"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                     >
                         <Navbar.Brand
                             href="#home"
-                            className="fw-bold gradient-text logo-text"
+                            className="navbar-brand-custom"
                             onClick={(e) => {
                                 e.preventDefault();
                                 scrollToSection('#home');
@@ -142,7 +141,7 @@ const Navigation = () => {
                             >
                                 <FaCode />
                             </motion.div>
-                            <span className="logo-name">Nischal Acharya</span>
+                            <span className="logo-text">Nischal Acharya</span>
                             <motion.div
                                 className="logo-underline"
                                 initial={{ scaleX: 0 }}
@@ -153,14 +152,13 @@ const Navigation = () => {
                     </motion.div>
 
                     {/* Desktop Navigation */}
-                    <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                    <Navbar.Collapse id="basic-navbar-nav" className="desktop-navigation">
                         <motion.div
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
-                            className="nav-items-desktop"
                         >
-                            <Nav className="align-items-center">
+                            <Nav className="nav-links-container">
                                 {navItems.map((item) => (
                                     <motion.div
                                         key={item.name}
@@ -169,9 +167,7 @@ const Navigation = () => {
                                     >
                                         <Nav.Link
                                             href={item.href}
-                                            className={`nav-link-custom ${
-                                                activeSection === item.name.toLowerCase() ? 'active' : ''
-                                            }`}
+                                            className={`nav-link-custom ${activeSection === item.name.toLowerCase() ? 'active' : ''} ${isDark ? 'dark-mode' : ''}`}
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 scrollToSection(item.href);
@@ -182,12 +178,14 @@ const Navigation = () => {
                                                 whileHover={{ y: -2 }}
                                                 whileTap={{ y: 0 }}
                                             >
-                                                <item.icon className="nav-icon" />
-                                                <span className="nav-text">{item.name}</span>
+                                                <item.icon className={`nav-link-icon ${activeSection === item.name.toLowerCase() ? 'active-icon' : ''}`} />
+                                                <span className={`nav-link-text ${activeSection === item.name.toLowerCase() ? 'active-text' : ''}`}>
+                                                    {item.name}
+                                                </span>
                                                 {activeSection === item.name.toLowerCase() && (
                                                     <motion.div
                                                         layoutId="activeIndicator"
-                                                        className="nav-active-indicator"
+                                                        className="active-indicator"
                                                         initial={false}
                                                         transition={{
                                                             type: "spring",
@@ -202,7 +200,7 @@ const Navigation = () => {
                                 ))}
 
                                 {/* Theme Toggle */}
-                                <motion.div variants={itemVariants}>
+                                <motion.div variants={itemVariants} className="theme-toggle-wrapper">
                                     <motion.button
                                         className="theme-toggle-btn"
                                         onClick={toggleTheme}
@@ -220,6 +218,7 @@ const Navigation = () => {
                                             type: "spring",
                                             stiffness: 100
                                         }}
+                                        aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
                                     >
                                         <AnimatePresence mode="wait">
                                             <motion.div
@@ -228,6 +227,7 @@ const Navigation = () => {
                                                 animate={{ scale: 1, rotate: 0 }}
                                                 exit={{ scale: 0, rotate: 180 }}
                                                 transition={{ duration: 0.3 }}
+                                                className="theme-icon"
                                             >
                                                 {isDark ? <FaSun /> : <FaMoon />}
                                             </motion.div>
@@ -246,7 +246,7 @@ const Navigation = () => {
                         aria-label="Toggle menu"
                     >
                         <motion.div
-                            className="hamburger"
+                            className="hamburger-menu"
                             animate={isMobileMenuOpen ? "open" : "closed"}
                         >
                             <motion.span
@@ -290,9 +290,7 @@ const Navigation = () => {
                                     >
                                         <Nav.Link
                                             href={item.href}
-                                            className={`mobile-nav-link ${
-                                                activeSection === item.name.toLowerCase() ? 'active' : ''
-                                            }`}
+                                            className={`mobile-nav-link ${activeSection === item.name.toLowerCase() ? 'active' : ''} ${isDark ? 'dark-mode' : ''}`}
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 scrollToSection(item.href);
@@ -303,8 +301,10 @@ const Navigation = () => {
                                                 whileHover={{ x: 10 }}
                                                 whileTap={{ x: 0 }}
                                             >
-                                                <item.icon className="mobile-nav-icon" />
-                                                <span>{item.name}</span>
+                                                <item.icon className={`mobile-nav-icon ${activeSection === item.name.toLowerCase() ? 'active-icon' : ''}`} />
+                                                <span className={`mobile-nav-text ${activeSection === item.name.toLowerCase() ? 'active-text' : ''}`}>
+                                                    {item.name}
+                                                </span>
                                                 <motion.div
                                                     className="mobile-active-indicator"
                                                     animate={{
@@ -320,7 +320,7 @@ const Navigation = () => {
                                 {/* Mobile Theme Toggle */}
                                 <motion.div
                                     variants={mobileItemVariants}
-                                    className="mobile-theme-toggle"
+                                    className="mobile-theme-section"
                                 >
                                     <motion.button
                                         className="mobile-theme-btn"
@@ -334,11 +334,14 @@ const Navigation = () => {
                                                 animate={{ scale: 1 }}
                                                 exit={{ scale: 0 }}
                                                 transition={{ duration: 0.2 }}
+                                                className="mobile-theme-icon"
                                             >
                                                 {isDark ? <FaSun /> : <FaMoon />}
                                             </motion.div>
                                         </AnimatePresence>
-                                        <span>Switch to {isDark ? 'Light' : 'Dark'} Mode</span>
+                                        <span className="mobile-theme-label">
+                                            Switch to {isDark ? 'Light' : 'Dark'} Mode
+                                        </span>
                                     </motion.button>
                                 </motion.div>
                             </motion.div>
@@ -348,16 +351,411 @@ const Navigation = () => {
 
                 {/* Scroll Progress Bar */}
                 <motion.div
-                    className="scroll-progress-bar"
+                    className="scroll-progress"
                     initial={{ scaleX: 0 }}
                     animate={{ scaleX: scrolled ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
-                    style={{
-                        transformOrigin: 'left',
-                        background: `linear-gradient(90deg, var(--primary-color), var(--secondary-color))`
-                    }}
                 />
             </Navbar>
+
+            <style jsx>{`
+                .custom-navbar {
+                    background: var(--navbar-bg);
+                    backdrop-filter: blur(20px);
+                    border-bottom: 1px solid var(--border-color);
+                    transition: all var(--transition-base);
+                    padding: 0.75rem 0;
+                }
+
+                .custom-navbar.scrolled {
+                    background: var(--navbar-bg);
+                    box-shadow: var(--shadow);
+                }
+
+                /* Logo Styles */
+                .logo-container {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .navbar-brand-custom {
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                    color: var(--text-color);
+                    font-weight: 700;
+                    font-size: 1.25rem;
+                    position: relative;
+                    padding: 0.5rem 0;
+                    margin: 0;
+                }
+
+                .navbar-brand-custom:hover {
+                    text-decoration: none;
+                    color: var(--text-color);
+                }
+
+                .logo-icon {
+                    font-size: 1.5rem;
+                    color: var(--primary-color);
+                    margin-right: 0.5rem;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .logo-text {
+                    background: var(--gradient-primary);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .logo-underline {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: var(--gradient-primary);
+                    transform-origin: left;
+                }
+
+                /* Desktop Navigation */
+                .desktop-navigation {
+                    flex-grow: 0;
+                }
+
+                .nav-links-container {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    margin: 0;
+                }
+
+                .nav-item-wrapper {
+                    position: relative;
+                }
+
+                .nav-link-custom {
+                    color: var(--text-muted);
+                    text-decoration: none;
+                    padding: 0.5rem 1rem;
+                    border-radius: var(--radius-lg);
+                    transition: all var(--transition-base);
+                    position: relative;
+                }
+
+                .nav-link-custom:hover {
+                    color: var(--primary-color);
+                    background: rgba(var(--primary-rgb), 0.05);
+                }
+
+                /* Active state for light mode */
+                .nav-link-custom.active:not(.dark-mode) {
+                    color: var(--primary-color);
+                    background: rgba(var(--primary-rgb), 0.1);
+                }
+
+                /* Active state for dark mode - White text with gradient background */
+                .nav-link-custom.active.dark-mode {
+                    color: white !important;
+                    background: var(--gradient-primary) !important;
+                    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.3);
+                }
+
+                /* Active text in dark mode */
+                .nav-link-custom.active.dark-mode .nav-link-text.active-text {
+                    color: white !important;
+                }
+
+                /* Active icon in dark mode */
+                .nav-link-custom.active.dark-mode .nav-link-icon.active-icon {
+                    color: white !important;
+                }
+
+                .nav-link-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .nav-link-icon {
+                    font-size: 0.875rem;
+                    flex-shrink: 0;
+                    transition: color var(--transition-base);
+                }
+
+                .nav-link-text {
+                    font-weight: 500;
+                    font-size: 0.875rem;
+                    white-space: nowrap;
+                    transition: color var(--transition-base);
+                }
+
+                .active-indicator {
+                    position: absolute;
+                    bottom: -2px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 30px;
+                    height: 2px;
+                    background: var(--gradient-primary);
+                    border-radius: var(--radius-sm);
+                }
+
+                /* Hide active indicator in dark mode when using gradient background */
+                .nav-link-custom.active.dark-mode .active-indicator {
+                    display: none;
+                }
+
+                /* Theme Toggle */
+                .theme-toggle-wrapper {
+                    margin-left: 0.5rem;
+                }
+
+                .theme-toggle-btn {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: var(--radius-lg);
+                    border: 1px solid var(--border-color);
+                    background: var(--card-bg);
+                    color: var(--text-muted);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all var(--transition-base);
+                    cursor: pointer;
+                }
+
+                .theme-toggle-btn:hover {
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                    background: rgba(var(--primary-rgb), 0.05);
+                }
+
+                .theme-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                /* Mobile Toggle */
+                .mobile-toggle-btn {
+                    width: 45px;
+                    height: 45px;
+                    border-radius: var(--radius-lg);
+                    border: 1px solid var(--border-color);
+                    background: var(--card-bg);
+                    color: var(--text-color);
+                    display: none;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 4px;
+                    cursor: pointer;
+                    transition: all var(--transition-base);
+                }
+
+                .mobile-toggle-btn:hover {
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                }
+
+                .hamburger-menu {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    width: 20px;
+                }
+
+                .hamburger-menu span {
+                    display: block;
+                    height: 2px;
+                    background: currentColor;
+                    border-radius: 2px;
+                    transition: all var(--transition-base);
+                }
+
+                /* Mobile Menu Overlay */
+                .mobile-menu-overlay {
+                    position: fixed;
+                    top: 100%;
+                    left: 0;
+                    width: 100%;
+                    height: calc(100vh - 100%);
+                    background: rgba(0, 0, 0, 0.5);
+                    backdrop-filter: blur(10px);
+                    z-index: 1040;
+                }
+
+                .mobile-menu-content {
+                    background: var(--card-bg);
+                    border-top: 1px solid var(--border-color);
+                    padding: 2rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    height: 100%;
+                }
+
+                .mobile-nav-link {
+                    color: var(--text-color);
+                    text-decoration: none;
+                    padding: 1rem 0;
+                    border-bottom: 1px solid var(--border-color);
+                    transition: all var(--transition-base);
+                }
+
+                .mobile-nav-link:hover,
+                .mobile-nav-link.active {
+                    color: var(--primary-color);
+                    text-decoration: none;
+                }
+
+                /* Mobile active state for dark mode */
+                .mobile-nav-link.active.dark-mode {
+                    color: white !important;
+                    background: var(--gradient-primary) !important;
+                    border-radius: var(--radius-lg);
+                    padding: 1rem;
+                    margin: 0 -1rem;
+                }
+
+                .mobile-nav-link.active.dark-mode .mobile-nav-text.active-text {
+                    color: white !important;
+                }
+
+                .mobile-nav-link.active.dark-mode .mobile-nav-icon.active-icon {
+                    color: white !important;
+                }
+
+                .mobile-link-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    position: relative;
+                }
+
+                .mobile-nav-icon {
+                    font-size: 1.25rem;
+                    color: var(--primary-color);
+                    width: 24px;
+                    flex-shrink: 0;
+                    transition: color var(--transition-base);
+                }
+
+                .mobile-nav-text {
+                    font-weight: 500;
+                    font-size: 1.125rem;
+                    flex: 1;
+                    transition: color var(--transition-base);
+                }
+
+                .mobile-active-indicator {
+                    width: 6px;
+                    height: 6px;
+                    background: var(--primary-color);
+                    border-radius: 50%;
+                    margin-left: auto;
+                }
+
+                /* Hide mobile indicator in dark mode when using gradient background */
+                .mobile-nav-link.active.dark-mode .mobile-active-indicator {
+                    display: none;
+                }
+
+                .mobile-theme-section {
+                    margin-top: auto;
+                    padding-top: 1.5rem;
+                    border-top: 1px solid var(--border-color);
+                }
+
+                .mobile-theme-btn {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                    width: 100%;
+                    padding: 1rem;
+                    background: var(--surface-color);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-lg);
+                    color: var(--text-color);
+                    transition: all var(--transition-base);
+                    cursor: pointer;
+                }
+
+                .mobile-theme-btn:hover {
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                }
+
+                .mobile-theme-icon {
+                    font-size: 1.25rem;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .mobile-theme-label {
+                    font-weight: 500;
+                    font-size: 1rem;
+                }
+
+                /* Progress Bar */
+                .scroll-progress {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background: var(--gradient-primary);
+                    transform-origin: left;
+                }
+
+                /* Responsive Design */
+                @media (max-width: 991px) {
+                    .desktop-navigation {
+                        display: none;
+                    }
+
+                    .mobile-toggle-btn {
+                        display: flex;
+                    }
+
+                    .nav-links-container {
+                        flex-direction: column;
+                        gap: 0.5rem;
+                    }
+
+                    .nav-link-custom {
+                        padding: 1rem 1.5rem;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .logo-text {
+                        font-size: 1rem;
+                    }
+
+                    .logo-icon {
+                        font-size: 1.25rem;
+                        margin-right: 0.5rem;
+                    }
+
+                    .mobile-menu-content {
+                        padding: 1.5rem;
+                    }
+
+                    .mobile-nav-link {
+                        padding: 1rem 0;
+                    }
+
+                    .mobile-nav-text {
+                        font-size: 1rem;
+                    }
+                }
+            `}</style>
         </>
     );
 };

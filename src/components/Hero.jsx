@@ -385,55 +385,6 @@ const Hero = () => {
                                 </p>
                             </motion.div>
 
-                            {/* Skills Grid */}
-                            <motion.div variants={itemVariants} className="mb-5">
-                                <div style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-                                    gap: '1rem',
-                                    maxWidth: '600px',
-                                    margin: '0 auto'
-                                }}>
-                                    {skills.map((skill, index) => (
-                                        <motion.div
-                                            key={skill.label}
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '1rem',
-                                                padding: '1rem',
-                                                background: 'var(--card-bg)',
-                                                border: '1px solid var(--border-color)',
-                                                borderRadius: '12px',
-                                                transition: 'all 0.3s ease',
-                                                cursor: 'pointer'
-                                            }}
-                                            whileHover={{
-                                                scale: 1.05,
-                                                y: -5
-                                            }}
-                                            whileTap={{ scale: 0.95 }}
-                                        >
-                                            <skill.icon style={{
-                                                fontSize: '1.5rem',
-                                                color: 'var(--primary-color)'
-                                            }} />
-                                            <div style={{ textAlign: 'left' }}>
-                                                <div style={{
-                                                    fontWeight: 600,
-                                                    color: 'var(--text-color)',
-                                                    marginBottom: '0.25rem'
-                                                }}>{skill.label}</div>
-                                                <div style={{
-                                                    fontSize: '0.85rem',
-                                                    color: 'var(--text-muted)'
-                                                }}>{skill.description}</div>
-                                            </div>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            </motion.div>
-
                             {/* Action Buttons */}
                             <motion.div
                                 variants={itemVariants}
