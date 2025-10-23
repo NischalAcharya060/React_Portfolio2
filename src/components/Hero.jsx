@@ -1,6 +1,6 @@
 // src/components/Hero.jsx
-import React, { useState, useEffect, useRef } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Container, Row, Col, Button, Spinner, Toast } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     FaChevronDown,
@@ -15,14 +15,21 @@ import {
     FaCode,
     FaServer,
     FaRocket,
-    FaWordpress
+    FaWordpress,
+    FaCheck,
+    FaStar
 } from 'react-icons/fa';
 
 const Hero = () => {
     const [currentRole, setCurrentRole] = useState(0);
-    const [isTyping, setIsTyping] = useState(true);
     const [displayText, setDisplayText] = useState('');
     const [showCursor, setShowCursor] = useState(true);
+    const [isHovered, setIsHovered] = useState(false);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+    const [downloadState, setDownloadState] = useState('idle'); // 'idle', 'downloading', 'completed'
+    const sectionRef = useRef(null);
+    const typingTimeoutRef = useRef(null);
+    const cursorIntervalRef = useRef(null);
 
     const roles = [
         "Frontend Developer",
@@ -36,98 +43,13 @@ const Hero = () => {
         { Icon: FaGithub, href: 'https://github.com/NischalAcharya060', label: 'GitHub', color: '#333' },
         { Icon: FaLinkedin, href: 'https://www.linkedin.com/in/nischal-acharya101/', label: 'LinkedIn', color: '#0077B5' },
         { Icon: FaInstagram, href: 'https://www.instagram.com/its_nischalacharya/', label: 'Instagram', color: '#E4405F' },
-        { Icon: FaTwitter, href: 'https://x.com/Nischal79783380', label: 'Twitter', color: '#1DA1F2' },
-        { Icon: FaFacebook, href: 'https://www.facebook.com/Nischal.Acharya.58760', label: 'Facebook', color: '#1877F2' },
+        { Icon: FaTwitter, href: 'https://x.com/nischalacharya_', label: 'Twitter', color: '#1DA1F2' },
+        { Icon: FaFacebook, href: 'https://www.facebook.com/GrdhRavan', label: 'Facebook', color: '#1877F2' },
         { Icon: FaEnvelope, href: 'mailto:Nischal060@gmail.com', label: 'Email', color: '#D44638' }
     ];
 
-    const skills = [
-        { icon: FaCode, label: 'Frontend', description: 'React, Vue, JavaScript' },
-        { icon: FaServer, label: 'Backend', description: 'Node.js, Python, PHP' },
-        { icon: FaWordpress, label: 'WordPress', description: 'Custom Themes & Plugins' },
-        { icon: FaRocket, label: 'Freelance', description: '5+ Projects Delivered' }
-    ];
-
-    const resumeFile = '/resume/Nischal_Acharya_CV.pdf';
-    const resumeFileName = 'Nischal_Acharya_CV.pdf';
-
-    const handleDownloadResume = () => {
-        // Create a temporary anchor element
-        const link = document.createElement('a');
-        link.href = resumeFile;
-        link.download = resumeFileName;
-        document.body.appendChild(link);
-
-        // Trigger the download
-        link.click();
-
-        // Clean up
-        document.body.removeChild(link);
-
-        // Optional: Add analytics or tracking here
-        console.log('Resume download initiated');
-    };
-
-    // Alternative method using fetch for better error handling
-    const handleDownloadResumeWithFetch = async () => {
-        try {
-            const response = await fetch(resumeFile);
-            if (!response.ok) {
-                throw new Error('Failed to fetch resume');
-            }
-
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = resumeFileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-
-            console.log('Resume downloaded successfully');
-        } catch (error) {
-            console.error('Error downloading resume:', error);
-            // Fallback: Open in new tab if download fails
-            window.open(resumeFile, '_blank');
-        }
-    };
-
-    useEffect(() => {
-        // Typewriter effect
-        const currentRoleText = roles[currentRole];
-        let charIndex = 0;
-
-        const typeWriter = () => {
-            if (charIndex < currentRoleText.length) {
-                setDisplayText(currentRoleText.substring(0, charIndex + 1));
-                charIndex++;
-                setTimeout(typeWriter, 100);
-            } else {
-                setIsTyping(false);
-                setTimeout(() => {
-                    setIsTyping(true);
-                    setCurrentRole((prev) => (prev + 1) % roles.length);
-                    setDisplayText('');
-                }, 2000);
-            }
-        };
-
-        const timer = setTimeout(typeWriter, 500);
-        return () => clearTimeout(timer);
-    }, [currentRole]);
-
-    useEffect(() => {
-        // Cursor blink effect
-        const cursorInterval = setInterval(() => {
-            setShowCursor(prev => !prev);
-        }, 500);
-
-        return () => clearInterval(cursorInterval);
-    }, []);
-
-    const scrollToSection = (sectionId) => {
+    // Memoized scroll function
+    const scrollToSection = useCallback((sectionId) => {
         const element = document.getElementById(sectionId);
         if (element) {
             const offset = 80;
@@ -137,15 +59,130 @@ const Hero = () => {
                 behavior: 'smooth'
             });
         }
-    };
+    }, []);
 
+    // Optimized download function
+    const handleDownloadResume = useCallback(async () => {
+        setDownloadState('downloading');
+
+        try {
+            // Simulate download process
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const link = document.createElement('a');
+            link.href = '/resume/Nischal_Acharya_CV.pdf';
+            link.download = 'Nischal_Acharya_CV.pdf';
+            link.style.display = 'none';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            setDownloadState('completed');
+
+            // Reset after 3 seconds
+            setTimeout(() => {
+                setDownloadState('idle');
+            }, 3000);
+
+        } catch (error) {
+            console.error('Download failed:', error);
+            setDownloadState('idle');
+            // Fallback: open in new tab
+            window.open('/resume/Nischal_Acharya_CV.pdf', '_blank');
+        }
+    }, []);
+
+    // Optimized mouse move handler
+    const handleMouseMove = useCallback((e) => {
+        if (!sectionRef.current) return;
+
+        const { left, top, width, height } = sectionRef.current.getBoundingClientRect();
+        const x = ((e.clientX - left) / width) * 100;
+        const y = ((e.clientY - top) / height) * 100;
+        setMousePosition({ x, y });
+    }, []);
+
+    // Optimized typewriter effect with proper cleanup
+    useEffect(() => {
+        let currentText = '';
+        let currentIndex = 0;
+        let isDeleting = false;
+        let typingSpeed = 100;
+
+        const type = () => {
+            const fullText = roles[currentRole];
+
+            if (isDeleting) {
+                // Deleting text
+                currentText = fullText.substring(0, currentIndex - 1);
+                currentIndex--;
+                typingSpeed = 50;
+            } else {
+                // Typing text
+                currentText = fullText.substring(0, currentIndex + 1);
+                currentIndex++;
+                typingSpeed = 100;
+            }
+
+            setDisplayText(currentText);
+
+            if (!isDeleting && currentIndex === fullText.length) {
+                // Pause at end
+                typingSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && currentIndex === 0) {
+                // Move to next role
+                isDeleting = false;
+                setCurrentRole((prev) => (prev + 1) % roles.length);
+                typingSpeed = 500;
+            }
+
+            typingTimeoutRef.current = setTimeout(type, typingSpeed);
+        };
+
+        typingTimeoutRef.current = setTimeout(type, 1000);
+
+        return () => {
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+        };
+    }, [currentRole, roles.length]);
+
+    // Optimized cursor effect
+    useEffect(() => {
+        cursorIntervalRef.current = setInterval(() => {
+            setShowCursor(prev => !prev);
+        }, 530);
+
+        return () => {
+            if (cursorIntervalRef.current) {
+                clearInterval(cursorIntervalRef.current);
+            }
+        };
+    }, []);
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+            if (cursorIntervalRef.current) {
+                clearInterval(cursorIntervalRef.current);
+            }
+        };
+    }, []);
+
+    // Animation variants
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                delayChildren: 0.3,
-                staggerChildren: 0.15
+                delayChildren: 0.2,
+                staggerChildren: 0.08
             }
         }
     };
@@ -159,22 +196,61 @@ const Hero = () => {
             y: 0,
             opacity: 1,
             transition: {
-                duration: 0.6,
+                duration: 0.5,
                 ease: "easeOut"
             }
         }
     };
 
+    const floatingVariants = {
+        float: {
+            y: [-8, 8, -8],
+            transition: {
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+            }
+        }
+    };
+
+    // Optimized particles data - pre-calculated for performance
+    const particles = useRef(
+        Array.from({ length: 15 }, (_, i) => ({
+            id: i,
+            left: Math.random() * 100,
+            top: Math.random() * 100,
+            size: Math.random() * 4 + 2,
+            duration: 6 + Math.random() * 4,
+            delay: Math.random() * 2,
+            color: i % 3 === 0 ? 'var(--primary-color)' : i % 3 === 1 ? 'var(--secondary-color)' : 'var(--accent-color)'
+        }))
+    ).current;
+
+    const shapes = useRef(
+        Array.from({ length: 5 }, (_, i) => ({
+            id: i,
+            left: Math.random() * 100,
+            top: Math.random() * 100,
+            size: Math.random() * 100 + 50,
+            duration: 12 + Math.random() * 8,
+            delay: Math.random() * 3
+        }))
+    ).current;
+
     return (
         <section
+            ref={sectionRef}
             id="home"
             className="hero-section min-vh-100 d-flex align-items-center position-relative overflow-hidden"
             style={{
                 background: 'linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%)',
                 paddingTop: '6rem'
             }}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Animated Gradient Background */}
+            {/* Optimized Background */}
             <motion.div
                 className="hero-background"
                 style={{
@@ -183,34 +259,45 @@ const Hero = () => {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    background: 'linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 25%, var(--background-color) 50%, var(--primary-color) 75%, var(--secondary-color) 100%)',
-                    backgroundSize: '400% 400%',
-                    opacity: 0.03,
-                    zIndex: -1
-                }}
-                animate={{
-                    backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-                }}
-                transition={{
-                    duration: 15,
-                    repeat: Infinity,
-                    ease: "linear"
+                    background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
+                                rgba(100, 100, 255, 0.08) 0%, 
+                                rgba(255, 100, 255, 0.04) 30%, 
+                                transparent 70%)`,
+                    opacity: isHovered ? 1 : 0.7,
+                    transition: 'opacity 0.2s ease',
+                    zIndex: -2
                 }}
             />
 
-            {/* Floating Particles */}
+            {/* Static Gradient Overlay */}
+            <div
+                className="animated-gradient"
+                style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    background: 'linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--primary-color) 100%)',
+                    backgroundSize: '200% 200%',
+                    opacity: 0.02,
+                    zIndex: -1
+                }}
+            />
+
+            {/* Optimized Particles */}
             <div className="floating-particles">
-                {[...Array(15)].map((_, i) => (
+                {particles.map((particle) => (
                     <motion.div
-                        key={i}
+                        key={particle.id}
                         className="floating-particle"
                         style={{
                             position: 'absolute',
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                            width: `${Math.random() * 4 + 2}px`,
-                            height: `${Math.random() * 4 + 2}px`,
-                            background: 'var(--primary-color)',
+                            left: `${particle.left}%`,
+                            top: `${particle.top}%`,
+                            width: `${particle.size}px`,
+                            height: `${particle.size}px`,
+                            background: particle.color,
                             borderRadius: '50%',
                             opacity: 0.3,
                         }}
@@ -218,10 +305,40 @@ const Hero = () => {
                             y: [-10, 10, -10],
                         }}
                         transition={{
-                            duration: 4,
+                            duration: particle.duration,
                             repeat: Infinity,
                             ease: "easeInOut",
-                            delay: Math.random() * 2
+                            delay: particle.delay
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Optimized Shapes */}
+            <div className="floating-shapes">
+                {shapes.map((shape) => (
+                    <motion.div
+                        key={shape.id}
+                        style={{
+                            position: 'absolute',
+                            left: `${shape.left}%`,
+                            top: `${shape.top}%`,
+                            width: `${shape.size}px`,
+                            height: `${shape.size}px`,
+                            background: `rgba(100, 100, 255, 0.02)`,
+                            borderRadius: '30%',
+                            filter: 'blur(15px)',
+                        }}
+                        animate={{
+                            y: [-50, 50, -50],
+                            x: shape.id % 2 === 0 ? [-25, 25, -25] : [25, -25, 25],
+                            rotate: [0, 180, 360],
+                        }}
+                        transition={{
+                            duration: shape.duration,
+                            repeat: Infinity,
+                            ease: "linear",
+                            delay: shape.delay
                         }}
                     />
                 ))}
@@ -241,14 +358,18 @@ const Hero = () => {
                                 className="mb-4"
                                 style={{ display: 'flex', justifyContent: 'center' }}
                             >
-                                <div style={{
-                                    position: 'relative',
-                                    width: '150px',
-                                    height: '150px',
-                                    borderRadius: '50%',
-                                    padding: '4px',
-                                    background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))'
-                                }}>
+                                <motion.div
+                                    style={{
+                                        position: 'relative',
+                                        width: '160px',
+                                        height: '160px',
+                                        borderRadius: '50%',
+                                        padding: '3px',
+                                        background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
+                                    }}
+                                    whileHover={{ scale: 1.03 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
                                     <img
                                         src="/api/placeholder/profile.jpeg"
                                         alt="Nischal Acharya"
@@ -260,30 +381,16 @@ const Hero = () => {
                                             border: '3px solid var(--background-color)'
                                         }}
                                     />
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '-2px',
-                                        left: '-2px',
-                                        right: '-2px',
-                                        bottom: '-2px',
-                                        borderRadius: '50%',
-                                        background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
-                                        filter: 'blur(10px)',
-                                        opacity: 0.5,
-                                        zIndex: -1,
-                                        animation: 'glow 3s ease-in-out infinite alternate'
-                                    }} />
                                     <motion.div
                                         style={{
                                             position: 'absolute',
-                                            bottom: '10px',
-                                            right: '10px',
-                                            width: '12px',
-                                            height: '12px',
+                                            bottom: '12px',
+                                            right: '12px',
+                                            width: '14px',
+                                            height: '14px',
                                             background: '#00ff88',
                                             border: '2px solid var(--background-color)',
                                             borderRadius: '50%',
-                                            boxShadow: '0 0 10px #00ff88'
                                         }}
                                         animate={{
                                             scale: [1, 1.2, 1],
@@ -294,11 +401,11 @@ const Hero = () => {
                                             repeat: Infinity
                                         }}
                                     />
-                                </div>
+                                </motion.div>
                             </motion.div>
 
                             {/* Main Heading */}
-                            <motion.div variants={itemVariants} className="mb-4">
+                            <motion.div variants={itemVariants} className="mb-3">
                                 <h1 style={{
                                     fontSize: 'clamp(2.5rem, 5vw, 4rem)',
                                     fontWeight: 800,
@@ -317,7 +424,7 @@ const Hero = () => {
                                 </h1>
                             </motion.div>
 
-                            {/* Animated Role Text */}
+                            {/* Optimized Role Text */}
                             <motion.div variants={itemVariants} className="mb-4">
                                 <div style={{
                                     display: 'flex',
@@ -329,7 +436,11 @@ const Hero = () => {
                                         fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
                                         fontWeight: 600,
                                         color: 'var(--text-color)',
-                                        marginBottom: '0.5rem'
+                                        marginBottom: '0.5rem',
+                                        minHeight: '60px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
                                     }}>
                                         <span style={{
                                             fontFamily: "'Monaco', 'Consolas', monospace",
@@ -343,35 +454,38 @@ const Hero = () => {
                                                 color: 'var(--primary-color)',
                                                 fontWeight: 300,
                                                 opacity: showCursor ? 1 : 0,
-                                                transition: 'opacity 0.3s ease'
+                                                transition: 'opacity 0.1s ease'
                                             }}>
                                                 |
                                             </span>
                                         </span>
                                     </h2>
-                                    <div style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        background: 'rgba(0, 255, 136, 0.1)',
-                                        color: '#00ff88',
-                                        padding: '0.5rem 1rem',
-                                        borderRadius: '25px',
-                                        fontSize: '0.9rem',
-                                        fontWeight: 500,
-                                        border: '1px solid rgba(0, 255, 136, 0.2)',
-                                        backdropFilter: 'blur(10px)'
-                                    }}>
+                                    <motion.div
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                            background: 'rgba(0, 255, 136, 0.1)',
+                                            color: '#00ff88',
+                                            padding: '0.5rem 1rem',
+                                            borderRadius: '25px',
+                                            fontSize: '0.9rem',
+                                            fontWeight: 500,
+                                            border: '1px solid rgba(0, 255, 136, 0.2)',
+                                        }}
+                                        variants={floatingVariants}
+                                        animate="float"
+                                    >
                                         <FaPlay size={12} />
                                         <span>Available for work</span>
-                                    </div>
+                                    </motion.div>
                                 </div>
                             </motion.div>
 
                             {/* Description */}
                             <motion.div variants={itemVariants} className="mb-5">
                                 <p style={{
-                                    fontSize: '1.2rem',
+                                    fontSize: '1.1rem',
                                     lineHeight: 1.6,
                                     color: 'var(--text-muted)',
                                     maxWidth: '600px',
@@ -392,8 +506,8 @@ const Hero = () => {
                             >
                                 <div className="d-flex gap-3 justify-content-center flex-wrap">
                                     <motion.div
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                     >
                                         <Button
                                             size="lg"
@@ -401,9 +515,10 @@ const Hero = () => {
                                                 background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
                                                 border: 'none',
                                                 color: 'white',
-                                                padding: '1rem 2rem',
+                                                padding: '0.875rem 1.75rem',
                                                 borderRadius: '50px',
-                                                fontWeight: 600
+                                                fontWeight: 600,
+                                                minWidth: '160px'
                                             }}
                                             onClick={() => scrollToSection('projects')}
                                         >
@@ -413,8 +528,8 @@ const Hero = () => {
                                     </motion.div>
 
                                     <motion.div
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                     >
                                         <Button
                                             variant="outline"
@@ -423,9 +538,10 @@ const Hero = () => {
                                                 background: 'transparent',
                                                 border: '2px solid var(--primary-color)',
                                                 color: 'var(--primary-color)',
-                                                padding: '1rem 2rem',
+                                                padding: '0.875rem 1.75rem',
                                                 borderRadius: '50px',
-                                                fontWeight: 600
+                                                fontWeight: 600,
+                                                minWidth: '160px'
                                             }}
                                             onClick={() => scrollToSection('contact')}
                                         >
@@ -435,24 +551,53 @@ const Hero = () => {
                                     </motion.div>
 
                                     <motion.div
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                     >
                                         <Button
                                             variant="outline"
                                             size="lg"
                                             style={{
                                                 background: 'transparent',
-                                                border: '2px solid var(--border-color)',
-                                                color: 'var(--text-muted)',
-                                                padding: '1rem 2rem',
+                                                border: `2px solid ${
+                                                    downloadState === 'completed'
+                                                        ? '#00ff88'
+                                                        : downloadState === 'downloading'
+                                                            ? 'var(--primary-color)'
+                                                            : 'var(--border-color)'
+                                                }`,
+                                                color: downloadState === 'completed' ? '#00ff88' : 'var(--text-muted)',
+                                                padding: '0.875rem 1.75rem',
                                                 borderRadius: '50px',
-                                                fontWeight: 600
+                                                fontWeight: 600,
+                                                minWidth: '160px',
+                                                position: 'relative',
+                                                overflow: 'hidden'
                                             }}
                                             onClick={handleDownloadResume}
+                                            disabled={downloadState === 'downloading'}
                                         >
-                                            <FaDownload className="me-2" />
-                                            Download CV
+                                            {downloadState === 'downloading' ? (
+                                                <>
+                                                    <Spinner
+                                                        animation="border"
+                                                        size="sm"
+                                                        className="me-2"
+                                                        style={{ width: '1rem', height: '1rem' }}
+                                                    />
+                                                    Downloading...
+                                                </>
+                                            ) : downloadState === 'completed' ? (
+                                                <>
+                                                    <FaCheck className="me-2" />
+                                                    Downloaded!
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <FaDownload className="me-2" />
+                                                    Download CV
+                                                </>
+                                            )}
                                         </Button>
                                     </motion.div>
                                 </div>
@@ -472,7 +617,7 @@ const Hero = () => {
                                     <div style={{
                                         display: 'flex',
                                         justifyContent: 'center',
-                                        gap: '1rem',
+                                        gap: '0.75rem',
                                         flexWrap: 'wrap'
                                     }}>
                                         {socialLinks.map((social, index) => (
@@ -485,56 +630,93 @@ const Hero = () => {
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    width: '50px',
-                                                    height: '50px',
+                                                    width: '48px',
+                                                    height: '48px',
                                                     borderRadius: '50%',
                                                     background: 'var(--card-bg)',
                                                     border: '1px solid var(--border-color)',
                                                     textDecoration: 'none',
                                                     color: 'var(--text-muted)',
-                                                    position: 'relative',
-                                                    overflow: 'hidden'
                                                 }}
                                                 whileHover={{
-                                                    scale: 1.2,
-                                                    y: -5,
-                                                    color: social.color
+                                                    scale: 1.15,
+                                                    y: -3,
+                                                    color: social.color,
+                                                    borderColor: social.color,
                                                 }}
-                                                whileTap={{ scale: 0.9 }}
+                                                whileTap={{ scale: 0.95 }}
                                                 initial={{ scale: 0 }}
                                                 animate={{ scale: 1 }}
                                                 transition={{
-                                                    delay: 1 + index * 0.1,
+                                                    delay: 1 + index * 0.08,
                                                     type: "spring",
-                                                    stiffness: 200
+                                                    stiffness: 300,
+                                                    damping: 20
                                                 }}
                                                 aria-label={social.label}
                                             >
-                                                <social.Icon size={20} />
+                                                <social.Icon size={18} />
                                             </motion.a>
                                         ))}
                                     </div>
                                 </div>
                             </motion.div>
+
                         </motion.div>
                     </Col>
                 </Row>
             </Container>
 
-            {/* Add the glow animation to your global CSS */}
+            {/* Download Success Toast */}
+            <AnimatePresence>
+                {downloadState === 'completed' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 50, scale: 0.8 }}
+                        style={{
+                            position: 'fixed',
+                            bottom: '2rem',
+                            right: '2rem',
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '12px',
+                            padding: '1rem 1.5rem',
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                            zIndex: 1000,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            backdropFilter: 'blur(10px)'
+                        }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 500 }}
+                        >
+                            <FaCheck style={{ color: '#00ff88', fontSize: '1.25rem' }} />
+                        </motion.div>
+                        <div>
+                            <div style={{ fontWeight: 600, color: 'var(--text-color)' }}>
+                                Download Complete!
+                            </div>
+                            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                                CV downloaded successfully
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <style>
                 {`
-                    @keyframes glow {
-                        from { opacity: 0.3; }
-                        to { opacity: 0.7; }
-                    }
-                    
                     .hero-section {
                         position: relative;
                         overflow: hidden;
                     }
                     
-                    .floating-particles {
+                    .floating-particles, .floating-shapes {
                         position: absolute;
                         top: 0;
                         left: 0;
@@ -542,6 +724,21 @@ const Hero = () => {
                         height: 100%;
                         pointer-events: none;
                         z-index: -1;
+                    }
+                    
+                    /* Optimize animations for performance */
+                    @media (prefers-reduced-motion: reduce) {
+                        .floating-particles,
+                        .floating-shapes,
+                        .animated-gradient {
+                            display: none;
+                        }
+                        
+                        * {
+                            animation-duration: 0.01ms !important;
+                            animation-iteration-count: 1 !important;
+                            transition-duration: 0.01ms !important;
+                        }
                     }
                 `}
             </style>

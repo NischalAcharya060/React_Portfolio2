@@ -67,10 +67,10 @@ export const socialLinks = [
     },
     {
         icon: FaTwitter,
-        href: 'https://x.com/Nischal79783380',
+        href: 'https://x.com/nischalacharya_',
         label: 'Twitter',
         color: '#1DA1F2',
-        username: '@Nischal79783380',
+        username: '@nischalacharya_',
         type: 'twitter'
     },
     {

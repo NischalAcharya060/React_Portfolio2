@@ -1,21 +1,30 @@
 // src/components/Contact.jsx
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import {
     FaPaperPlane,
     FaCheck,
+    FaExclamationTriangle,
     FaSpinner
 } from 'react-icons/fa';
-
-// Import data from external file
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import emailjs from '@emailjs/browser';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { contactInfo, socialLinks, formFields } from '../data/contact.js';
+
+const SERVICE_ID = 'service_elk86vl';
+const TEMPLATE_ID = 'template_864nhk9';
+const PUBLIC_KEY = '-qiVxTcSYDKmI-Zkf';
+const RECAPTCHA_SITE_KEY = '6Leu0q4nAAAAAA6B5LZvGfCbM432JKOtvgCtiUCO';
 
 const Contact = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.1 });
+    const recaptchaRef = useRef(null);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -23,8 +32,44 @@ const Contact = () => {
         message: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState(null);
     const [activeField, setActiveField] = useState(null);
+    const [recaptchaToken, setRecaptchaToken] = useState(null);
+
+    // Custom toast styles
+    const toastStyle = {
+        success: {
+            background: 'linear-gradient(135deg, #10b981, #059669)',
+            color: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 10px 30px rgba(16, 185, 129, 0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(10px)'
+        },
+        error: {
+            background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+            color: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 10px 30px rgba(239, 68, 68, 0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(10px)'
+        },
+        warning: {
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            color: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 10px 30px rgba(245, 158, 11, 0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(10px)'
+        },
+        info: {
+            background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+            color: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 10px 30px rgba(59, 130, 246, 0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(10px)'
+        }
+    };
 
     const handleChange = (e) => {
         setFormData({
@@ -33,17 +78,145 @@ const Contact = () => {
         });
     };
 
+    const handleRecaptchaChange = (token) => {
+        setRecaptchaToken(token);
+        if (token) {
+            // Clear any previous warnings when user completes reCAPTCHA
+            toast.dismiss();
+        }
+    };
+
+    const showSuccessToast = () => {
+        toast.success(
+            <div className="toast-content">
+                <div className="toast-icon">
+                    <FaCheck size={20} />
+                </div>
+                <div className="toast-message">
+                    <div className="toast-title">Message Sent Successfully!</div>
+                    <div className="toast-description">
+                        Thank you! I'll get back to you within 24 hours.
+                    </div>
+                </div>
+            </div>,
+            {
+                style: toastStyle.success,
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                icon: false
+            }
+        );
+    };
+
+    const showErrorToast = () => {
+        toast.error(
+            <div className="toast-content">
+                <div className="toast-icon">
+                    <FaExclamationTriangle size={20} />
+                </div>
+                <div className="toast-message">
+                    <div className="toast-title">Failed to Send Message</div>
+                    <div className="toast-description">
+                        Please try again later or contact me directly.
+                    </div>
+                </div>
+            </div>,
+            {
+                style: toastStyle.error,
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                icon: false
+            }
+        );
+    };
+
+    const showWarningToast = (message) => {
+        toast.warning(
+            <div className="toast-content">
+                <div className="toast-icon">
+                    <FaExclamationTriangle size={20} />
+                </div>
+                <div className="toast-message">
+                    <div className="toast-title">Action Required</div>
+                    <div className="toast-description">
+                        {message}
+                    </div>
+                </div>
+            </div>,
+            {
+                style: toastStyle.warning,
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                icon: false
+            }
+        );
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate form fields
+        if (!formData.name || !formData.email || !formData.message) {
+            showWarningToast('Please fill in all required fields.');
+            return;
+        }
+
+        if (!recaptchaToken) {
+            showWarningToast('Please complete the reCAPTCHA verification.');
+            return;
+        }
+
         setIsSubmitting(true);
 
-        // Simulate form submission
+        const templateParams = {
+            from_name: formData.name,
+            from_email: formData.email,
+            subject: formData.subject || 'New Message from Portfolio',
+            message: formData.message,
+            'g-recaptcha-response': recaptchaToken
+        };
+
         try {
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            setSubmitStatus('success');
+            await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, PUBLIC_KEY);
+
+            // Show success toast
+            showSuccessToast();
+
+            // Reset form
             setFormData({ name: '', email: '', subject: '', message: '' });
+
+            // Reset reCAPTCHA
+            if (recaptchaRef.current) {
+                recaptchaRef.current.reset();
+                setRecaptchaToken(null);
+            }
+
         } catch (error) {
-            setSubmitStatus('error');
+            console.error('EmailJS Error:', error);
+
+            // Show error toast
+            showErrorToast();
+
+            // Reset reCAPTCHA on error too
+            if (recaptchaRef.current) {
+                recaptchaRef.current.reset();
+                setRecaptchaToken(null);
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -93,7 +266,25 @@ const Contact = () => {
             ref={ref}
             className="contact-section section-padding position-relative overflow-hidden"
         >
-            {/* Background Elements */}
+            {/* Toast Container */}
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+                style={{
+                    zIndex: 9999,
+                    marginTop: '80px' // Adjust based on your navbar height
+                }}
+            />
+
+            {/* Background elements remain the same */}
             <div className="background-elements">
                 <motion.div
                     className="bg-blob primary-blob"
@@ -124,7 +315,6 @@ const Contact = () => {
                 />
             </div>
 
-            {/* Floating Elements */}
             <motion.div
                 className="floating-element primary-float"
                 variants={floatingVariants}
@@ -138,7 +328,6 @@ const Contact = () => {
             />
 
             <Container>
-                {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
@@ -167,7 +356,6 @@ const Contact = () => {
                     animate={isInView ? "visible" : "hidden"}
                 >
                     <Row className="g-5">
-                        {/* Contact Information */}
                         <Col lg={5}>
                             <motion.div variants={itemVariants}>
                                 <div className="contact-info-card">
@@ -210,7 +398,6 @@ const Contact = () => {
                                         ))}
                                     </div>
 
-                                    {/* Social Links */}
                                     <div className="social-section">
                                         <h6 className="social-title">Follow My Journey</h6>
                                         <div className="social-links">
@@ -249,26 +436,10 @@ const Contact = () => {
                             </motion.div>
                         </Col>
 
-                        {/* Contact Form */}
                         <Col lg={7}>
                             <motion.div variants={itemVariants}>
                                 <div className="contact-form-card">
                                     <h4 className="form-title">Send Me a Message</h4>
-
-                                    <AnimatePresence>
-                                        {submitStatus === 'success' && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -20 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: -20 }}
-                                            >
-                                                <Alert className="success-alert">
-                                                    <FaCheck className="alert-icon" />
-                                                    Thank you! Your message has been sent successfully.
-                                                </Alert>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
 
                                     <Form onSubmit={handleSubmit}>
                                         <Row className="g-4">
@@ -277,6 +448,7 @@ const Contact = () => {
                                                     <Form.Group>
                                                         <Form.Label className="form-label">
                                                             {field.label}
+                                                            {field.required && <span className="text-danger"> *</span>}
                                                         </Form.Label>
                                                         <motion.div
                                                             whileFocus={{ scale: 1.02 }}
@@ -303,6 +475,16 @@ const Contact = () => {
                                             ))}
 
                                             <Col xs={12}>
+                                                <div className="recaptcha-container">
+                                                    <ReCAPTCHA
+                                                        ref={recaptchaRef}
+                                                        sitekey={RECAPTCHA_SITE_KEY}
+                                                        onChange={handleRecaptchaChange}
+                                                    />
+                                                </div>
+                                            </Col>
+
+                                            <Col xs={12}>
                                                 <motion.div
                                                     className="form-submit"
                                                     whileHover={{ scale: 1.02 }}
@@ -311,7 +493,7 @@ const Contact = () => {
                                                     <Button
                                                         type="submit"
                                                         size="lg"
-                                                        disabled={isSubmitting}
+                                                        disabled={isSubmitting || !recaptchaToken}
                                                         className="submit-button"
                                                     >
                                                         {isSubmitting ? (
@@ -339,14 +521,48 @@ const Contact = () => {
 
             <style jsx>{`
                 .contact-section {
-                    background: linear-gradient(135deg, 
-                        var(--background-color) 0%, 
-                        var(--surface-color) 50%, 
-                        var(--background-color) 100%);
+                    background: linear-gradient(135deg,
+                    var(--background-color) 0%,
+                    var(--surface-color) 50%,
+                    var(--background-color) 100%);
                     position: relative;
                     overflow: hidden;
                 }
 
+                /* Toast Custom Styles */
+                .toast-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                }
+
+                .toast-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.2);
+                    flex-shrink: 0;
+                }
+
+                .toast-message {
+                    flex: 1;
+                }
+
+                .toast-title {
+                    font-weight: 600;
+                    font-size: 14px;
+                    margin-bottom: 2px;
+                }
+
+                .toast-description {
+                    font-size: 12px;
+                    opacity: 0.9;
+                }
+
+                /* Rest of your existing CSS styles remain the same */
                 .background-elements {
                     position: absolute;
                     top: 0;
@@ -407,9 +623,9 @@ const Contact = () => {
 
                 .section-badge {
                     display: inline-block;
-                    background: linear-gradient(135deg, 
-                        rgba(var(--primary-rgb), 0.15) 0%, 
-                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    background: linear-gradient(135deg,
+                    rgba(var(--primary-rgb), 0.15) 0%,
+                    rgba(var(--secondary-rgb), 0.15) 100%);
                     color: var(--primary-color);
                     padding: var(--spacing-sm) var(--spacing-xl);
                     border-radius: 50px;
@@ -448,7 +664,6 @@ const Contact = () => {
                     line-height: 1.7;
                 }
 
-                /* Contact Info Card */
                 .contact-info-card {
                     background: var(--card-bg);
                     border: 1px solid var(--border-color);
@@ -532,7 +747,6 @@ const Contact = () => {
                     color: var(--text-muted);
                 }
 
-                /* Social Section */
                 .social-section {
                     margin-top: var(--spacing-xl);
                 }
@@ -587,7 +801,6 @@ const Contact = () => {
                     color: var(--text-muted);
                 }
 
-                /* Contact Form Card */
                 .contact-form-card {
                     background: var(--card-bg);
                     border: 1px solid var(--border-color);
@@ -608,18 +821,6 @@ const Contact = () => {
                     font-weight: 700;
                     color: var(--text-color);
                     margin-bottom: var(--spacing-lg);
-                }
-
-                .success-alert {
-                    background: rgba(34, 197, 94, 0.1);
-                    border: 1px solid rgba(34, 197, 94, 0.3);
-                    color: var(--success-color);
-                    border-radius: var(--radius-lg);
-                    margin-bottom: var(--spacing-lg);
-                }
-
-                .alert-icon {
-                    margin-right: var(--spacing-sm);
                 }
 
                 .form-label {
@@ -649,6 +850,12 @@ const Contact = () => {
                 .form-control-modern::placeholder {
                     color: var(--text-muted);
                     opacity: 0.7;
+                }
+
+                .recaptcha-container {
+                    margin-bottom: var(--spacing-xl);
+                    display: flex;
+                    justify-content: center;
                 }
 
                 .form-submit {
@@ -697,7 +904,6 @@ const Contact = () => {
                     to { transform: rotate(360deg); }
                 }
 
-                /* Responsive Design */
                 @media (max-width: 768px) {
                     .section-title {
                         font-size: var(--font-size-3xl);
@@ -720,7 +926,7 @@ const Contact = () => {
 
                     .contact-method {
                         padding: var(--spacing-sm);
-                    flex-direction: column;
+                        flex-direction: column;
                         text-align: center;
                     }
 

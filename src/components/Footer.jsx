@@ -64,7 +64,7 @@ const Footer = () => {
         },
         {
             icon: FaTwitter,
-            href: 'https://x.com/Nischal79783380',
+            href: 'https://x.com/nischalacharya_',
             label: 'Twitter',
             color: '#1DA1F2'
         },
