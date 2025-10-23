@@ -450,10 +450,10 @@ const Projects = () => {
 
             <style jsx>{`
                 .projects-section {
-                    background: linear-gradient(135deg, 
-                        var(--background-color) 0%, 
-                        var(--surface-color) 50%, 
-                        var(--background-color) 100%);
+                    background: linear-gradient(135deg,
+                    var(--background-color) 0%,
+                    var(--surface-color) 50%,
+                    var(--background-color) 100%);
                     position: relative;
                     overflow: hidden;
                 }
@@ -504,9 +504,9 @@ const Projects = () => {
 
                 .section-badge {
                     display: inline-block;
-                    background: linear-gradient(135deg, 
-                        rgba(var(--primary-rgb), 0.15) 0%, 
-                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    background: linear-gradient(135deg,
+                    rgba(var(--primary-rgb), 0.15) 0%,
+                    rgba(var(--secondary-rgb), 0.15) 100%);
                     color: var(--primary-color);
                     padding: 0.6rem 1.8rem;
                     border-radius: 50px;
@@ -581,10 +581,10 @@ const Projects = () => {
                     left: -100%;
                     width: 100%;
                     height: 100%;
-                    background: linear-gradient(90deg, 
-                        transparent, 
-                        rgba(var(--primary-rgb), 0.1), 
-                        transparent);
+                    background: linear-gradient(90deg,
+                    transparent,
+                    rgba(var(--primary-rgb), 0.1),
+                    transparent);
                     transition: left 0.6s;
                 }
 
@@ -658,10 +658,10 @@ const Projects = () => {
                     left: 0;
                     right: 0;
                     height: 1px;
-                    background: linear-gradient(90deg, 
-                        transparent, 
-                        var(--primary-color), 
-                        transparent);
+                    background: linear-gradient(90deg,
+                    transparent,
+                    var(--primary-color),
+                    transparent);
                     opacity: 0;
                     transition: opacity 0.4s;
                 }
@@ -719,7 +719,7 @@ const Projects = () => {
 
                 .status-badge.completed {
                     background: rgba(34, 197, 94, 0.15);
-                    color: #22c55e;
+                    color: #ffffff;
                     border: 1px solid rgba(34, 197, 94, 0.3);
                 }
 
@@ -749,9 +749,9 @@ const Projects = () => {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background: linear-gradient(to bottom, 
-                        transparent 0%, 
-                        rgba(0, 0, 0, 0.1) 100%);
+                    background: linear-gradient(to bottom,
+                    transparent 0%,
+                    rgba(0, 0, 0, 0.1) 100%);
                     opacity: 0;
                     transition: opacity 0.3s;
                 }

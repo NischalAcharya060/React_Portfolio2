@@ -5,19 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import {
-    FaEnvelope,
-    FaPhone,
-    FaMapMarkerAlt,
-    FaLinkedin,
-    FaGithub,
-    FaTwitter,
-    FaInstagram,
-    FaFacebook,
     FaPaperPlane,
     FaCheck,
-    FaWhatsapp,
-    FaTelegram
+    FaSpinner
 } from 'react-icons/fa';
+
+// Import data from external file
+import { contactInfo, socialLinks, formFields } from '../data/contact.js';
 
 const Contact = () => {
     const ref = useRef(null);
@@ -54,72 +48,6 @@ const Contact = () => {
             setIsSubmitting(false);
         }
     };
-
-    const contactInfo = [
-        {
-            icon: FaEnvelope,
-            label: 'Email',
-            value: 'Nischal060@gmail.com',
-            href: 'mailto:Nischal060@gmail.com',
-            color: '#D44638',
-            description: 'Send me an email anytime'
-        },
-        {
-            icon: FaPhone,
-            label: 'Phone',
-            value: '+977 9842000000',
-            href: 'tel:+9779842000000',
-            color: '#25D366',
-            description: 'Mon - Fri, 9AM - 6PM'
-        },
-        {
-            icon: FaMapMarkerAlt,
-            label: 'Location',
-            value: 'Gauradaha-Jhapa, Nepal',
-            href: 'https://maps.google.com/?q=Gauradaha-Jhapa,Nepal',
-            color: '#FF6B6B',
-            description: 'Available for remote work'
-        },
-        {
-            icon: FaWhatsapp,
-            label: 'WhatsApp',
-            value: '+977 9842000000',
-            href: 'https://wa.me/9779842000000',
-            color: '#25D366',
-            description: 'Quick response guaranteed'
-        }
-    ];
-
-    const socialLinks = [
-        {
-            icon: FaGithub,
-            href: 'https://github.com/NischalAcharya060',
-            label: 'GitHub',
-            color: '#333',
-            username: '@NischalAcharya060'
-        },
-        {
-            icon: FaLinkedin,
-            href: 'https://www.linkedin.com/in/nischal-acharya101/',
-            label: 'LinkedIn',
-            color: '#0077B5',
-            username: '@nischal-acharya101'
-        },
-        {
-            icon: FaTwitter,
-            href: 'https://x.com/Nischal79783380',
-            label: 'Twitter',
-            color: '#1DA1F2',
-            username: '@Nischal79783380'
-        },
-        {
-            icon: FaInstagram,
-            href: 'https://www.instagram.com/its_nischalacharya/',
-            label: 'Instagram',
-            color: '#E4405F',
-            username: '@its_nischalacharya'
-        }
-    ];
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -163,27 +91,16 @@ const Contact = () => {
         <section
             id="contact"
             ref={ref}
-            className="section-padding position-relative overflow-hidden"
-            style={{
-                background: 'linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%)'
-            }}
+            className="contact-section section-padding position-relative overflow-hidden"
         >
             {/* Background Elements */}
-            <div className="position-absolute top-0 start-0 w-100 h-100">
+            <div className="background-elements">
                 <motion.div
-                    style={{
-                        position: 'absolute',
-                        top: '10%',
-                        right: '5%',
-                        width: '300px',
-                        height: '300px',
-                        background: 'radial-gradient(circle, var(--primary-color) 0%, transparent 70%)',
-                        opacity: 0.03,
-                        borderRadius: '50%'
-                    }}
+                    className="bg-blob primary-blob"
                     animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.03, 0.05, 0.03]
+                        scale: [1, 1.1, 1],
+                        opacity: [0.03, 0.05, 0.03],
+                        x: [0, 20, 0]
                     }}
                     transition={{
                         duration: 8,
@@ -192,22 +109,14 @@ const Contact = () => {
                     }}
                 />
                 <motion.div
-                    style={{
-                        position: 'absolute',
-                        bottom: '20%',
-                        left: '5%',
-                        width: '200px',
-                        height: '200px',
-                        background: 'radial-gradient(circle, var(--secondary-color) 0%, transparent 70%)',
-                        opacity: 0.03,
-                        borderRadius: '50%'
-                    }}
+                    className="bg-blob secondary-blob"
                     animate={{
-                        scale: [1.2, 1, 1.2],
-                        opacity: [0.05, 0.03, 0.05]
+                        scale: [1.1, 1, 1.1],
+                        opacity: [0.04, 0.02, 0.04],
+                        y: [0, -15, 0]
                     }}
                     transition={{
-                        duration: 6,
+                        duration: 7,
                         repeat: Infinity,
                         ease: "easeInOut",
                         delay: 1
@@ -217,30 +126,12 @@ const Contact = () => {
 
             {/* Floating Elements */}
             <motion.div
-                className="position-absolute"
-                style={{
-                    top: '20%',
-                    left: '10%',
-                    width: '40px',
-                    height: '40px',
-                    background: 'var(--primary-color)',
-                    borderRadius: '50%',
-                    opacity: 0.1
-                }}
+                className="floating-element primary-float"
                 variants={floatingVariants}
                 animate="float"
             />
             <motion.div
-                className="position-absolute"
-                style={{
-                    bottom: '30%',
-                    right: '15%',
-                    width: '30px',
-                    height: '30px',
-                    background: 'var(--secondary-color)',
-                    borderRadius: '50%',
-                    opacity: 0.1
-                }}
+                className="floating-element secondary-float"
                 variants={floatingVariants}
                 animate="float"
                 transition={{ delay: 1 }}
@@ -249,17 +140,23 @@ const Contact = () => {
             <Container>
                 {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-5"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="section-header text-center mb-6"
                 >
-                    <span className="section-badge">Let's Connect</span>
-                    <h2 className="display-4 fw-bold mb-3">
+                    <motion.span
+                        className="section-badge"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                        Let's Connect
+                    </motion.span>
+                    <h2 className="section-title gradient-heading mb-4">
                         Get In
                         <span className="gradient-text"> Touch</span>
                     </h2>
-                    <p className="lead text-muted max-w-600 mx-auto">
+                    <p className="section-subtitle">
                         Ready to bring your ideas to life? Let's discuss your project and create something amazing together.
                     </p>
                 </motion.div>
@@ -273,15 +170,9 @@ const Contact = () => {
                         {/* Contact Information */}
                         <Col lg={5}>
                             <motion.div variants={itemVariants}>
-                                <div className="contact-info-card p-4 rounded-4 h-100"
-                                     style={{
-                                         background: 'linear-gradient(135deg, var(--card-bg), var(--surface-color))',
-                                         backdropFilter: 'blur(10px)',
-                                         border: '1px solid var(--border-color)'
-                                     }}
-                                >
-                                    <h4 className="fw-bold mb-4">Contact Information</h4>
-                                    <p className="text-muted mb-4">
+                                <div className="contact-info-card">
+                                    <h4 className="contact-info-title">Contact Information</h4>
+                                    <p className="contact-info-description">
                                         Feel free to reach out through any of these channels. I typically respond within 24 hours.
                                     </p>
 
@@ -292,12 +183,7 @@ const Contact = () => {
                                                 href={info.href}
                                                 target={info.href.startsWith('http') ? '_blank' : '_self'}
                                                 rel={info.href.startsWith('http') ? 'noopener noreferrer' : ''}
-                                                className="contact-method d-flex align-items-center p-3 rounded-3 mb-3 text-decoration-none"
-                                                style={{
-                                                    background: 'var(--surface-color)',
-                                                    border: '1px solid var(--border-color)',
-                                                    transition: 'all 0.3s ease'
-                                                }}
+                                                className="contact-method"
                                                 whileHover={{
                                                     x: 10,
                                                     borderColor: info.color,
@@ -306,10 +192,8 @@ const Contact = () => {
                                                 whileTap={{ scale: 0.98 }}
                                             >
                                                 <div
-                                                    className="contact-icon d-flex align-items-center justify-content-center rounded-3 me-3 flex-shrink-0"
+                                                    className="contact-icon"
                                                     style={{
-                                                        width: '50px',
-                                                        height: '50px',
                                                         background: `${info.color}15`,
                                                         color: info.color,
                                                         border: `1px solid ${info.color}30`
@@ -317,35 +201,28 @@ const Contact = () => {
                                                 >
                                                     <info.icon size={20} />
                                                 </div>
-                                                <div className="flex-grow-1">
-                                                    <h6 className="fw-bold mb-1" style={{ color: 'var(--text-color)' }}>
-                                                        {info.label}
-                                                    </h6>
-                                                    <p className="mb-1" style={{ color: 'var(--text-color)', fontWeight: '500' }}>
-                                                        {info.value}
-                                                    </p>
-                                                    <small className="text-muted">{info.description}</small>
+                                                <div className="contact-details">
+                                                    <h6 className="contact-label">{info.label}</h6>
+                                                    <p className="contact-value">{info.value}</p>
+                                                    <small className="contact-description">{info.description}</small>
                                                 </div>
                                             </motion.a>
                                         ))}
                                     </div>
 
                                     {/* Social Links */}
-                                    <div className="mt-5">
-                                        <h6 className="fw-bold mb-3">Follow My Journey</h6>
-                                        <div className="social-links d-flex flex-wrap gap-2">
+                                    <div className="social-section">
+                                        <h6 className="social-title">Follow My Journey</h6>
+                                        <div className="social-links">
                                             {socialLinks.map((social) => (
                                                 <motion.a
                                                     key={social.label}
                                                     href={social.href}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="social-link d-flex align-items-center p-3 rounded-3 text-decoration-none flex-grow-1"
+                                                    className="social-link"
                                                     style={{
-                                                        background: 'var(--surface-color)',
                                                         border: `1px solid ${social.color}30`,
-                                                        color: 'var(--text-color)',
-                                                        minWidth: '140px'
                                                     }}
                                                     whileHover={{
                                                         scale: 1.05,
@@ -357,12 +234,12 @@ const Contact = () => {
                                                 >
                                                     <social.icon
                                                         size={20}
-                                                        className="me-2 flex-shrink-0"
+                                                        className="social-icon"
                                                         style={{ color: social.color }}
                                                     />
-                                                    <div className="text-start">
-                                                        <div className="fw-semibold small">{social.label}</div>
-                                                        <div className="text-muted extra-small">{social.username}</div>
+                                                    <div className="social-info">
+                                                        <div className="social-label">{social.label}</div>
+                                                        <div className="social-username">{social.username}</div>
                                                     </div>
                                                 </motion.a>
                                             ))}
@@ -375,14 +252,8 @@ const Contact = () => {
                         {/* Contact Form */}
                         <Col lg={7}>
                             <motion.div variants={itemVariants}>
-                                <div className="contact-form-card p-4 p-lg-5 rounded-4 h-100"
-                                     style={{
-                                         background: 'linear-gradient(135deg, var(--card-bg), var(--surface-color))',
-                                         backdropFilter: 'blur(10px)',
-                                         border: '1px solid var(--border-color)'
-                                     }}
-                                >
-                                    <h4 className="fw-bold mb-4">Send Me a Message</h4>
+                                <div className="contact-form-card">
+                                    <h4 className="form-title">Send Me a Message</h4>
 
                                     <AnimatePresence>
                                         {submitStatus === 'success' && (
@@ -391,16 +262,8 @@ const Contact = () => {
                                                 animate={{ opacity: 1, y: 0 }}
                                                 exit={{ opacity: 0, y: -20 }}
                                             >
-                                                <Alert
-                                                    variant="success"
-                                                    className="d-flex align-items-center"
-                                                    style={{
-                                                        background: 'rgba(34, 197, 94, 0.1)',
-                                                        border: '1px solid rgba(34, 197, 94, 0.3)',
-                                                        color: '#16a34a'
-                                                    }}
-                                                >
-                                                    <FaCheck className="me-2" />
+                                                <Alert className="success-alert">
+                                                    <FaCheck className="alert-icon" />
                                                     Thank you! Your message has been sent successfully.
                                                 </Alert>
                                             </motion.div>
@@ -409,103 +272,39 @@ const Contact = () => {
 
                                     <Form onSubmit={handleSubmit}>
                                         <Row className="g-4">
-                                            <Col md={6}>
-                                                <Form.Group>
-                                                    <Form.Label className="fw-semibold mb-2">
-                                                        Full Name *
-                                                    </Form.Label>
-                                                    <motion.div
-                                                        whileFocus={{ scale: 1.02 }}
-                                                    >
-                                                        <Form.Control
-                                                            type="text"
-                                                            name="name"
-                                                            value={formData.name}
-                                                            onChange={handleChange}
-                                                            required
-                                                            placeholder="Enter your full name"
-                                                            className="form-control-modern"
-                                                            onFocus={() => setActiveField('name')}
-                                                            onBlur={() => setActiveField(null)}
-                                                        />
-                                                    </motion.div>
-                                                </Form.Group>
-                                            </Col>
-
-                                            <Col md={6}>
-                                                <Form.Group>
-                                                    <Form.Label className="fw-semibold mb-2">
-                                                        Email Address *
-                                                    </Form.Label>
-                                                    <motion.div
-                                                        whileFocus={{ scale: 1.02 }}
-                                                    >
-                                                        <Form.Control
-                                                            type="email"
-                                                            name="email"
-                                                            value={formData.email}
-                                                            onChange={handleChange}
-                                                            required
-                                                            placeholder="your.email@example.com"
-                                                            className="form-control-modern"
-                                                            onFocus={() => setActiveField('email')}
-                                                            onBlur={() => setActiveField(null)}
-                                                        />
-                                                    </motion.div>
-                                                </Form.Group>
-                                            </Col>
-
-                                            <Col xs={12}>
-                                                <Form.Group>
-                                                    <Form.Label className="fw-semibold mb-2">
-                                                        Subject *
-                                                    </Form.Label>
-                                                    <motion.div
-                                                        whileFocus={{ scale: 1.02 }}
-                                                    >
-                                                        <Form.Control
-                                                            type="text"
-                                                            name="subject"
-                                                            value={formData.subject}
-                                                            onChange={handleChange}
-                                                            required
-                                                            placeholder="What's this about?"
-                                                            className="form-control-modern"
-                                                            onFocus={() => setActiveField('subject')}
-                                                            onBlur={() => setActiveField(null)}
-                                                        />
-                                                    </motion.div>
-                                                </Form.Group>
-                                            </Col>
-
-                                            <Col xs={12}>
-                                                <Form.Group>
-                                                    <Form.Label className="fw-semibold mb-2">
-                                                        Your Message *
-                                                    </Form.Label>
-                                                    <motion.div
-                                                        whileFocus={{ scale: 1.02 }}
-                                                    >
-                                                        <Form.Control
-                                                            as="textarea"
-                                                            rows={6}
-                                                            name="message"
-                                                            value={formData.message}
-                                                            onChange={handleChange}
-                                                            required
-                                                            placeholder="Tell me about your project, ideas, or questions..."
-                                                            className="form-control-modern"
-                                                            onFocus={() => setActiveField('message')}
-                                                            onBlur={() => setActiveField(null)}
-                                                            style={{ resize: 'vertical' }}
-                                                        />
-                                                    </motion.div>
-                                                </Form.Group>
-                                            </Col>
+                                            {formFields.map((field) => (
+                                                <Col key={field.name} {...field.grid}>
+                                                    <Form.Group>
+                                                        <Form.Label className="form-label">
+                                                            {field.label}
+                                                        </Form.Label>
+                                                        <motion.div
+                                                            whileFocus={{ scale: 1.02 }}
+                                                        >
+                                                            <Form.Control
+                                                                as={field.type === 'textarea' ? 'textarea' : 'input'}
+                                                                type={field.type}
+                                                                name={field.name}
+                                                                value={formData[field.name]}
+                                                                onChange={handleChange}
+                                                                required={field.required}
+                                                                placeholder={field.placeholder}
+                                                                rows={field.rows}
+                                                                className="form-control-modern"
+                                                                onFocus={() => setActiveField(field.name)}
+                                                                onBlur={() => setActiveField(null)}
+                                                                style={{
+                                                                    resize: field.type === 'textarea' ? 'vertical' : 'none'
+                                                                }}
+                                                            />
+                                                        </motion.div>
+                                                    </Form.Group>
+                                                </Col>
+                                            ))}
 
                                             <Col xs={12}>
                                                 <motion.div
-                                                    className="text-center text-md-start"
+                                                    className="form-submit"
                                                     whileHover={{ scale: 1.02 }}
                                                     whileTap={{ scale: 0.98 }}
                                                 >
@@ -513,18 +312,16 @@ const Contact = () => {
                                                         type="submit"
                                                         size="lg"
                                                         disabled={isSubmitting}
-                                                        className="btn-primary-gradient px-5 py-3"
+                                                        className="submit-button"
                                                     >
                                                         {isSubmitting ? (
                                                             <>
-                                                                <div className="spinner-border spinner-border-sm me-2" role="status">
-                                                                    <span className="visually-hidden">Loading...</span>
-                                                                </div>
+                                                                <FaSpinner className="spinner-icon" />
                                                                 Sending Message...
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <FaPaperPlane className="me-2" />
+                                                                <FaPaperPlane className="button-icon" />
                                                                 Send Message
                                                             </>
                                                         )}
@@ -540,105 +337,408 @@ const Contact = () => {
                 </motion.div>
             </Container>
 
-            <style>
-                {`
-                    .section-badge {
-                        display: inline-block;
-                        background: rgba(var(--primary-rgb), 0.1);
-                        color: var(--primary-color);
-                        padding: 0.5rem 1.5rem;
-                        border-radius: 50px;
-                        font-size: 0.9rem;
-                        font-weight: 600;
-                        margin-bottom: 1rem;
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
-                    }
+            <style jsx>{`
+                .contact-section {
+                    background: linear-gradient(135deg, 
+                        var(--background-color) 0%, 
+                        var(--surface-color) 50%, 
+                        var(--background-color) 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
 
-                    .max-w-600 {
-                        max-width: 600px;
-                    }
+                .background-elements {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                }
 
-                    .contact-method {
-                        transition: all 0.3s ease;
-                    }
+                .bg-blob {
+                    position: absolute;
+                    border-radius: 50%;
+                    filter: blur(40px);
+                }
 
-                    .contact-method:hover {
-                        text-decoration: none;
-                    }
+                .primary-blob {
+                    top: 10%;
+                    right: 5%;
+                    width: 300px;
+                    height: 300px;
+                    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+                }
 
-                    .form-control-modern {
-                        background: var(--surface-color);
-                        border: 2px solid var(--border-color);
-                        border-radius: 12px;
-                        padding: 0.75rem 1rem;
-                        color: var(--text-color);
-                        transition: all 0.3s ease;
-                    }
+                .secondary-blob {
+                    bottom: 20%;
+                    left: 5%;
+                    width: 200px;
+                    height: 200px;
+                    background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+                }
 
-                    .form-control-modern:focus {
-                        background: var(--surface-color);
-                        border-color: var(--primary-color);
-                        box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.1);
-                        color: var(--text-color);
-                    }
+                .floating-element {
+                    position: absolute;
+                    border-radius: 50%;
+                    opacity: 0.1;
+                }
 
-                    .btn-primary-gradient {
-                        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-                        border: none;
-                        color: white;
-                        border-radius: 50px;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                    }
+                .primary-float {
+                    top: 20%;
+                    left: 10%;
+                    width: 40px;
+                    height: 40px;
+                    background: var(--primary-color);
+                }
 
-                    .btn-primary-gradient:hover:not(:disabled) {
-                        transform: translateY(-2px);
-                        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-                    }
+                .secondary-float {
+                    bottom: 30%;
+                    right: 15%;
+                    width: 30px;
+                    height: 30px;
+                    background: var(--secondary-color);
+                }
 
-                    .btn-primary-gradient:disabled {
-                        opacity: 0.7;
-                        transform: none;
-                    }
+                .section-header {
+                    position: relative;
+                    z-index: 2;
+                }
 
-                    .social-links {
-                        gap: 0.75rem;
-                    }
+                .section-badge {
+                    display: inline-block;
+                    background: linear-gradient(135deg, 
+                        rgba(var(--primary-rgb), 0.15) 0%, 
+                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    color: var(--primary-color);
+                    padding: var(--spacing-sm) var(--spacing-xl);
+                    border-radius: 50px;
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                    margin-bottom: var(--spacing-lg);
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    border: 1px solid rgba(var(--primary-rgb), 0.2);
+                    backdrop-filter: blur(10px);
+                    cursor: default;
+                }
 
-                    .social-link {
-                        transition: all 0.3s ease;
-                        text-decoration: none;
-                    }
+                .section-title {
+                    font-size: var(--font-size-4xl);
+                    font-weight: 800;
+                    margin-bottom: var(--spacing-md);
+                    background: linear-gradient(135deg, var(--text-color) 0%, var(--text-muted) 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
 
-                    .extra-small {
-                        font-size: 0.7rem;
+                .gradient-text {
+                    background: var(--gradient-primary);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .section-subtitle {
+                    font-size: var(--font-size-lg);
+                    color: var(--text-muted);
+                    max-width: 600px;
+                    margin: 0 auto;
+                    line-height: 1.7;
+                }
+
+                /* Contact Info Card */
+                .contact-info-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-xl);
+                    padding: var(--spacing-xl);
+                    backdrop-filter: blur(10px);
+                    transition: all var(--transition-base);
+                    height: 100%;
+                }
+
+                .contact-info-card:hover {
+                    border-color: var(--primary-color);
+                    box-shadow: var(--shadow-xl);
+                }
+
+                .contact-info-title {
+                    font-size: var(--font-size-xl);
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-md);
+                }
+
+                .contact-info-description {
+                    color: var(--text-muted);
+                    margin-bottom: var(--spacing-xl);
+                    line-height: 1.6;
+                }
+
+                .contact-methods {
+                    margin-bottom: var(--spacing-2xl);
+                }
+
+                .contact-method {
+                    display: flex;
+                    align-items: center;
+                    padding: var(--spacing-md);
+                    border-radius: var(--radius-lg);
+                    background: var(--surface-color);
+                    border: 1px solid var(--border-color);
+                    transition: all var(--transition-base);
+                    text-decoration: none;
+                    margin-bottom: var(--spacing-md);
+                }
+
+                .contact-method:hover {
+                    text-decoration: none;
+                }
+
+                .contact-icon {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: var(--radius-lg);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-right: var(--spacing-md);
+                    flex-shrink: 0;
+                    transition: all var(--transition-base);
+                }
+
+                .contact-details {
+                    flex-grow: 1;
+                }
+
+                .contact-label {
+                    font-size: var(--font-size-base);
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-xs);
+                }
+
+                .contact-value {
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-xs);
+                }
+
+                .contact-description {
+                    font-size: var(--font-size-xs);
+                    color: var(--text-muted);
+                }
+
+                /* Social Section */
+                .social-section {
+                    margin-top: var(--spacing-xl);
+                }
+
+                .social-title {
+                    font-size: var(--font-size-base);
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-md);
+                }
+
+                .social-links {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: var(--spacing-sm);
+                }
+
+                .social-link {
+                    display: flex;
+                    align-items: center;
+                    padding: var(--spacing-md);
+                    border-radius: var(--radius-lg);
+                    background: var(--surface-color);
+                    color: var(--text-color);
+                    text-decoration: none;
+                    flex-grow: 1;
+                    min-width: 140px;
+                    transition: all var(--transition-base);
+                }
+
+                .social-link:hover {
+                    text-decoration: none;
+                    color: var(--text-color);
+                }
+
+                .social-icon {
+                    margin-right: var(--spacing-sm);
+                    flex-shrink: 0;
+                }
+
+                .social-info {
+                    text-align: left;
+                }
+
+                .social-label {
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                }
+
+                .social-username {
+                    font-size: var(--font-size-xs);
+                    color: var(--text-muted);
+                }
+
+                /* Contact Form Card */
+                .contact-form-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-xl);
+                    padding: var(--spacing-xl);
+                    backdrop-filter: blur(10px);
+                    transition: all var(--transition-base);
+                    height: 100%;
+                }
+
+                .contact-form-card:hover {
+                    border-color: var(--primary-color);
+                    box-shadow: var(--shadow-xl);
+                }
+
+                .form-title {
+                    font-size: var(--font-size-xl);
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-lg);
+                }
+
+                .success-alert {
+                    background: rgba(34, 197, 94, 0.1);
+                    border: 1px solid rgba(34, 197, 94, 0.3);
+                    color: var(--success-color);
+                    border-radius: var(--radius-lg);
+                    margin-bottom: var(--spacing-lg);
+                }
+
+                .alert-icon {
+                    margin-right: var(--spacing-sm);
+                }
+
+                .form-label {
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-sm);
+                }
+
+                .form-control-modern {
+                    background: var(--surface-color);
+                    border: 2px solid var(--border-color);
+                    border-radius: var(--radius-lg);
+                    padding: var(--spacing-md);
+                    color: var(--text-color);
+                    transition: all var(--transition-base);
+                    font-size: var(--font-size-base);
+                }
+
+                .form-control-modern:focus {
+                    background: var(--surface-color);
+                    border-color: var(--primary-color);
+                    box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.1);
+                    color: var(--text-color);
+                }
+
+                .form-control-modern::placeholder {
+                    color: var(--text-muted);
+                    opacity: 0.7;
+                }
+
+                .form-submit {
+                    text-align: center;
+                }
+
+                @media (min-width: 768px) {
+                    .form-submit {
+                        text-align: left;
+                    }
+                }
+
+                .submit-button {
+                    background: var(--gradient-primary);
+                    border: none;
+                    color: white;
+                    border-radius: 50px;
+                    font-weight: 600;
+                    padding: var(--spacing-md) var(--spacing-xl);
+                    font-size: var(--font-size-base);
+                    transition: all var(--transition-base);
+                }
+
+                .submit-button:hover:not(:disabled) {
+                    transform: translateY(-2px);
+                    box-shadow: var(--shadow-lg);
+                }
+
+                .submit-button:disabled {
+                    opacity: 0.7;
+                    transform: none;
+                    cursor: not-allowed;
+                }
+
+                .button-icon {
+                    margin-right: var(--spacing-sm);
+                }
+
+                .spinner-icon {
+                    margin-right: var(--spacing-sm);
+                    animation: spin 1s linear infinite;
+                }
+
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+
+                /* Responsive Design */
+                @media (max-width: 768px) {
+                    .section-title {
+                        font-size: var(--font-size-3xl);
                     }
 
                     .contact-info-card,
                     .contact-form-card {
-                        transition: all 0.3s ease;
+                        padding: var(--spacing-lg);
                     }
 
-                    .contact-info-card:hover,
-                    .contact-form-card:hover {
-                        border-color: var(--primary-color);
-                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    .social-link {
+                        min-width: calc(50% - var(--spacing-sm));
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .section-title {
+                        font-size: var(--font-size-2xl);
                     }
 
-                    @media (max-width: 768px) {
-                        .social-link {
-                            min-width: calc(50% - 0.75rem) !important;
-                        }
+                    .contact-method {
+                        padding: var(--spacing-sm);
+                    flex-direction: column;
+                        text-align: center;
                     }
 
-                    @media (max-width: 576px) {
-                        .social-link {
-                            min-width: 100% !important;
-                        }
+                    .contact-icon {
+                        margin-right: 0;
+                        margin-bottom: var(--spacing-sm);
                     }
-                `}
-            </style>
+
+                    .social-link {
+                        min-width: 100%;
+                    }
+
+                    .contact-info-card,
+                    .contact-form-card {
+                        padding: var(--spacing-md);
+                    }
+                }
+            `}</style>
         </section>
     );
 };

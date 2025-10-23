@@ -1,35 +1,12 @@
 // src/components/Skills.jsx
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, ProgressBar } from 'react-bootstrap';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import {
-    FaReact,
-    FaNodeJs,
-    FaJs,
-    FaPython,
-    FaAws,
-    FaGitAlt,
-    FaDocker,
-    FaVuejs,
-    FaPhp,
-    FaDatabase,
-    FaMobile,
-    FaCloud,
-    FaRocket,
-    FaCode, FaServer
-} from 'react-icons/fa';
-import {
-    SiNextdotjs,
-    SiTailwindcss,
-    SiMongodb,
-    SiExpress,
-    SiPostgresql,
-    SiTypescript,
-    SiRedis,
-    SiKubernetes
-} from 'react-icons/si';
+
+// Import data from external file
+import { skillCategories, skillsStats } from '../data/skills.js';
 
 const AnimatedProgressBar = ({ level, color, delay = 0 }) => {
     const [animatedLevel, setAnimatedLevel] = useState(0);
@@ -43,12 +20,7 @@ const AnimatedProgressBar = ({ level, color, delay = 0 }) => {
 
     return (
         <div className="progress-container">
-            <div
-                className="progress-background"
-                style={{
-                    backgroundColor: 'var(--surface-color)'
-                }}
-            >
+            <div className="progress-background">
                 <motion.div
                     className="progress-fill"
                     initial={{ width: 0 }}
@@ -95,39 +67,29 @@ const SkillCard = ({ skill, index, isInView }) => {
             onHoverStart={() => setIsHovered(true)}
             onHoverEnd={() => setIsHovered(false)}
         >
-            <Card
-                className="h-100 border-0 skill-card position-relative overflow-hidden"
-                style={{
-                    background: 'linear-gradient(135deg, var(--card-bg), var(--surface-color))',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer'
-                }}
-            >
+            <Card className="skill-card">
                 {/* Animated Background Effect */}
                 <motion.div
-                    className="position-absolute top-0 start-0 w-100 h-100"
+                    className="skill-background"
                     style={{
                         background: `linear-gradient(135deg, ${skill.color}15, transparent 50%)`,
                         opacity: isHovered ? 1 : 0,
-                        transition: 'opacity 0.3s ease'
                     }}
                 />
 
                 {/* Glow Effect */}
                 <motion.div
-                    className="position-absolute top-0 start-0 w-100 h-100"
+                    className="skill-glow"
                     style={{
                         background: `radial-gradient(circle at center, ${skill.color}10 0%, transparent 70%)`,
                         opacity: isHovered ? 1 : 0,
-                        transition: 'opacity 0.3s ease'
                     }}
                 />
 
-                <Card.Body className="p-4 position-relative">
+                <Card.Body className="skill-card-body">
                     {/* Skill Icon */}
                     <motion.div
-                        className="skill-icon-container mb-3"
+                        className="skill-icon-container"
                         animate={isHovered ? {
                             scale: 1.2,
                             rotate: [0, -5, 5, 0]
@@ -138,13 +100,10 @@ const SkillCard = ({ skill, index, isInView }) => {
                         transition={{ duration: 0.3 }}
                     >
                         <div
-                            className="icon-wrapper rounded-3 p-3"
+                            className="icon-wrapper"
                             style={{
                                 background: `linear-gradient(135deg, ${skill.color}20, ${skill.color}10)`,
                                 border: `1px solid ${skill.color}30`,
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
                             }}
                         >
                             <skill.icon
@@ -155,18 +114,31 @@ const SkillCard = ({ skill, index, isInView }) => {
                     </motion.div>
 
                     {/* Skill Name */}
-                    <h5 className="fw-bold mb-3" style={{ color: 'var(--text-color)' }}>
+                    <h5 className="skill-name">
                         {skill.name}
                     </h5>
 
+                    {/* Skill Description */}
+                    <motion.p
+                        className="skill-description"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{
+                            opacity: isHovered ? 1 : 0.7,
+                            height: 'auto'
+                        }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {skill.description}
+                    </motion.p>
+
                     {/* Progress Section */}
                     <div className="skill-progress">
-                        <div className="d-flex justify-content-between align-items-center mb-2">
-                            <span className="text-muted small text-uppercase fw-semibold">
+                        <div className="progress-header">
+                            <span className="progress-label">
                                 Proficiency
                             </span>
                             <motion.span
-                                className="fw-bold"
+                                className="progress-percentage"
                                 style={{ color: skill.color }}
                                 animate={isHovered ? { scale: 1.1 } : { scale: 1 }}
                             >
@@ -183,18 +155,16 @@ const SkillCard = ({ skill, index, isInView }) => {
 
                     {/* Experience Level */}
                     <motion.div
-                        className="experience-level mt-3"
+                        className="experience-level"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: isHovered ? 1 : 0.7 }}
                     >
                         <span
-                            className="badge rounded-pill px-3 py-2"
+                            className="experience-badge"
                             style={{
                                 backgroundColor: `${skill.color}15`,
                                 color: skill.color,
                                 border: `1px solid ${skill.color}30`,
-                                fontSize: '0.75rem',
-                                fontWeight: 600
                             }}
                         >
                             {skill.experience}
@@ -209,70 +179,22 @@ const SkillCard = ({ skill, index, isInView }) => {
 const Skills = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.1 });
-
-    const skillCategories = [
-        {
-            title: "Frontend",
-            icon: FaCode,
-            skills: [
-                { name: 'React', level: 90, icon: FaReact, color: '#61DAFB', experience: '3+ Years' },
-                { name: 'Vue.js', level: 80, icon: FaVuejs, color: '#4FC08D', experience: '2+ Years' },
-                { name: 'TypeScript', level: 85, icon: SiTypescript, color: '#3178C6', experience: '2+ Years' },
-                { name: 'Next.js', level: 75, icon: SiNextdotjs, color: '#000000', experience: '1+ Year' },
-                { name: 'Tailwind CSS', level: 88, icon: SiTailwindcss, color: '#06B6D4', experience: '2+ Years' }
-            ]
-        },
-        {
-            title: "Backend",
-            icon: FaServer,
-            skills: [
-                { name: 'Node.js', level: 85, icon: FaNodeJs, color: '#339933', experience: '3+ Years' },
-                { name: 'Python', level: 75, icon: FaPython, color: '#3776AB', experience: '2+ Years' },
-                { name: 'PHP', level: 70, icon: FaPhp, color: '#777BB4', experience: '2+ Years' },
-                { name: 'Express.js', level: 82, icon: SiExpress, color: '#000000', experience: '3+ Years' },
-                { name: 'PostgreSQL', level: 78, icon: SiPostgresql, color: '#4169E1', experience: '2+ Years' }
-            ]
-        },
-        {
-            title: "Tools & DevOps",
-            icon: FaRocket,
-            skills: [
-                { name: 'AWS', level: 70, icon: FaAws, color: '#FF9900', experience: '2+ Years' },
-                { name: 'Docker', level: 65, icon: FaDocker, color: '#2496ED', experience: '1+ Year' },
-                { name: 'Kubernetes', level: 60, icon: SiKubernetes, color: '#326CE5', experience: '1+ Year' },
-                { name: 'Git', level: 85, icon: FaGitAlt, color: '#F05032', experience: '3+ Years' },
-                { name: 'Redis', level: 72, icon: SiRedis, color: '#DC382D', experience: '1+ Year' }
-            ]
-        }
-    ];
-
     const [activeCategory, setActiveCategory] = useState(0);
 
     return (
         <section
             id="skills"
             ref={ref}
-            className="section-padding position-relative overflow-hidden"
-            style={{
-                background: 'linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%)'
-            }}
+            className="skills-section section-padding position-relative overflow-hidden"
         >
             {/* Background Elements */}
-            <div className="position-absolute top-0 start-0 w-100 h-100">
+            <div className="background-elements">
                 <motion.div
-                    style={{
-                        position: 'absolute',
-                        top: '10%',
-                        left: '10%',
-                        width: '200px',
-                        height: '200px',
-                        background: 'radial-gradient(circle, var(--primary-color) 0%, transparent 70%)',
-                        opacity: 0.03,
-                        borderRadius: '50%'
-                    }}
+                    className="bg-blob primary-blob"
                     animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.03, 0.05, 0.03]
+                        scale: [1, 1.1, 1],
+                        opacity: [0.03, 0.05, 0.03],
+                        x: [0, 20, 0]
                     }}
                     transition={{
                         duration: 8,
@@ -281,22 +203,14 @@ const Skills = () => {
                     }}
                 />
                 <motion.div
-                    style={{
-                        position: 'absolute',
-                        bottom: '20%',
-                        right: '10%',
-                        width: '150px',
-                        height: '150px',
-                        background: 'radial-gradient(circle, var(--secondary-color) 0%, transparent 70%)',
-                        opacity: 0.03,
-                        borderRadius: '50%'
-                    }}
+                    className="bg-blob secondary-blob"
                     animate={{
-                        scale: [1.2, 1, 1.2],
-                        opacity: [0.05, 0.03, 0.05]
+                        scale: [1.1, 1, 1.1],
+                        opacity: [0.04, 0.02, 0.04],
+                        y: [0, -15, 0]
                     }}
                     transition={{
-                        duration: 6,
+                        duration: 7,
                         repeat: Infinity,
                         ease: "easeInOut",
                         delay: 1
@@ -307,49 +221,113 @@ const Skills = () => {
             <Container>
                 {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-5"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="section-header text-center mb-6"
                 >
-                    <span className="section-badge">Skills</span>
-                    <h2 className="display-4 fw-bold mb-3">
-                        Technical
+                    <motion.span
+                        className="section-badge"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                        Technical Skills
+                    </motion.span>
+                    <h2 className="section-title gradient-heading mb-4">
+                        My Technical
                         <span className="gradient-text"> Expertise</span>
                     </h2>
-                    <p className="lead text-muted max-w-600 mx-auto">
+                    <p className="section-subtitle">
                         A comprehensive overview of my technical skills and proficiency levels across different domains
                     </p>
+                </motion.div>
+
+                {/* Skills Stats */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="skills-stats mb-6"
+                >
+                    <Row className="g-4">
+                        <Col lg={3} md={6}>
+                            <div className="stat-card text-center">
+                                <div className="stat-icon total-skills">
+                                    <span className="stat-number">{skillsStats.totalSkills}</span>
+                                </div>
+                                <p className="stat-label">Total Skills</p>
+                            </div>
+                        </Col>
+                        <Col lg={3} md={6}>
+                            <div className="stat-card text-center">
+                                <div className="stat-icon years-exp">
+                                    <span className="stat-number">{skillsStats.yearsExperience}</span>
+                                </div>
+                                <p className="stat-label">Years Experience</p>
+                            </div>
+                        </Col>
+                        <Col lg={3} md={6}>
+                            <div className="stat-card text-center">
+                                <div className="stat-icon projects">
+                                    <span className="stat-number">{skillsStats.projectsCompleted}</span>
+                                </div>
+                                <p className="stat-label">Projects Completed</p>
+                            </div>
+                        </Col>
+                        <Col lg={3} md={6}>
+                            <div className="stat-card text-center">
+                                <div className="stat-icon technologies">
+                                    <span className="stat-number">{skillsStats.technologiesMastered}</span>
+                                </div>
+                                <p className="stat-label">Technologies Mastered</p>
+                            </div>
+                        </Col>
+                    </Row>
                 </motion.div>
 
                 {/* Category Tabs */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="text-center mb-5"
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="category-tabs-container mb-6"
                 >
-                    <div className="category-tabs d-flex flex-wrap justify-content-center gap-3">
-                        {skillCategories.map((category, index) => (
-                            <motion.button
-                                key={category.title}
-                                onClick={() => setActiveCategory(index)}
-                                className={`category-tab ${activeCategory === index ? 'active' : ''}`}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <category.icon className="me-2" size={16} />
-                                {category.title}
-                            </motion.button>
-                        ))}
+                    <div className="category-tabs">
+                        {skillCategories.map((category, index) => {
+                            const CategoryIcon = category.icon;
+                            return (
+                                <motion.button
+                                    key={category.id}
+                                    onClick={() => setActiveCategory(index)}
+                                    className={`category-tab ${activeCategory === index ? 'active' : ''}`}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <CategoryIcon className="tab-icon" size={18} />
+                                    <span className="tab-label">{category.title}</span>
+                                </motion.button>
+                            );
+                        })}
                     </div>
+                </motion.div>
+
+                {/* Category Description */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="category-description text-center mb-5"
+                >
+                    <p className="category-desc-text">
+                        {skillCategories[activeCategory].description}
+                    </p>
                 </motion.div>
 
                 {/* Skills Grid */}
                 <motion.div
                     key={activeCategory}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
                     <Row className="g-4">
@@ -366,111 +344,407 @@ const Skills = () => {
                 </motion.div>
             </Container>
 
-            <style>
-                {`
-                    .section-badge {
-                        display: inline-block;
-                        background: rgba(var(--primary-rgb), 0.1);
-                        color: var(--primary-color);
-                        padding: 0.5rem 1.5rem;
-                        border-radius: 50px;
-                        font-size: 0.9rem;
-                        font-weight: 600;
-                        margin-bottom: 1rem;
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
-                    }
+            <style jsx>{`
+                .skills-section {
+                    background: linear-gradient(135deg, 
+                        var(--background-color) 0%, 
+                        var(--surface-color) 50%, 
+                        var(--background-color) 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
 
-                    .max-w-600 {
-                        max-width: 600px;
+                .background-elements {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                }
+
+                .bg-blob {
+                    position: absolute;
+                    border-radius: 50%;
+                    filter: blur(40px);
+                }
+
+                .primary-blob {
+                    top: 10%;
+                    left: 10%;
+                    width: 200px;
+                    height: 200px;
+                    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+                }
+
+                .secondary-blob {
+                    bottom: 20%;
+                    right: 10%;
+                    width: 150px;
+                    height: 150px;
+                    background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+                }
+
+                .section-header {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .section-badge {
+                    display: inline-block;
+                    background: linear-gradient(135deg, 
+                        rgba(var(--primary-rgb), 0.15) 0%, 
+                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    color: var(--primary-color);
+                    padding: var(--spacing-sm) var(--spacing-xl);
+                    border-radius: 50px;
+                    font-size: var(--font-size-sm);
+                    font-weight: 600;
+                    margin-bottom: var(--spacing-lg);
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    border: 1px solid rgba(var(--primary-rgb), 0.2);
+                    backdrop-filter: blur(10px);
+                    cursor: default;
+                }
+
+                .section-title {
+                    font-size: var(--font-size-4xl);
+                    font-weight: 800;
+                    margin-bottom: var(--spacing-md);
+                    background: linear-gradient(135deg, var(--text-color) 0%, var(--text-muted) 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .gradient-text {
+                    background: var(--gradient-primary);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .section-subtitle {
+                    font-size: var(--font-size-lg);
+                    color: var(--text-muted);
+                    max-width: 600px;
+                    margin: 0 auto;
+                    line-height: 1.7;
+                }
+
+                /* Skills Stats */
+                .skills-stats {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .stat-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-lg);
+                    padding: var(--spacing-lg);
+                    backdrop-filter: blur(10px);
+                    transition: all var(--transition-base);
+                }
+
+                .stat-card:hover {
+                    border-color: var(--primary-color);
+                    transform: translateY(-5px);
+                    box-shadow: var(--shadow-lg);
+                }
+
+                .stat-icon {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto var(--spacing-md);
+                    background: rgba(var(--primary-rgb), 0.1);
+                    color: var(--primary-color);
+                    font-weight: 700;
+                }
+
+                .stat-icon.total-skills { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+                .stat-icon.years-exp { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+                .stat-icon.projects { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+                .stat-icon.technologies { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+
+                .stat-number {
+                    font-size: 1.8rem;
+                    font-weight: 800;
+                }
+
+                .stat-label {
+                    color: var(--text-muted);
+                    font-weight: 600;
+                    margin: 0;
+                    font-size: var(--font-size-sm);
+                }
+
+                /* Category Tabs */
+                .category-tabs-container {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .category-tabs {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    gap: var(--spacing-md);
+                }
+
+                .category-tab {
+                    padding: var(--spacing-md) var(--spacing-xl);
+                    border: 2px solid var(--border-color);
+                    background: var(--card-bg);
+                    color: var(--text-muted);
+                    border-radius: var(--radius-lg);
+                    font-weight: 600;
+                    font-size: var(--font-size-sm);
+                    transition: all var(--transition-base);
+                    display: flex;
+                    align-items: center;
+                    gap: var(--spacing-sm);
+                    backdrop-filter: blur(10px);
+                }
+
+                .category-tab.active {
+                    background: var(--gradient-primary);
+                    border-color: transparent;
+                    color: white;
+                    box-shadow: var(--shadow);
+                }
+
+                .category-tab:not(.active):hover {
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                    background: rgba(var(--primary-rgb), 0.05);
+                }
+
+                .tab-icon {
+                    flex-shrink: 0;
+                }
+
+                /* Category Description */
+                .category-description {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .category-desc-text {
+                    color: var(--text-muted);
+                    font-size: var(--font-size-base);
+                    font-style: italic;
+                    max-width: 600px;
+                    margin: 0 auto;
+                }
+
+                /* Skill Card */
+                .skill-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: var(--radius-xl);
+                    overflow: hidden;
+                    backdrop-filter: blur(10px);
+                    transition: all var(--transition-base);
+                    position: relative;
+                    height: 100%;
+                }
+
+                .skill-card:hover {
+                    border-color: var(--primary-color);
+                    box-shadow: var(--shadow-xl);
+                    transform: translateY(-5px);
+                }
+
+                .skill-background {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    transition: opacity var(--transition-base);
+                }
+
+                .skill-glow {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    transition: opacity var(--transition-base);
+                }
+
+                .skill-card-body {
+                    padding: var(--spacing-lg);
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .skill-icon-container {
+                    margin-bottom: var(--spacing-md);
+                    text-align: center;
+                }
+
+                .icon-wrapper {
+                    border-radius: var(--radius-lg);
+                    padding: var(--spacing-md);
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all var(--transition-base);
+                }
+
+                .skill-card:hover .icon-wrapper {
+                    box-shadow: var(--shadow);
+                }
+
+                .skill-name {
+                    font-size: var(--font-size-lg);
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-sm);
+                    text-align: center;
+                }
+
+                .skill-description {
+                    color: var(--text-muted);
+                    font-size: var(--font-size-sm);
+                    line-height: 1.5;
+                    margin-bottom: var(--spacing-lg);
+                    text-align: center;
+                    min-height: 40px;
+                }
+
+                .skill-progress {
+                    margin-bottom: var(--spacing-md);
+                }
+
+                .progress-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: var(--spacing-sm);
+                }
+
+                .progress-label {
+                    color: var(--text-muted);
+                    font-size: var(--font-size-xs);
+                    font-weight: 600;
+                    text-transform: uppercase;
+                }
+
+                .progress-percentage {
+                    font-weight: 700;
+                    font-size: var(--font-size-sm);
+                }
+
+                .progress-container {
+                    width: 100%;
+                    background: var(--surface-color);
+                    border-radius: var(--radius-lg);
+                    overflow: hidden;
+                }
+
+                .progress-background {
+                    width: 100%;
+                    height: 8px;
+                    border-radius: var(--radius-lg);
+                    overflow: hidden;
+                    position: relative;
+                }
+
+                .progress-fill {
+                    height: 100%;
+                    border-radius: var(--radius-lg);
+                    position: relative;
+                    transition: width 1.5s ease-in-out;
+                }
+
+                .progress-fill::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 20px;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+                    animation: shimmer 2s infinite;
+                }
+
+                .experience-level {
+                    text-align: center;
+                }
+
+                .experience-badge {
+                    padding: var(--spacing-xs) var(--spacing-md);
+                    border-radius: 20px;
+                    font-size: var(--font-size-xs);
+                    font-weight: 600;
+                    backdrop-filter: blur(10px);
+                }
+
+                @keyframes shimmer {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(400%); }
+                }
+
+                /* Responsive Design */
+                @media (max-width: 768px) {
+                    .section-title {
+                        font-size: var(--font-size-3xl);
                     }
 
                     .category-tabs {
-                        gap: 1rem;
+                        gap: var(--spacing-sm);
                     }
 
                     .category-tab {
-                        padding: 0.75rem 1.5rem;
-                        border: 2px solid var(--border-color);
-                        background: transparent;
-                        color: var(--text-muted);
-                        border-radius: 50px;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                        display: flex;
+                        padding: var(--spacing-sm) var(--spacing-md);
+                        font-size: var(--font-size-xs);
+                    }
+
+                    .stat-card {
+                        padding: var(--spacing-md);
+                    }
+
+                    .stat-icon {
+                        width: 60px;
+                        height: 60px;
+                    }
+
+                    .stat-number {
+                        font-size: 1.5rem;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .section-title {
+                        font-size: var(--font-size-2xl);
+                    }
+
+                    .category-tabs {
+                        flex-direction: column;
                         align-items: center;
                     }
 
-                    .category-tab.active {
-                        background: var(--primary-color);
-                        border-color: var(--primary-color);
-                        color: white;
-                    }
-
-                    .category-tab:not(.active):hover {
-                        border-color: var(--primary-color);
-                        color: var(--primary-color);
-                        background: rgba(var(--primary-rgb), 0.1);
-                    }
-
-                    .skill-card {
-                        transition: all 0.3s ease;
-                        border: 1px solid var(--border-color);
-                    }
-
-                    .skill-card:hover {
-                        border-color: var(--primary-color);
-                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-                    }
-
-                    .progress-container {
+                    .category-tab {
                         width: 100%;
-                        background: var(--surface-color);
-                        border-radius: 10px;
-                        overflow: hidden;
-                        position: relative;
+                        max-width: 250px;
+                        justify-content: center;
                     }
 
-                    .progress-background {
-                        width: 100%;
-                        height: 8px;
-                        border-radius: 10px;
-                        overflow: hidden;
-                        position: relative;
+                    .skill-card-body {
+                        padding: var(--spacing-md);
                     }
-
-                    .progress-fill {
-                        height: 100%;
-                        border-radius: 10px;
-                        position: relative;
-                        transition: width 1.5s ease-in-out;
-                    }
-
-                    .progress-fill::after {
-                        content: '';
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        bottom: 0;
-                        width: 20px;
-                        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-                        animation: shimmer 2s infinite;
-                    }
-
-                    @keyframes shimmer {
-                        0% { transform: translateX(-100%); }
-                        100% { transform: translateX(400%); }
-                    }
-
-                    .icon-wrapper {
-                        transition: all 0.3s ease;
-                    }
-
-                    .skill-card:hover .icon-wrapper {
-                        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-                    }
-                `}
-            </style>
+                }
+            `}</style>
         </section>
     );
 };

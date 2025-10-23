@@ -21,7 +21,6 @@ import {
     FaUserTie
 } from 'react-icons/fa';
 
-// Import data
 import { experiences, experienceStats } from '../data/experience.js';
 
 const Experience = () => {
@@ -382,10 +381,10 @@ const Experience = () => {
 
             <style jsx>{`
                 .experience-section {
-                    background: linear-gradient(135deg, 
-                        var(--background-color) 0%, 
-                        var(--surface-color) 50%, 
-                        var(--background-color) 100%);
+                    background: linear-gradient(135deg,
+                    var(--background-color) 0%,
+                    var(--surface-color) 50%,
+                    var(--background-color) 100%);
                     position: relative;
                     overflow: hidden;
                 }
@@ -436,26 +435,26 @@ const Experience = () => {
 
                 .section-badge {
                     display: inline-block;
-                    background: linear-gradient(135deg, 
-                        rgba(var(--primary-rgb), 0.15) 0%, 
-                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    background: linear-gradient(135deg,
+                    rgba(var(--primary-rgb), 0.15) 0%,
+                    rgba(var(--secondary-rgb), 0.15) 100%);
                     color: var(--primary-color);
-                    padding: 0.6rem 1.8rem;
+                    padding: var(--spacing-sm) var(--spacing-xl);
                     border-radius: 50px;
-                    font-size: 0.85rem;
+                    font-size: var(--font-size-sm);
                     font-weight: 600;
-                    margin-bottom: 1.5rem;
+                    margin-bottom: var(--spacing-lg);
                     text-transform: uppercase;
-                    letter-spacing: 1.2px;
+                    letter-spacing: 1px;
                     border: 1px solid rgba(var(--primary-rgb), 0.2);
                     backdrop-filter: blur(10px);
                     cursor: default;
                 }
 
                 .section-title {
-                    font-size: 3rem;
+                    font-size: var(--font-size-4xl);
                     font-weight: 800;
-                    margin-bottom: 1rem;
+                    margin-bottom: var(--spacing-md);
                     background: linear-gradient(135deg, var(--text-color) 0%, var(--text-muted) 100%);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
@@ -463,14 +462,14 @@ const Experience = () => {
                 }
 
                 .gradient-text {
-                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                    background: var(--gradient-primary);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
                 }
 
                 .section-subtitle {
-                    font-size: 1.1rem;
+                    font-size: var(--font-size-lg);
                     color: var(--text-muted);
                     max-width: 600px;
                     margin: 0 auto;
@@ -486,16 +485,16 @@ const Experience = () => {
                 .stat-card {
                     background: var(--card-bg);
                     border: 1px solid var(--border-color);
-                    border-radius: 16px;
-                    padding: 2rem 1rem;
+                    border-radius: var(--radius-xl);
+                    padding: var(--spacing-2xl) var(--spacing-md);
                     backdrop-filter: blur(10px);
-                    transition: all 0.3s ease;
+                    transition: all var(--transition-base);
                 }
 
                 .stat-card:hover {
                     border-color: var(--primary-color);
                     transform: translateY(-5px);
-                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                    box-shadow: var(--shadow-xl);
                 }
 
                 .stat-icon {
@@ -505,7 +504,7 @@ const Experience = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    margin: 0 auto 1rem;
+                    margin: 0 auto var(--spacing-md);
                     background: rgba(var(--primary-rgb), 0.1);
                     color: var(--primary-color);
                 }
@@ -519,7 +518,7 @@ const Experience = () => {
                     font-size: 2.5rem;
                     font-weight: 800;
                     color: var(--text-color);
-                    margin-bottom: 0.5rem;
+                    margin-bottom: var(--spacing-sm);
                 }
 
                 .stat-label {
@@ -547,16 +546,16 @@ const Experience = () => {
                     transform: translateX(-50%);
                     width: 2px;
                     height: 100%;
-                    background: linear-gradient(to bottom, 
-                        transparent, 
-                        var(--primary-color), 
-                        var(--secondary-color), 
-                        transparent);
+                    background: linear-gradient(to bottom,
+                    transparent,
+                    var(--primary-color),
+                    var(--secondary-color),
+                    transparent);
                 }
 
                 .timeline-item {
                     position: relative;
-                    margin-bottom: 4rem;
+                    margin-bottom: var(--spacing-2xl);
                     width: 100%;
                     display: flex;
                     justify-content: center;
@@ -580,10 +579,10 @@ const Experience = () => {
                 .experience-card {
                     background: var(--card-bg);
                     border: 1px solid var(--border-color);
-                    border-radius: 20px;
+                    border-radius: var(--radius-xl);
                     overflow: hidden;
                     backdrop-filter: blur(10px);
-                    transition: all 0.3s ease;
+                    transition: all var(--transition-base);
                     position: relative;
                 }
 
@@ -594,9 +593,9 @@ const Experience = () => {
                     left: 0;
                     right: 0;
                     height: 3px;
-                    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+                    background: var(--gradient-primary);
                     opacity: 0;
-                    transition: opacity 0.3s ease;
+                    transition: opacity var(--transition-base);
                 }
 
                 .experience-card:hover::before {
@@ -605,31 +604,31 @@ const Experience = () => {
 
                 .experience-card:hover {
                     border-color: var(--primary-color);
-                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+                    box-shadow: var(--shadow-xl);
                     transform: translateY(-5px);
                 }
 
                 .card-header {
-                    padding: 1.5rem 1.5rem 1rem;
+                    padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
                     border-bottom: 1px solid var(--border-color);
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-start;
-                    gap: 1rem;
+                    gap: var(--spacing-md);
                 }
 
                 .company-info {
                     display: flex;
                     align-items: flex-start;
-                    gap: 1rem;
+                    gap: var(--spacing-md);
                     flex: 1;
                 }
 
                 .company-logo {
                     width: 50px;
                     height: 50px;
-                    border-radius: 12px;
-                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                    border-radius: var(--radius-lg);
+                    background: var(--gradient-primary);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -642,101 +641,101 @@ const Experience = () => {
                 }
 
                 .role-title {
-                    font-size: 1.3rem;
+                    font-size: var(--font-size-xl);
                     font-weight: 700;
                     color: var(--text-color);
-                    margin-bottom: 0.5rem;
+                    margin-bottom: var(--spacing-sm);
                     line-height: 1.3;
                 }
 
                 .company-meta {
                     display: flex;
                     align-items: center;
-                    gap: 0.8rem;
+                    gap: var(--spacing-sm);
                     flex-wrap: wrap;
                 }
 
                 .company-name {
                     color: var(--primary-color);
                     font-weight: 600;
-                    font-size: 1rem;
+                    font-size: var(--font-size-base);
                 }
 
                 .role-type {
                     background: rgba(var(--primary-rgb), 0.1);
                     color: var(--text-color);
                     border: none;
-                    font-size: 0.75rem;
+                    font-size: var(--font-size-xs);
                     font-weight: 600;
-                    padding: 0.3rem 0.8rem;
+                    padding: var(--spacing-xs) var(--spacing-sm);
                     border-radius: 20px;
                 }
 
                 .duration-badge {
-                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                    background: var(--gradient-primary);
                     color: white;
-                    padding: 0.5rem 1rem;
+                    padding: var(--spacing-sm) var(--spacing-md);
                     border-radius: 25px;
-                    font-size: 0.8rem;
+                    font-size: var(--font-size-sm);
                     font-weight: 600;
                     display: flex;
                     align-items: center;
-                    gap: 0.5rem;
+                    gap: var(--spacing-sm);
                     flex-shrink: 0;
                 }
 
                 .card-body {
-                    padding: 1.5rem;
+                    padding: var(--spacing-lg);
                 }
 
                 .experience-meta {
                     display: flex;
-                    gap: 1.5rem;
-                    margin-bottom: 1.2rem;
+                    gap: var(--spacing-lg);
+                    margin-bottom: var(--spacing-md);
                     flex-wrap: wrap;
                 }
 
                 .meta-item {
                     display: flex;
                     align-items: center;
-                    gap: 0.5rem;
+                    gap: var(--spacing-sm);
                     color: var(--text-muted);
-                    font-size: 0.9rem;
+                    font-size: var(--font-size-sm);
                 }
 
                 .experience-description {
                     color: var(--text-color);
                     line-height: 1.7;
-                    margin-bottom: 1.5rem;
-                    font-size: 0.95rem;
+                    margin-bottom: var(--spacing-lg);
+                    font-size: var(--font-size-base);
                 }
 
                 .technologies-section {
-                    margin-bottom: 1.5rem;
+                    margin-bottom: var(--spacing-lg);
                 }
 
                 .technologies-section h6 {
                     color: var(--text-muted);
                     font-weight: 600;
-                    margin-bottom: 0.8rem;
-                    font-size: 0.9rem;
+                    margin-bottom: var(--spacing-sm);
+                    font-size: var(--font-size-sm);
                 }
 
                 .tech-tags {
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 0.5rem;
+                    gap: var(--spacing-sm);
                 }
 
                 .tech-tag {
                     background: rgba(var(--primary-rgb), 0.1);
                     color: var(--primary-color);
-                    padding: 0.4rem 0.8rem;
+                    padding: var(--spacing-xs) var(--spacing-sm);
                     border-radius: 20px;
-                    font-size: 0.8rem;
+                    font-size: var(--font-size-xs);
                     font-weight: 600;
                     border: 1px solid rgba(var(--primary-rgb), 0.2);
-                    transition: all 0.3s ease;
+                    transition: all var(--transition-base);
                     backdrop-filter: blur(10px);
                 }
 
@@ -748,18 +747,18 @@ const Experience = () => {
                 }
 
                 .achievements-section {
-                    margin-top: 1.5rem;
-                    padding-top: 1.5rem;
+                    margin-top: var(--spacing-lg);
+                    padding-top: var(--spacing-lg);
                     border-top: 1px solid var(--border-color);
                 }
 
                 .achievements-title {
                     color: var(--text-color);
                     font-weight: 600;
-                    margin-bottom: 1rem;
+                    margin-bottom: var(--spacing-md);
                     display: flex;
                     align-items: center;
-                    font-size: 1rem;
+                    font-size: var(--font-size-base);
                 }
 
                 .achievements-list {
@@ -771,8 +770,8 @@ const Experience = () => {
                 .achievement-item {
                     display: flex;
                     align-items: flex-start;
-                    gap: 0.8rem;
-                    margin-bottom: 0.8rem;
+                    gap: var(--spacing-sm);
+                    margin-bottom: var(--spacing-sm);
                     color: var(--text-color);
                     line-height: 1.5;
                 }
@@ -785,7 +784,7 @@ const Experience = () => {
                 }
 
                 .card-footer {
-                    padding: 1rem 1.5rem;
+                    padding: var(--spacing-md) var(--spacing-lg);
                     border-top: 1px solid var(--border-color);
                     text-align: center;
                 }
@@ -794,16 +793,16 @@ const Experience = () => {
                     background: transparent;
                     border: 1px solid var(--border-color);
                     color: var(--text-muted);
-                    padding: 0.7rem 1.5rem;
+                    padding: var(--spacing-sm) var(--spacing-lg);
                     border-radius: 25px;
                     font-weight: 600;
-                    font-size: 0.9rem;
+                    font-size: var(--font-size-sm);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 0.5rem;
+                    gap: var(--spacing-sm);
                     margin: 0 auto;
-                    transition: all 0.3s ease;
+                    transition: all var(--transition-base);
                     cursor: pointer;
                 }
 
@@ -814,7 +813,7 @@ const Experience = () => {
                 }
 
                 .expand-icon {
-                    transition: transform 0.3s ease;
+                    transition: transform var(--transition-base);
                 }
 
                 .expand-icon.expanded {
@@ -865,12 +864,12 @@ const Experience = () => {
 
                 @media (max-width: 768px) {
                     .section-title {
-                        font-size: 2.2rem;
+                        font-size: var(--font-size-3xl);
                     }
 
                     .card-header {
                         flex-direction: column;
-                        gap: 1rem;
+                        gap: var(--spacing-md);
                     }
 
                     .duration-badge {
@@ -878,12 +877,12 @@ const Experience = () => {
                     }
 
                     .experience-meta {
-                        gap: 1rem;
+                        gap: var(--spacing-md);
                     }
 
                     .company-info {
                         flex-direction: column;
-                        gap: 0.8rem;
+                        gap: var(--spacing-sm);
                     }
 
                     .company-logo {
@@ -892,17 +891,17 @@ const Experience = () => {
                     }
 
                     .role-title {
-                        font-size: 1.1rem;
+                        font-size: var(--font-size-lg);
                     }
                 }
 
                 @media (max-width: 576px) {
                     .section-title {
-                        font-size: 1.8rem;
+                        font-size: var(--font-size-2xl);
                     }
 
                     .stat-card {
-                        padding: 1.5rem 0.5rem;
+                        padding: var(--spacing-lg) var(--spacing-sm);
                     }
 
                     .stat-value {
@@ -912,7 +911,7 @@ const Experience = () => {
                     .card-body,
                     .card-header,
                     .card-footer {
-                        padding: 1rem;
+                        padding: var(--spacing-md);
                     }
                 }
             `}</style>
