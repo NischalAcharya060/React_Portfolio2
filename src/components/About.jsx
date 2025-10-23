@@ -1,5 +1,5 @@
 // src/components/About.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
@@ -17,7 +17,6 @@ import {
 const About = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.2 });
-    const [activeTab, setActiveTab] = useState('skills');
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -53,18 +52,14 @@ const About = () => {
         { icon: FaCalendarAlt, value: '100%', label: 'Meeting Deadlines' }
     ];
 
-    const skills = [
-        { name: 'Frontend Development', level: 80, color: 'var(--primary-color)' },
-        { name: 'Backend Development', level: 60, color: 'var(--secondary-color)' },
-        { name: 'UI/UX Design', level: 50, color: '#ff6b6b' },
-        { name: 'Mobile Development', level: 20, color: '#4ecdc4' },
-        { name: 'DevOps & Cloud', level: 40, color: '#45b7d1' }
-    ];
-
-    const technologies = {
-        frontend: ['React', 'Vue.js', 'TypeScript', 'Next.js', 'Tailwind CSS'],
-        backend: ['Node.js', 'Python', 'PHP', 'Express.js', 'MongoDB'],
-        tools: ['Git', 'Docker', 'AWS', 'Figma', 'Webpack']
+    const handleDownloadResume = () => {
+        const resumeFile = '/resume/Nischal_Acharya_Resume.pdf';
+        const link = document.createElement('a');
+        link.href = resumeFile;
+        link.download = 'Nischal_Acharya_Resume.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (
@@ -102,7 +97,7 @@ const About = () => {
                             <span className="gradient-text"> Experiences</span>
                         </h2>
                         <p className="section-subtitle">
-                            Passionate full-stack developer with 3+ years of experience creating
+                            Passionate full-stack developer with 2+ years of experience creating
                             innovative digital solutions that drive business success
                         </p>
                     </motion.div>
@@ -194,70 +189,6 @@ const About = () => {
                                         to open-source projects, or sharing knowledge with the developer community.
                                     </p>
                                 </div>
-
-                                {/* Skills & Technologies Tabs */}
-                                <div className="tabs-section">
-                                    <div className="tabs-header">
-                                        {['skills', 'technologies'].map((tab) => (
-                                            <button
-                                                key={tab}
-                                                onClick={() => setActiveTab(tab)}
-                                                className={`tab-button ${activeTab === tab ? 'active' : ''}`}
-                                            >
-                                                {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                                            </button>
-                                        ))}
-                                    </div>
-
-                                    {activeTab === 'skills' && (
-                                        <div className="skills-container">
-                                            {skills.map((skill, index) => (
-                                                <div key={index} className="skill-item">
-                                                    <div className="skill-header">
-                                                        <span className="skill-name">{skill.name}</span>
-                                                        <span className="skill-percentage">{skill.level}%</span>
-                                                    </div>
-                                                    <div className="skill-progress">
-                                                        <motion.div
-                                                            className="skill-progress-bar"
-                                                            style={{ backgroundColor: skill.color }}
-                                                            initial={{ width: 0 }}
-                                                            animate={{ width: `${skill.level}%` }}
-                                                            transition={{ duration: 1.5, delay: index * 0.2 }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {activeTab === 'technologies' && (
-                                        <div className="technologies-container">
-                                            {Object.entries(technologies).map(([category, items]) => (
-                                                <div key={category} className="tech-category">
-                                                    <h6 className="tech-category-title">
-                                                        {category}
-                                                    </h6>
-                                                    <div className="tech-tags">
-                                                        {items.map((tech, index) => (
-                                                            <motion.span
-                                                                key={tech}
-                                                                className="tech-tag"
-                                                                initial={{ scale: 0 }}
-                                                                animate={{ scale: 1 }}
-                                                                transition={{ delay: index * 0.1 }}
-                                                                whileHover={{ scale: 1.1 }}
-                                                            >
-                                                                {tech}
-                                                            </motion.span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-
                             </motion.div>
                         </Col>
                     </Row>
@@ -266,10 +197,10 @@ const About = () => {
 
             <style jsx>{`
                 .about-section {
-                    background: linear-gradient(135deg, 
-                        var(--background-color) 0%, 
-                        var(--surface-color) 50%, 
-                        var(--background-color) 100%);
+                    background: linear-gradient(135deg,
+                    var(--background-color) 0%,
+                    var(--surface-color) 50%,
+                    var(--background-color) 100%);
                     position: relative;
                     overflow: hidden;
                 }
@@ -312,9 +243,9 @@ const About = () => {
 
                 .section-badge {
                     display: inline-block;
-                    background: linear-gradient(135deg, 
-                        rgba(var(--primary-rgb), 0.15) 0%, 
-                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    background: linear-gradient(135deg,
+                    rgba(var(--primary-rgb), 0.15) 0%,
+                    rgba(var(--secondary-rgb), 0.15) 100%);
                     color: var(--primary-color);
                     padding: var(--spacing-sm) var(--spacing-xl);
                     border-radius: 50px;
@@ -471,128 +402,6 @@ const About = () => {
                     color: var(--primary-color);
                 }
 
-                /* Tabs Section */
-                .tabs-section {
-                    margin-bottom: var(--spacing-xl);
-                }
-
-                .tabs-header {
-                    display: flex;
-                    gap: var(--spacing-sm);
-                    margin-bottom: var(--spacing-lg);
-                }
-
-                .tab-button {
-                    padding: var(--spacing-md) var(--spacing-xl);
-                    border: none;
-                    background: var(--surface-color);
-                    color: var(--text-muted);
-                    border-radius: var(--radius-lg);
-                    font-weight: 600;
-                    font-size: var(--font-size-sm);
-                    transition: all var(--transition-base);
-                    cursor: pointer;
-                }
-
-                .tab-button.active {
-                    background: var(--gradient-primary);
-                    color: white;
-                }
-
-                .tab-button:not(.active):hover {
-                    background: var(--card-bg);
-                    color: var(--text-color);
-                }
-
-                /* Skills Container */
-                .skills-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: var(--spacing-lg);
-                }
-
-                .skill-item {
-                    width: 100%;
-                }
-
-                .skill-header {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: var(--spacing-sm);
-                }
-
-                .skill-name {
-                    font-size: var(--font-size-sm);
-                    font-weight: 600;
-                    color: var(--text-color);
-                }
-
-                .skill-percentage {
-                    font-size: var(--font-size-sm);
-                    color: var(--text-muted);
-                    font-weight: 600;
-                }
-
-                .skill-progress {
-                    width: 100%;
-                    height: 8px;
-                    background-color: var(--surface-color);
-                    border-radius: var(--radius-lg);
-                    overflow: hidden;
-                }
-
-                .skill-progress-bar {
-                    height: 100%;
-                    border-radius: var(--radius-lg);
-                    transition: width 1.5s ease-in-out;
-                }
-
-                /* Technologies Container */
-                .technologies-container {
-                    display: flex;
-                    flex-direction: column;
-                    gap: var(--spacing-lg);
-                }
-
-                .tech-category {
-                    width: 100%;
-                }
-
-                .tech-category-title {
-                    font-size: var(--font-size-sm);
-                    font-weight: 700;
-                    color: var(--text-muted);
-                    text-transform: uppercase;
-                    margin-bottom: var(--spacing-sm);
-                    letter-spacing: 0.5px;
-                }
-
-                .tech-tags {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: var(--spacing-sm);
-                }
-
-                .tech-tag {
-                    background: var(--surface-color);
-                    color: var(--text-color);
-                    padding: var(--spacing-sm) var(--spacing-md);
-                    border-radius: var(--radius-lg);
-                    font-size: var(--font-size-sm);
-                    font-weight: 500;
-                    border: 1px solid var(--border-color);
-                    transition: all var(--transition-base);
-                    backdrop-filter: blur(10px);
-                }
-
-                .tech-tag:hover {
-                    background: var(--primary-color);
-                    color: white;
-                    border-color: var(--primary-color);
-                    transform: translateY(-1px);
-                }
-
                 /* Action Buttons */
                 .action-buttons {
                     display: flex;
@@ -665,10 +474,6 @@ const About = () => {
                         left: -10px;
                     }
 
-                    .tabs-header {
-                        justify-content: center;
-                    }
-
                     .action-buttons {
                         justify-content: center;
                     }
@@ -683,23 +488,10 @@ const About = () => {
                         padding: var(--spacing-sm);
                     }
 
-                    .tab-button {
-                        padding: var(--spacing-sm) var(--spacing-lg);
-                        font-size: var(--font-size-xs);
-                    }
-
                     .primary-button,
                     .outline-button {
                         width: 100%;
                         justify-content: center;
-                    }
-
-                    .tech-tags {
-                        justify-content: center;
-                    }
-
-                    .tech-category-title {
-                        text-align: center;
                     }
                 }
             `}</style>

@@ -519,54 +519,6 @@ const Hero = () => {
                         </motion.div>
                     </Col>
                 </Row>
-
-                {/* Scroll Indicator */}
-                {/*<motion.div*/}
-                {/*    style={{*/}
-                {/*        position: 'absolute',*/}
-                {/*        bottom: '2rem',*/}
-                {/*        left: '50%',*/}
-                {/*        transform: 'translateX(-50%)',*/}
-                {/*        zIndex: 10*/}
-                {/*    }}*/}
-                {/*    initial={{ opacity: 0, y: 20 }}*/}
-                {/*    animate={{ opacity: 1, y: 0 }}*/}
-                {/*    transition={{ delay: 2.5 }}*/}
-                {/*>*/}
-                {/*    <motion.button*/}
-                {/*        onClick={() => scrollToSection('about')}*/}
-                {/*        style={{*/}
-                {/*            background: 'transparent',*/}
-                {/*            border: 'none',*/}
-                {/*            color: 'var(--text-muted)',*/}
-                {/*            display: 'flex',*/}
-                {/*            flexDirection: 'column',*/}
-                {/*            alignItems: 'center',*/}
-                {/*            gap: '0.5rem',*/}
-                {/*            cursor: 'pointer'*/}
-                {/*        }}*/}
-                {/*        whileHover={{ y: 5 }}*/}
-                {/*        whileTap={{ scale: 0.9 }}*/}
-                {/*        aria-label="Scroll to about section"*/}
-                {/*    >*/}
-                {/*        <motion.div*/}
-                {/*            animate={{ y: [0, 10, 0] }}*/}
-                {/*            transition={{*/}
-                {/*                duration: 2,*/}
-                {/*                repeat: Infinity,*/}
-                {/*                ease: "easeInOut"*/}
-                {/*            }}*/}
-                {/*        >*/}
-                {/*            <FaChevronDown size={20} />*/}
-                {/*        </motion.div>*/}
-                {/*        <span style={{*/}
-                {/*            fontSize: '0.8rem',*/}
-                {/*            textTransform: 'uppercase',*/}
-                {/*            letterSpacing: '2px',*/}
-                {/*            fontWeight: 500*/}
-                {/*        }}>Explore More</span>*/}
-                {/*    </motion.button>*/}
-                {/*</motion.div>*/}
             </Container>
 
             {/* Add the glow animation to your global CSS */}

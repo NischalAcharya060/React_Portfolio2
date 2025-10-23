@@ -346,10 +346,10 @@ const Skills = () => {
 
             <style jsx>{`
                 .skills-section {
-                    background: linear-gradient(135deg, 
-                        var(--background-color) 0%, 
-                        var(--surface-color) 50%, 
-                        var(--background-color) 100%);
+                    background: linear-gradient(135deg,
+                    var(--background-color) 0%,
+                    var(--surface-color) 50%,
+                    var(--background-color) 100%);
                     position: relative;
                     overflow: hidden;
                 }
@@ -392,9 +392,9 @@ const Skills = () => {
 
                 .section-badge {
                     display: inline-block;
-                    background: linear-gradient(135deg, 
-                        rgba(var(--primary-rgb), 0.15) 0%, 
-                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    background: linear-gradient(135deg,
+                    rgba(var(--primary-rgb), 0.15) 0%,
+                    rgba(var(--secondary-rgb), 0.15) 100%);
                     color: var(--primary-color);
                     padding: var(--spacing-sm) var(--spacing-xl);
                     border-radius: 50px;
