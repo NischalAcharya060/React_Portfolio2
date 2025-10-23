@@ -1,0 +1,20 @@
+User-agent: *
+Allow: /
+
+# Block sensitive directories
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /node_modules/
+Disallow: /src/
+
+# Block specific file types if needed
+Disallow: /*.json$
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Sitemap
+Sitemap: https://acharyanischal.com.np/sitemap.xml
+
+# Crawl rate (be nice to servers)
+Crawl-delay: 1

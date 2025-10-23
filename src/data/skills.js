@@ -10,7 +10,9 @@ import {
     FaCloud,
     FaRocket,
     FaCode,
-    FaServer
+    FaServer,
+    FaHtml5,
+    FaCss3Alt
 } from 'react-icons/fa';
 import {
     SiNextdotjs,
@@ -46,7 +48,7 @@ export const skillCategories = [
                 level: 20,
                 icon: FaVuejs,
                 color: '#4FC08D',
-                experience: '2+ Years',
+                experience: '1+ Years',
                 description: 'Progressive framework for building user interfaces'
             },
             {
@@ -54,7 +56,7 @@ export const skillCategories = [
                 level: 10,
                 icon: SiTypescript,
                 color: '#3178C6',
-                experience: '2+ Years',
+                experience: '1+ Years',
                 description: 'Typed JavaScript for better development experience'
             },
             {
@@ -80,6 +82,22 @@ export const skillCategories = [
                 color: '#F7DF1E',
                 experience: '4+ Years',
                 description: 'Core programming language for web development'
+            },
+            {
+                name: 'HTML',
+                level: 80,
+                icon: FaHtml5,
+                color: '#E34F26',
+                experience: '4+ Years',
+                description: 'Semantic markup and accessible document structure'
+            },
+            {
+                name: 'CSS',
+                level: 70,
+                icon: FaCss3Alt,
+                color: '#1572B6',
+                experience: '4+ Years',
+                description: 'Styling, layouts, responsive design and animations'
             }
         ]
     },
@@ -134,7 +152,7 @@ export const skillCategories = [
                 level: 20,
                 icon: SiMongodb,
                 color: '#47A248',
-                experience: '2+ Years',
+                experience: '1+ Years',
                 description: 'NoSQL database for modern applications'
             }
         ]
@@ -174,7 +192,7 @@ export const skillCategories = [
                 level: 40,
                 icon: SiFirebase,
                 color: '#FFCA28',
-                experience: '1+ Year',
+                experience: '2+ Year',
                 description: 'Backend-as-a-service for mobile and web apps'
             }
         ]
@@ -214,7 +232,7 @@ export const skillCategories = [
 ];
 
 export const skillsStats = {
-    totalSkills: 19,
+    totalSkills: 21,
     yearsExperience: '2+',
     projectsCompleted: '20+',
     technologiesMastered: '4+'
