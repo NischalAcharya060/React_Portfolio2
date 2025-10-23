@@ -14,97 +14,20 @@ import {
     FaUsers,
     FaChartLine,
     FaExternalLinkAlt,
-    FaChevronDown
+    FaChevronDown,
+    FaLaptopCode,
+    FaStar,
+    FaGitAlt,
+    FaUserTie
 } from 'react-icons/fa';
+
+// Import data
+import { experiences, experienceStats } from '../data/experience.js';
 
 const Experience = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.1 });
-    const [activeCompany, setActiveCompany] = useState(0);
     const [expandedItems, setExpandedItems] = useState({});
-
-    const experiences = [
-        {
-            id: 1,
-            role: 'Senior Full-Stack Developer',
-            company: 'Tech Solutions Inc.',
-            duration: '2022 - Present',
-            location: 'New York, NY',
-            type: 'Full-time',
-            description: 'Lead development of enterprise web applications using React, Node.js, and cloud technologies. Mentor junior developers and implement best practices across multiple projects.',
-            achievements: [
-                'Improved application performance by 40% through code optimization and caching strategies',
-                'Led a team of 4 developers on a major e-commerce platform serving 10k+ daily users',
-                'Implemented CI/CD pipelines reducing deployment time by 60% and improving release frequency',
-                'Architected microservices infrastructure handling 1M+ API requests daily',
-                'Mentored 3 junior developers, improving team productivity by 25%'
-            ],
-            technologies: ['React', 'Node.js', 'TypeScript', 'AWS', 'Docker', 'MongoDB', 'Redis'],
-            companyLogo: '/api/placeholder/60/60',
-            projects: 15,
-            teamSize: 8
-        },
-        {
-            id: 2,
-            role: 'Full-Stack Developer',
-            company: 'Digital Innovations LLC',
-            duration: '2020 - 2022',
-            location: 'Remote',
-            type: 'Full-time',
-            description: 'Developed and maintained multiple client projects using modern web technologies. Collaborated with designers and project managers to deliver high-quality solutions.',
-            achievements: [
-                'Built 10+ successful web applications for clients across various industries',
-                'Reduced page load times by 50% across all projects through optimization',
-                'Implemented responsive designs for mobile-first approach, improving mobile engagement by 35%',
-                'Integrated third-party APIs and payment systems for e-commerce platforms',
-                'Conducted code reviews and established coding standards'
-            ],
-            technologies: ['React', 'Vue.js', 'Express.js', 'PostgreSQL', 'Firebase', 'Stripe'],
-            companyLogo: '/api/placeholder/60/60',
-            projects: 12,
-            teamSize: 6
-        },
-        {
-            id: 3,
-            role: 'Frontend Developer',
-            company: 'Web Creations Agency',
-            duration: '2019 - 2020',
-            location: 'Boston, MA',
-            type: 'Full-time',
-            description: 'Focused on creating responsive and interactive user interfaces using React and modern CSS frameworks. Worked closely with UX/UI designers.',
-            achievements: [
-                'Developed 15+ responsive websites with modern design patterns',
-                'Improved user engagement by 25% through UI/UX enhancements and A/B testing',
-                'Collaborated with backend team on RESTful API integration and optimization',
-                'Implemented component libraries reducing development time by 30%',
-                'Optimized websites for SEO, improving search rankings by 40%'
-            ],
-            technologies: ['React', 'JavaScript', 'SASS', 'Material-UI', 'GraphQL', 'Jest'],
-            companyLogo: '/api/placeholder/60/60',
-            projects: 18,
-            teamSize: 4
-        },
-        {
-            id: 4,
-            role: 'Junior Web Developer',
-            company: 'StartUp Ventures',
-            duration: '2018 - 2019',
-            location: 'San Francisco, CA',
-            type: 'Full-time',
-            description: 'Started my career building websites and learning full-stack development fundamentals. Gained experience in agile methodologies and team collaboration.',
-            achievements: [
-                'Built first commercial web applications from concept to deployment',
-                'Learned and implemented agile development methodologies in team environment',
-                'Contributed to open-source projects and internal tool development',
-                'Participated in code reviews and continuous integration processes',
-                'Developed responsive websites for various small business clients'
-            ],
-            technologies: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'MySQL', 'jQuery'],
-            companyLogo: '/api/placeholder/60/60',
-            projects: 8,
-            teamSize: 3
-        }
-    ];
 
     const toggleExpanded = (id) => {
         setExpandedItems(prev => ({
@@ -118,14 +41,14 @@ const Experience = () => {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.2
+                staggerChildren: 0.15
             }
         }
     };
 
     const itemVariants = {
         hidden: {
-            y: 60,
+            y: 50,
             opacity: 0,
             scale: 0.95
         },
@@ -134,24 +57,35 @@ const Experience = () => {
             opacity: 1,
             scale: 1,
             transition: {
-                duration: 0.8,
-                ease: "easeOut"
+                duration: 0.6,
+                ease: [0.25, 0.1, 0.25, 1]
             }
         }
     };
 
-    const timelineVariants = {
-        hidden: {
-            scaleY: 0,
-            opacity: 0
-        },
+    const statsVariants = {
+        hidden: { scale: 0, opacity: 0 },
         visible: {
-            scaleY: 1,
+            scale: 1,
             opacity: 1,
             transition: {
-                duration: 1.5,
-                ease: "easeOut"
+                type: "spring",
+                stiffness: 100,
+                delay: 0.5
             }
+        }
+    };
+
+    const getRoleIcon = (role) => {
+        switch (role.toLowerCase()) {
+            case 'internship':
+                return FaUserTie;
+            case 'freelance':
+                return FaLaptopCode;
+            case 'volunteer':
+                return FaGitAlt;
+            default:
+                return FaBriefcase;
         }
     };
 
@@ -159,27 +93,16 @@ const Experience = () => {
         <section
             id="experience"
             ref={ref}
-            className="section-padding position-relative overflow-hidden"
-            style={{
-                background: 'linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%)'
-            }}
+            className="experience-section section-padding position-relative overflow-hidden"
         >
-            {/* Background Elements */}
-            <div className="position-absolute top-0 start-0 w-100 h-100">
+            {/* Animated Background Elements */}
+            <div className="background-elements">
                 <motion.div
-                    style={{
-                        position: 'absolute',
-                        top: '20%',
-                        right: '10%',
-                        width: '200px',
-                        height: '200px',
-                        background: 'radial-gradient(circle, var(--primary-color) 0%, transparent 70%)',
-                        opacity: 0.03,
-                        borderRadius: '50%'
-                    }}
+                    className="bg-blob primary-blob"
                     animate={{
-                        scale: [1, 1.2, 1],
-                        opacity: [0.03, 0.05, 0.03]
+                        scale: [1, 1.1, 1],
+                        opacity: [0.03, 0.05, 0.03],
+                        x: [0, 20, 0]
                     }}
                     transition={{
                         duration: 8,
@@ -188,25 +111,31 @@ const Experience = () => {
                     }}
                 />
                 <motion.div
-                    style={{
-                        position: 'absolute',
-                        bottom: '30%',
-                        left: '5%',
-                        width: '150px',
-                        height: '150px',
-                        background: 'radial-gradient(circle, var(--secondary-color) 0%, transparent 70%)',
-                        opacity: 0.03,
-                        borderRadius: '50%'
-                    }}
+                    className="bg-blob secondary-blob"
                     animate={{
-                        scale: [1.2, 1, 1.2],
-                        opacity: [0.05, 0.03, 0.05]
+                        scale: [1.1, 1, 1.1],
+                        opacity: [0.04, 0.02, 0.04],
+                        y: [0, -15, 0]
                     }}
                     transition={{
-                        duration: 6,
+                        duration: 7,
                         repeat: Infinity,
                         ease: "easeInOut",
                         delay: 1
+                    }}
+                />
+                <motion.div
+                    className="bg-blob accent-blob"
+                    animate={{
+                        scale: [1, 1.05, 1],
+                        opacity: [0.02, 0.04, 0.02],
+                        rotate: [0, 5, 0]
+                    }}
+                    transition={{
+                        duration: 9,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 2
                     }}
                 />
             </div>
@@ -214,178 +143,172 @@ const Experience = () => {
             <Container>
                 {/* Section Header */}
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-5"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="section-header text-center mb-6"
                 >
-                    <span className="section-badge">Career Journey</span>
-                    <h2 className="display-4 fw-bold mb-3">
+                    <motion.span
+                        className="section-badge"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                    >
+                        Career Journey
+                    </motion.span>
+                    <h2 className="section-title gradient-heading mb-4">
                         Professional
                         <span className="gradient-text"> Experience</span>
                     </h2>
-                    <p className="lead text-muted max-w-600 mx-auto">
-                        My career progression and the milestones I've achieved along the way
+                    <p className="section-subtitle">
+                        My journey through various roles and projects that shaped my skills and expertise
                     </p>
                 </motion.div>
 
-                <Row className="justify-content-center">
-                    <Col xl={10}>
-                        <motion.div
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate={isInView ? "visible" : "hidden"}
-                            className="timeline-container position-relative"
-                        >
-                            {/* Timeline Line */}
+                {/* Experience Stats */}
+                <motion.div
+                    initial="hidden"
+                    animate={isInView ? "visible" : "hidden"}
+                    variants={containerVariants}
+                    className="experience-stats mb-6"
+                >
+                    <Row className="g-4">
+                        <Col lg={3} md={6}>
                             <motion.div
-                                className="timeline-line position-absolute start-0 top-0 h-100"
-                                style={{
-                                    width: '2px',
-                                    background: 'linear-gradient(to bottom, var(--primary-color), var(--secondary-color))',
-                                    left: '30px',
-                                    zIndex: 1
-                                }}
-                                variants={timelineVariants}
-                                initial="hidden"
-                                animate={isInView ? "visible" : "hidden"}
-                            />
+                                variants={statsVariants}
+                                className="stat-card text-center"
+                            >
+                                <div className="stat-icon years">
+                                    <FaCalendarAlt size={24} />
+                                </div>
+                                <h3 className="stat-value">{experienceStats.totalYears}</h3>
+                                <p className="stat-label">Years Experience</p>
+                            </motion.div>
+                        </Col>
+                        <Col lg={3} md={6}>
+                            <motion.div
+                                variants={statsVariants}
+                                className="stat-card text-center"
+                            >
+                                <div className="stat-icon projects">
+                                    <FaCode size={24} />
+                                </div>
+                                <h3 className="stat-value">{experienceStats.completedProjects}</h3>
+                                <p className="stat-label">Projects Completed</p>
+                            </motion.div>
+                        </Col>
+                        <Col lg={3} md={6}>
+                            <motion.div
+                                variants={statsVariants}
+                                className="stat-card text-center"
+                            >
+                                <div className="stat-icon clients">
+                                    <FaUsers size={24} />
+                                </div>
+                                <h3 className="stat-value">{experienceStats.happyClients}</h3>
+                                <p className="stat-label">Happy Clients</p>
+                            </motion.div>
+                        </Col>
+                        <Col lg={3} md={6}>
+                            <motion.div
+                                variants={statsVariants}
+                                className="stat-card text-center"
+                            >
+                                <div className="stat-icon technologies">
+                                    <FaLaptopCode size={24} />
+                                </div>
+                                <h3 className="stat-value">{experienceStats.technologies}</h3>
+                                <p className="stat-label">Technologies</p>
+                            </motion.div>
+                        </Col>
+                    </Row>
+                </motion.div>
 
-                            {experiences.map((exp, index) => (
+                {/* Timeline */}
+                <motion.div
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate={isInView ? "visible" : "hidden"}
+                    className="timeline-container"
+                >
+                    <div className="timeline">
+                        {experiences.map((exp, index) => {
+                            const RoleIcon = getRoleIcon(exp.type);
+                            return (
                                 <motion.div
                                     key={exp.id}
                                     variants={itemVariants}
-                                    className="timeline-item mb-5 position-relative"
+                                    className={`timeline-item ${index % 2 === 0 ? 'left' : 'right'}`}
                                 >
-                                    {/* Timeline Dot */}
+                                    {/* Timeline Content */}
                                     <motion.div
-                                        className="timeline-dot position-absolute rounded-circle"
-                                        style={{
-                                            width: '20px',
-                                            height: '20px',
-                                            background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
-                                            border: '4px solid var(--background-color)',
-                                            left: '20px',
-                                            top: '30px',
-                                            zIndex: 2
-                                        }}
-                                        whileHover={{ scale: 1.3 }}
-                                        transition={{ type: "spring", stiffness: 300 }}
-                                    />
-
-                                    <motion.div
-                                        className="timeline-content ms-5 ps-4"
+                                        className="timeline-content"
                                         whileHover={{
                                             y: -5,
                                             transition: { duration: 0.2 }
                                         }}
                                     >
-                                        <div
-                                            className="experience-card p-4 rounded-4 position-relative overflow-hidden"
-                                            style={{
-                                                background: 'linear-gradient(135deg, var(--card-bg), var(--surface-color))',
-                                                backdropFilter: 'blur(10px)',
-                                                border: '1px solid var(--border-color)',
-                                                cursor: 'pointer'
-                                            }}
-                                            onClick={() => toggleExpanded(exp.id)}
-                                        >
-                                            {/* Background Pattern */}
-                                            <div
-                                                className="position-absolute top-0 end-0 w-50 h-100 opacity-10"
-                                                style={{
-                                                    background: `linear-gradient(45deg, transparent, ${exp.id === 1 ? 'var(--primary-color)' : exp.id === 2 ? 'var(--secondary-color)' : exp.id === 3 ? '#ff6b6b' : '#4ecdc4'})`,
-                                                    clipPath: 'polygon(100% 0, 0% 100%, 100% 100%)'
-                                                }}
-                                            />
-
-                                            <div className="position-relative z-2">
-                                                {/* Header Section */}
-                                                <div className="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4">
-                                                    <div className="d-flex align-items-start gap-3 mb-3 mb-md-0">
-                                                        <div className="company-logo-container">
-                                                            <img
-                                                                src={exp.companyLogo}
-                                                                alt={exp.company}
-                                                                className="company-logo rounded-3"
-                                                                style={{
-                                                                    width: '60px',
-                                                                    height: '60px',
-                                                                    objectFit: 'cover',
-                                                                    border: '2px solid var(--border-color)'
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <h5 className="fw-bold mb-1" style={{ color: 'var(--text-color)' }}>
-                                                                {exp.role}
-                                                            </h5>
-                                                            <div className="d-flex align-items-center gap-2 flex-wrap">
-                                                                <span className="company-name fw-semibold" style={{ color: 'var(--primary-color)' }}>
-                                                                    {exp.company}
-                                                                </span>
-                                                                <Badge
-                                                                    className="type-badge"
-                                                                    style={{
-                                                                        backgroundColor: 'rgba(var(--primary-rgb), 0.1)',
-                                                                        color: 'var(--primary-color)',
-                                                                        fontSize: '0.75rem'
-                                                                    }}
-                                                                >
-                                                                    {exp.type}
-                                                                </Badge>
-                                                            </div>
+                                        <div className="experience-card">
+                                            {/* Card Header */}
+                                            <div className="card-header">
+                                                <div className="company-info">
+                                                    <div className="company-logo">
+                                                        <RoleIcon size={24} />
+                                                    </div>
+                                                    <div className="company-details">
+                                                        <h4 className="role-title">{exp.role}</h4>
+                                                        <div className="company-meta">
+                                                            <span className="company-name">{exp.company}</span>
+                                                            <Badge className="role-type">{exp.type}</Badge>
                                                         </div>
                                                     </div>
-
-                                                    <Badge
-                                                        className="duration-badge align-self-start"
-                                                        style={{
-                                                            background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
-                                                            color: 'white',
-                                                            fontSize: '0.8rem',
-                                                            fontWeight: 600,
-                                                            padding: '0.5rem 1rem'
-                                                        }}
-                                                    >
-                                                        <FaCalendarAlt className="me-1" size={12} />
-                                                        {exp.duration}
-                                                    </Badge>
                                                 </div>
+                                                <div className="duration-badge">
+                                                    <FaCalendarAlt className="me-2" size={12} />
+                                                    {exp.duration}
+                                                </div>
+                                            </div>
 
-                                                {/* Meta Information */}
-                                                <div className="d-flex align-items-center gap-4 mb-3 flex-wrap">
-                                                    <div className="d-flex align-items-center gap-2 text-muted">
+                                            {/* Card Body */}
+                                            <div className="card-body">
+                                                <div className="experience-meta">
+                                                    <div className="meta-item">
                                                         <FaMapMarkerAlt size={14} />
                                                         <span>{exp.location}</span>
                                                     </div>
-                                                    <div className="d-flex align-items-center gap-2 text-muted">
+                                                    <div className="meta-item">
                                                         <FaCode size={14} />
                                                         <span>{exp.projects} Projects</span>
                                                     </div>
-                                                    <div className="d-flex align-items-center gap-2 text-muted">
+                                                    <div className="meta-item">
                                                         <FaUsers size={14} />
                                                         <span>Team: {exp.teamSize}</span>
                                                     </div>
                                                 </div>
 
-                                                {/* Description */}
-                                                <p className="mb-4" style={{ lineHeight: '1.6' }}>
+                                                <p className="experience-description">
                                                     {exp.description}
                                                 </p>
 
                                                 {/* Technologies */}
-                                                <div className="mb-4">
-                                                    <h6 className="fw-semibold mb-2 text-muted">Technologies Used:</h6>
-                                                    <div className="d-flex flex-wrap gap-2">
+                                                <div className="technologies-section">
+                                                    <h6>Technologies Used</h6>
+                                                    <div className="tech-tags">
                                                         {exp.technologies.map((tech, techIndex) => (
                                                             <motion.span
                                                                 key={tech}
                                                                 className="tech-tag"
-                                                                initial={{ scale: 0 }}
-                                                                animate={{ scale: 1 }}
-                                                                transition={{ delay: techIndex * 0.1 }}
-                                                                whileHover={{ scale: 1.1 }}
+                                                                initial={{ scale: 0, opacity: 0 }}
+                                                                animate={{ scale: 1, opacity: 1 }}
+                                                                transition={{
+                                                                    delay: techIndex * 0.1,
+                                                                    type: "spring",
+                                                                    stiffness: 500
+                                                                }}
+                                                                whileHover={{
+                                                                    scale: 1.05,
+                                                                    y: -1,
+                                                                    transition: { duration: 0.2 }
+                                                                }}
                                                             >
                                                                 {tech}
                                                             </motion.span>
@@ -397,178 +320,602 @@ const Experience = () => {
                                                 <AnimatePresence>
                                                     {expandedItems[exp.id] && (
                                                         <motion.div
+                                                            className="achievements-section"
                                                             initial={{ opacity: 0, height: 0 }}
                                                             animate={{ opacity: 1, height: 'auto' }}
                                                             exit={{ opacity: 0, height: 0 }}
                                                             transition={{ duration: 0.3 }}
                                                         >
-                                                            <h6 className="fw-semibold mb-3 text-muted d-flex align-items-center gap-2">
-                                                                <FaAward style={{ color: 'var(--primary-color)' }} />
+                                                            <h6 className="achievements-title">
+                                                                <FaAward className="me-2" />
                                                                 Key Achievements
                                                             </h6>
                                                             <ul className="achievements-list">
                                                                 {exp.achievements.map((achievement, idx) => (
                                                                     <motion.li
                                                                         key={idx}
-                                                                        className="mb-2 d-flex align-items-start"
+                                                                        className="achievement-item"
                                                                         initial={{ opacity: 0, x: -20 }}
                                                                         animate={{ opacity: 1, x: 0 }}
                                                                         transition={{ delay: idx * 0.1 }}
                                                                     >
-                                                                        <span
-                                                                            className="achievement-bullet me-3 mt-1 flex-shrink-0"
-                                                                            style={{
-                                                                                color: 'var(--primary-color)',
-                                                                                fontSize: '6px'
-                                                                            }}
-                                                                        >
-                                                                            ●
-                                                                        </span>
-                                                                        <span style={{ lineHeight: '1.5' }}>{achievement}</span>
+                                                                        <span className="achievement-bullet">●</span>
+                                                                        <span>{achievement}</span>
                                                                     </motion.li>
                                                                 ))}
                                                             </ul>
                                                         </motion.div>
                                                     )}
                                                 </AnimatePresence>
-
-                                                {/* Expand Button */}
-                                                <motion.div
-                                                    className="text-center mt-3"
-                                                    whileHover={{ scale: 1.05 }}
-                                                    whileTap={{ scale: 0.95 }}
-                                                >
-                                                    <button
-                                                        className="expand-btn btn btn-sm"
-                                                        style={{
-                                                            background: 'transparent',
-                                                            border: '1px solid var(--border-color)',
-                                                            color: 'var(--text-muted)',
-                                                            borderRadius: '50px',
-                                                            padding: '0.5rem 1.5rem'
-                                                        }}
-                                                    >
-                                                        <FaChevronDown
-                                                            size={12}
-                                                            className={`me-2 transition-rotate ${expandedItems[exp.id] ? 'rotated' : ''}`}
-                                                        />
-                                                        {expandedItems[exp.id] ? 'Show Less' : 'View Achievements'}
-                                                    </button>
-                                                </motion.div>
                                             </div>
+
+                                            {/* Expand Button */}
+                                            <motion.div
+                                                className="card-footer"
+                                                whileHover={{ scale: 1.02 }}
+                                                whileTap={{ scale: 0.98 }}
+                                            >
+                                                <button
+                                                    className="expand-btn"
+                                                    onClick={() => toggleExpanded(exp.id)}
+                                                >
+                                                    <FaChevronDown
+                                                        className={`expand-icon ${expandedItems[exp.id] ? 'expanded' : ''}`}
+                                                        size={14}
+                                                    />
+                                                    {expandedItems[exp.id] ? 'Show Less' : 'View Achievements'}
+                                                </button>
+                                            </motion.div>
                                         </div>
                                     </motion.div>
+
+                                    {/* Timeline Dot */}
+                                    <div className="timeline-dot">
+                                        <div className="dot-inner"></div>
+                                    </div>
                                 </motion.div>
-                            ))}
-                        </motion.div>
-                    </Col>
-                </Row>
+                            );
+                        })}
+                    </div>
+                </motion.div>
             </Container>
 
-            <style>
-                {`
-                    .section-badge {
-                        display: inline-block;
-                        background: rgba(var(--primary-rgb), 0.1);
-                        color: var(--primary-color);
-                        padding: 0.5rem 1.5rem;
-                        border-radius: 50px;
-                        font-size: 0.9rem;
-                        font-weight: 600;
-                        margin-bottom: 1rem;
-                        text-transform: uppercase;
-                        letter-spacing: 1px;
+            <style jsx>{`
+                .experience-section {
+                    background: linear-gradient(135deg, 
+                        var(--background-color) 0%, 
+                        var(--surface-color) 50%, 
+                        var(--background-color) 100%);
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .background-elements {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    pointer-events: none;
+                }
+
+                .bg-blob {
+                    position: absolute;
+                    border-radius: 50%;
+                    filter: blur(40px);
+                }
+
+                .primary-blob {
+                    top: 10%;
+                    right: 5%;
+                    width: 300px;
+                    height: 300px;
+                    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+                }
+
+                .secondary-blob {
+                    bottom: 20%;
+                    left: 5%;
+                    width: 250px;
+                    height: 250px;
+                    background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+                }
+
+                .accent-blob {
+                    top: 60%;
+                    right: 15%;
+                    width: 200px;
+                    height: 200px;
+                    background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+                }
+
+                .section-header {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .section-badge {
+                    display: inline-block;
+                    background: linear-gradient(135deg, 
+                        rgba(var(--primary-rgb), 0.15) 0%, 
+                        rgba(var(--secondary-rgb), 0.15) 100%);
+                    color: var(--primary-color);
+                    padding: 0.6rem 1.8rem;
+                    border-radius: 50px;
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    margin-bottom: 1.5rem;
+                    text-transform: uppercase;
+                    letter-spacing: 1.2px;
+                    border: 1px solid rgba(var(--primary-rgb), 0.2);
+                    backdrop-filter: blur(10px);
+                    cursor: default;
+                }
+
+                .section-title {
+                    font-size: 3rem;
+                    font-weight: 800;
+                    margin-bottom: 1rem;
+                    background: linear-gradient(135deg, var(--text-color) 0%, var(--text-muted) 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .gradient-text {
+                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
+                }
+
+                .section-subtitle {
+                    font-size: 1.1rem;
+                    color: var(--text-muted);
+                    max-width: 600px;
+                    margin: 0 auto;
+                    line-height: 1.7;
+                }
+
+                /* Experience Stats */
+                .experience-stats {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .stat-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: 16px;
+                    padding: 2rem 1rem;
+                    backdrop-filter: blur(10px);
+                    transition: all 0.3s ease;
+                }
+
+                .stat-card:hover {
+                    border-color: var(--primary-color);
+                    transform: translateY(-5px);
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                }
+
+                .stat-icon {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 1rem;
+                    background: rgba(var(--primary-rgb), 0.1);
+                    color: var(--primary-color);
+                }
+
+                .stat-icon.years { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+                .stat-icon.projects { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+                .stat-icon.clients { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+                .stat-icon.technologies { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+
+                .stat-value {
+                    font-size: 2.5rem;
+                    font-weight: 800;
+                    color: var(--text-color);
+                    margin-bottom: 0.5rem;
+                }
+
+                .stat-label {
+                    color: var(--text-muted);
+                    font-weight: 600;
+                    margin: 0;
+                }
+
+                /* Timeline */
+                .timeline-container {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .timeline {
+                    position: relative;
+                    max-width: 1200px;
+                    margin: 0 auto;
+                }
+
+                .timeline::before {
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 2px;
+                    height: 100%;
+                    background: linear-gradient(to bottom, 
+                        transparent, 
+                        var(--primary-color), 
+                        var(--secondary-color), 
+                        transparent);
+                }
+
+                .timeline-item {
+                    position: relative;
+                    margin-bottom: 4rem;
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                }
+
+                .timeline-item.left {
+                    justify-content: flex-start;
+                    padding-right: 50%;
+                }
+
+                .timeline-item.right {
+                    justify-content: flex-end;
+                    padding-left: 50%;
+                }
+
+                .timeline-content {
+                    width: 90%;
+                    max-width: 500px;
+                }
+
+                .experience-card {
+                    background: var(--card-bg);
+                    border: 1px solid var(--border-color);
+                    border-radius: 20px;
+                    overflow: hidden;
+                    backdrop-filter: blur(10px);
+                    transition: all 0.3s ease;
+                    position: relative;
+                }
+
+                .experience-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 3px;
+                    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                }
+
+                .experience-card:hover::before {
+                    opacity: 1;
+                }
+
+                .experience-card:hover {
+                    border-color: var(--primary-color);
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+                    transform: translateY(-5px);
+                }
+
+                .card-header {
+                    padding: 1.5rem 1.5rem 1rem;
+                    border-bottom: 1px solid var(--border-color);
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 1rem;
+                }
+
+                .company-info {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 1rem;
+                    flex: 1;
+                }
+
+                .company-logo {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 12px;
+                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    flex-shrink: 0;
+                }
+
+                .company-details {
+                    flex: 1;
+                }
+
+                .role-title {
+                    font-size: 1.3rem;
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin-bottom: 0.5rem;
+                    line-height: 1.3;
+                }
+
+                .company-meta {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.8rem;
+                    flex-wrap: wrap;
+                }
+
+                .company-name {
+                    color: var(--primary-color);
+                    font-weight: 600;
+                    font-size: 1rem;
+                }
+
+                .role-type {
+                    background: rgba(var(--primary-rgb), 0.1);
+                    color: var(--text-color);
+                    border: none;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    padding: 0.3rem 0.8rem;
+                    border-radius: 20px;
+                }
+
+                .duration-badge {
+                    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                    color: white;
+                    padding: 0.5rem 1rem;
+                    border-radius: 25px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    flex-shrink: 0;
+                }
+
+                .card-body {
+                    padding: 1.5rem;
+                }
+
+                .experience-meta {
+                    display: flex;
+                    gap: 1.5rem;
+                    margin-bottom: 1.2rem;
+                    flex-wrap: wrap;
+                }
+
+                .meta-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    color: var(--text-muted);
+                    font-size: 0.9rem;
+                }
+
+                .experience-description {
+                    color: var(--text-color);
+                    line-height: 1.7;
+                    margin-bottom: 1.5rem;
+                    font-size: 0.95rem;
+                }
+
+                .technologies-section {
+                    margin-bottom: 1.5rem;
+                }
+
+                .technologies-section h6 {
+                    color: var(--text-muted);
+                    font-weight: 600;
+                    margin-bottom: 0.8rem;
+                    font-size: 0.9rem;
+                }
+
+                .tech-tags {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 0.5rem;
+                }
+
+                .tech-tag {
+                    background: rgba(var(--primary-rgb), 0.1);
+                    color: var(--primary-color);
+                    padding: 0.4rem 0.8rem;
+                    border-radius: 20px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    border: 1px solid rgba(var(--primary-rgb), 0.2);
+                    transition: all 0.3s ease;
+                    backdrop-filter: blur(10px);
+                }
+
+                .tech-tag:hover {
+                    background: var(--primary-color);
+                    color: white;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+                }
+
+                .achievements-section {
+                    margin-top: 1.5rem;
+                    padding-top: 1.5rem;
+                    border-top: 1px solid var(--border-color);
+                }
+
+                .achievements-title {
+                    color: var(--text-color);
+                    font-weight: 600;
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    font-size: 1rem;
+                }
+
+                .achievements-list {
+                    list-style: none;
+                    padding: 0;
+                    margin: 0;
+                }
+
+                .achievement-item {
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 0.8rem;
+                    margin-bottom: 0.8rem;
+                    color: var(--text-color);
+                    line-height: 1.5;
+                }
+
+                .achievement-bullet {
+                    color: var(--primary-color);
+                    font-size: 8px;
+                    margin-top: 0.5rem;
+                    flex-shrink: 0;
+                }
+
+                .card-footer {
+                    padding: 1rem 1.5rem;
+                    border-top: 1px solid var(--border-color);
+                    text-align: center;
+                }
+
+                .expand-btn {
+                    background: transparent;
+                    border: 1px solid var(--border-color);
+                    color: var(--text-muted);
+                    padding: 0.7rem 1.5rem;
+                    border-radius: 25px;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    margin: 0 auto;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                }
+
+                .expand-btn:hover {
+                    border-color: var(--primary-color);
+                    color: var(--primary-color);
+                    background: rgba(var(--primary-rgb), 0.05);
+                }
+
+                .expand-icon {
+                    transition: transform 0.3s ease;
+                }
+
+                .expand-icon.expanded {
+                    transform: rotate(180deg);
+                }
+
+                .timeline-dot {
+                    position: absolute;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 20px;
+                    height: 20px;
+                    background: var(--background-color);
+                    border: 3px solid var(--primary-color);
+                    border-radius: 50%;
+                    z-index: 2;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .dot-inner {
+                    width: 8px;
+                    height: 8px;
+                    background: var(--primary-color);
+                    border-radius: 50%;
+                }
+
+                /* Responsive Design */
+                @media (max-width: 992px) {
+                    .timeline::before {
+                        left: 30px;
                     }
 
-                    .max-w-600 {
-                        max-width: 600px;
+                    .timeline-item {
+                        justify-content: flex-start !important;
+                        padding: 0 0 0 60px !important;
                     }
 
-                    .timeline-container {
-                        padding-left: 30px;
+                    .timeline-dot {
+                        left: 20px;
                     }
 
-                    .experience-card {
-                        transition: all 0.3s ease;
+                    .timeline-content {
+                        width: 100%;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .section-title {
+                        font-size: 2.2rem;
                     }
 
-                    .experience-card:hover {
-                        border-color: var(--primary-color);
-                        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+                    .card-header {
+                        flex-direction: column;
+                        gap: 1rem;
                     }
 
-                    .company-logo-container {
-                        flex-shrink: 0;
+                    .duration-badge {
+                        align-self: flex-start;
                     }
 
-                    .tech-tag {
-                        background: var(--surface-color);
-                        color: var(--text-color);
-                        padding: 0.4rem 0.8rem;
-                        border-radius: 50px;
-                        font-size: 0.8rem;
-                        font-weight: 500;
-                        border: 1px solid var(--border-color);
-                        transition: all 0.3s ease;
+                    .experience-meta {
+                        gap: 1rem;
                     }
 
-                    .tech-tag:hover {
-                        background: var(--primary-color);
-                        color: white;
-                        border-color: var(--primary-color);
+                    .company-info {
+                        flex-direction: column;
+                        gap: 0.8rem;
                     }
 
-                    .achievements-list {
-                        list-style: none;
-                        padding-left: 0;
+                    .company-logo {
+                        width: 40px;
+                        height: 40px;
                     }
 
-                    .achievement-bullet {
-                        flex-shrink: 0;
+                    .role-title {
+                        font-size: 1.1rem;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .section-title {
+                        font-size: 1.8rem;
                     }
 
-                    .expand-btn {
-                        transition: all 0.3s ease;
+                    .stat-card {
+                        padding: 1.5rem 0.5rem;
                     }
 
-                    .expand-btn:hover {
-                        border-color: var(--primary-color);
-                        color: var(--primary-color);
+                    .stat-value {
+                        font-size: 2rem;
                     }
 
-                    .transition-rotate {
-                        transition: transform 0.3s ease;
+                    .card-body,
+                    .card-header,
+                    .card-footer {
+                        padding: 1rem;
                     }
-
-                    .transition-rotate.rotated {
-                        transform: rotate(180deg);
-                    }
-
-                    .type-badge {
-                        font-size: 0.7rem;
-                        padding: 0.25rem 0.5rem;
-                    }
-
-                    @media (max-width: 768px) {
-                        .timeline-container {
-                            padding-left: 20px;
-                        }
-                        
-                        .timeline-line {
-                            left: 15px;
-                        }
-                        
-                        .timeline-dot {
-                            left: 10px;
-                        }
-                        
-                        .timeline-content {
-                            margin-left: 2rem;
-                            padding-left: 1rem;
-                        }
-                    }
-                `}
-            </style>
+                }
+            `}</style>
         </section>
     );
 };
