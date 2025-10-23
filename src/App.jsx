@@ -1,6 +1,7 @@
 // App.jsx
 import React from 'react';
 import { ThemeProvider } from './context/ThemeContext';
+import CustomCursor from './components/CustomCursor';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -14,6 +15,7 @@ function App() {
     return (
         <ThemeProvider>
             <div className="App">
+                <CustomCursor />
                 <Navigation />
                 <main>
                     <Hero />
