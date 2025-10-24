@@ -1,6 +1,7 @@
 // src/components/CustomCursor.jsx
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import './css/CustomCursor.css';
 
 const CustomCursor = () => {
     const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
@@ -258,80 +259,17 @@ const CustomCursor = () => {
     }
 
     return (
-        <>
-            {/* Desktop Cursor */}
-            <motion.div
-                className="custom-cursor-optimized"
-                animate={cursorVariant}
-                variants={cursorVariants}
-                style={{
-                    opacity: isVisible ? 1 : 0,
-                    scale: isClicking ? 0.9 : cursorVariants[cursorVariant]?.scale || 1,
-                    backgroundColor: getCursorColor(cursorVariant),
-                    borderColor: getBorderColor(cursorVariant)
-                }}
-            />
-
-            {/* Global styles */}
-            <style jsx global>{`
-                /* Custom text selection styles */
-                ::selection {
-                    background: #646cff;
-                    color: white;
-                    text-shadow: none;
-                }
-                
-                ::-moz-selection {
-                    background: #646cff;
-                    color: white;
-                    text-shadow: none;
-                }
-                
-                /* Hide default cursor only on desktop */
-                @media (hover: hover) and (pointer: fine) {
-                    * {
-                        cursor: none !important;
-                    }
-                }
-                
-                /* Performance optimizations */
-                .custom-cursor-optimized {
-                    will-change: transform;
-                    contain: layout style paint;
-                }
-                
-                /* Reduced motion support */
-                @media (prefers-reduced-motion: reduce) {
-                    .custom-cursor-optimized {
-                        transition: none !important;
-                        animation: none !important;
-                    }
-                }
-            `}</style>
-
-            <style jsx>{`
-                .custom-cursor-optimized {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 9999;
-                    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-                    backdrop-filter: blur(2px);
-                    transform-origin: center;
-                }
-
-                /* Performance optimizations */
-                @media (prefers-reduced-motion: reduce) {
-                    .custom-cursor-optimized {
-                        transition: opacity 0.1s ease !important;
-                    }
-                }
-            `}</style>
-        </>
+        <motion.div
+            className="custom-cursor-optimized"
+            animate={cursorVariant}
+            variants={cursorVariants}
+            style={{
+                opacity: isVisible ? 1 : 0,
+                scale: isClicking ? 0.9 : cursorVariants[cursorVariant]?.scale || 1,
+                backgroundColor: getCursorColor(cursorVariant),
+                borderColor: getBorderColor(cursorVariant)
+            }}
+        />
     );
 };
 

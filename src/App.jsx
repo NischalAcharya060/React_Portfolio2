@@ -14,7 +14,6 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
 
-// Create a layout component to conditionally render Navigation and Footer
 const MainLayout = ({ children }) => {
     const location = useLocation();
     const is404Page = location.pathname === '/404' || !['/', '/projects', '/contact'].includes(location.pathname);
@@ -56,7 +55,6 @@ function AppContent() {
         return () => clearTimeout(timer);
     }, [is404Route]);
 
-    // Don't show loader at all for 404 routes
     if (is404Route) {
         return (
             <div className="App">
@@ -70,10 +68,8 @@ function AppContent() {
 
     return (
         <div className="App">
-            {/* Loader Component - Only show for non-404 routes */}
             <Loader onLoadingComplete={() => setIsLoading(false)} />
 
-            {/* Main Content - Only show for non-404 routes after loading */}
             <div style={{
                 display: isLoading ? 'none' : 'block',
                 opacity: isLoading ? 0 : 1,
