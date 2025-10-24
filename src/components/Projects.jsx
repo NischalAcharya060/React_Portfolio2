@@ -220,24 +220,6 @@ const Projects = () => {
                     </div>
                 </motion.div>
 
-                {/* Projects Count Info */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="projects-info mb-4"
-                >
-                    <div className="d-flex justify-content-between align-items-center">
-                        <span className="projects-count">
-                            Showing {displayedProjects.length} of {filteredProjects.length} projects
-                            {filter !== 'all' && ` in ${categories.find(c => c.key === filter)?.label}`}
-                        </span>
-                        <span className="sort-info">
-                            Sorted by latest first
-                        </span>
-                    </div>
-                </motion.div>
-
                 {/* Projects Grid */}
                 <motion.div
                     variants={containerVariants}
