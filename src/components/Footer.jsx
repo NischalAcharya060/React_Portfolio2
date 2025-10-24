@@ -210,7 +210,7 @@ const Footer = () => {
                         </Col>
 
                         {/* Contact Info */}
-                        <Col lg={3} md={6} className="contact-section">
+                        <Col lg={3} md={6}>
                             <motion.div variants={itemVariants}>
                                 <h6 className="section-title">Let's Talk</h6>
                                 <div className="contact-info">
