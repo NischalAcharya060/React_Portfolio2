@@ -11,10 +11,11 @@ import {
     FaCode,
     FaStar,
     FaServer,
-    FaMobile,
+    FaMobileAlt,
+    FaGlobe,
     FaDesktop,
     FaRocket,
-    FaTools,
+    FaToolbox,
     FaLayerGroup,
     FaChevronDown,
     FaChevronUp
@@ -37,8 +38,9 @@ const Projects = () => {
         FaDesktop,
         FaServer,
         FaCode,
-        FaMobile,
-        FaTools,
+        FaMobileAlt,
+        FaGlobe,
+        FaToolbox,
         FaLayerGroup
     };
 

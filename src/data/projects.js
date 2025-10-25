@@ -22,7 +22,7 @@ export const projects = [
         technologies: ["HTML", "CSS(Bootstrap)", "JS"],
         github: "https://github.com/NischalAcharya060/nischalacharya.me/tree/main/todoproject",
         live: "https://nischalacharya060.github.io/nischalacharya.Project/todoproject/",
-        category: "frontend",
+        category: "tools",
         featured: false,
         status: "completed",
         year: "2023"
@@ -36,7 +36,7 @@ export const projects = [
         technologies: ["HTML", "CSS(Bootstrap)", "JS", "PHP", "Google API", "Other Sensors"],
         github: "https://github.com/NischalAcharya060/Bus_Management_System",
         live: "https://busmanagementsystem.rf.gd/login.php",
-        category: "fullstack",
+        category: "web",
         featured: true,
         status: "completed",
         year: "2024"
@@ -50,7 +50,7 @@ export const projects = [
         technologies: ["HTML", "CSS", "JS"],
         github: "https://github.com/NischalAcharya060/Random-Color-Generator",
         live: "https://nischalacharya060.github.io/nischalacharya.Project/random-color-generator/",
-        category: "frontend",
+        category: "tools",
         featured: false,
         status: "completed",
         year: "2024"
@@ -64,7 +64,7 @@ export const projects = [
         technologies: ["HTML", "CSS", "JS"],
         github: "https://github.com/NischalAcharya060/Random-Password-Generator",
         live: "https://nischalacharya060.github.io/nischalacharya.Project/random-password-generator/",
-        category: "frontend",
+        category: "tools",
         featured: false,
         status: "completed",
         year: "2024"
@@ -78,7 +78,7 @@ export const projects = [
         technologies: ["HTML", "CSS", "JS", "PHP"],
         github: "https://github.com/NischalAcharya060/Second-Year-Project",
         live: "https://github.com/NischalAcharya060/Second-Year-Project",
-        category: "fullstack",
+        category: "web",
         featured: false,
         status: "completed",
         year: "2024"
@@ -92,7 +92,7 @@ export const projects = [
         technologies: ["HTML", "CSS", "JS", "Laravel", "Postgres SQL", "API"],
         github: "https://github.com/NischalAcharya060/Kick-Up-Futsal.git",
         live: "https://github.com/NischalAcharya060/Kick-Up-Futsal.git",
-        category: "fullstack",
+        category: "web",
         featured: true,
         status: "completed",
         year: "2025"
@@ -106,7 +106,7 @@ export const projects = [
         technologies: ["HTML", "CSS", "JS", "Laravel", "Postgres SQL"],
         github: "https://github.com/NischalAcharya060/Blood_Management_System.git",
         live: "https://github.com/NischalAcharya060/Blood_Management_System.git",
-        category: "fullstack",
+        category: "web",
         featured: false,
         status: "completed",
         year: "2025"
@@ -120,7 +120,7 @@ export const projects = [
         technologies: ["React", "Open Weather Api"],
         github: "https://github.com/NischalAcharya060/Weather-App.git",
         live: "https://nischalacharyaweatherapp.netlify.app/",
-        category: "frontend",
+        category: "tools",
         featured: false,
         status: "completed",
         year: "2025"
@@ -134,7 +134,7 @@ export const projects = [
         technologies: ["React"],
         github: "https://github.com/NischalAcharya060/Resume-Builder.git",
         live: "https://nischalacharyaresumebuilder.netlify.app/",
-        category: "frontend",
+        category: "tools",
         featured: true,
         status: "completed",
         year: "2025"
@@ -162,7 +162,7 @@ export const projects = [
         technologies: ["HTML", "CSS", "JavaScript", "PHP", "MySQL"],
         github: "https://github.com/NischalAcharya060/Khanepani.git",
         live: "https://khanepani-86760.wasmer.app/",
-        category: "fullstack",
+        category: "web",
         featured: false,
         status: "Not completed",
         year: "2025"
@@ -171,9 +171,7 @@ export const projects = [
 
 export const categories = [
     { key: "all", label: "All Projects", icon: "FaRocket" },
-    { key: "frontend", label: "Frontend", icon: "FaDesktop" },
-    { key: "backend", label: "Backend", icon: "FaServer" },
-    { key: "fullstack", label: "Full Stack", icon: "FaCode" },
-    { key: "mobile", label: "Mobile", icon: "FaMobile" },
-    { key: "tools", label: "Tools", icon: "FaRocket" }
+    { key: "web", label: "Website", icon: "FaGlobe" },
+    { key: "mobile", label: "Mobile", icon: "FaMobileAlt" },
+    { key: "tools", label: "Tools", icon: "FaToolbox" }
 ];
