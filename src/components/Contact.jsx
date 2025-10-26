@@ -8,7 +8,8 @@ import {
     FaPaperPlane,
     FaCheck,
     FaExclamationTriangle,
-    FaSpinner
+    FaSpinner,
+    FaMapMarkerAlt
 } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -432,6 +433,43 @@ const Contact = () => {
                                             ))}
                                         </div>
                                     </div>
+
+                                    {/* Google Maps Section */}
+                                    <div className="map-section">
+                                        <h6 className="map-title">
+                                            <FaMapMarkerAlt className="map-icon" />
+                                            My Location
+                                        </h6>
+                                        <div className="map-container">
+                                            <motion.div
+                                                className="map-wrapper"
+                                                whileHover={{ scale: 1.02 }}
+                                                transition={{ type: "spring", stiffness: 300 }}
+                                            >
+                                                <iframe
+                                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57093.65737533069!2d87.67775326516703!3d26.573026673655008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39e59aeb2ac5d359%3A0x8a740efe290d8ed2!2sGauradaha%2057200!5e0!3m2!1sen!2snp!4v1761457406758!5m2!1sen!2snp"
+                                                    width="100%"
+                                                    height="250"
+                                                    style={{
+                                                        border: 0,
+                                                        borderRadius: 'var(--radius-lg)',
+                                                        boxShadow: 'var(--shadow-md)'
+                                                    }}
+                                                    allowFullScreen=""
+                                                    loading="lazy"
+                                                    referrerPolicy="no-referrer-when-downgrade"
+                                                    title="My Location - Gauradaha, Nepal"
+                                                    className="location-map"
+                                                />
+                                            </motion.div>
+                                            <div className="map-info">
+                                                <p className="map-description">
+                                                    Based in <strong>Gauradaha, Jhapa</strong>, Nepal -
+                                                    ready to collaborate with clients worldwide.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </motion.div>
                         </Col>
@@ -562,7 +600,59 @@ const Contact = () => {
                     opacity: 0.9;
                 }
 
-                /* Rest of your existing CSS styles remain the same */
+                /* Map Section */
+                .map-section {
+                    margin-top: var(--spacing-xl);
+                    padding-top: var(--spacing-lg);
+                    border-top: 1px solid var(--border-color);
+                }
+
+                .map-title {
+                    font-size: var(--font-size-base);
+                    font-weight: 700;
+                    color: var(--text-color);
+                    margin-bottom: var(--spacing-md);
+                    display: flex;
+                    align-items: center;
+                    gap: var(--spacing-sm);
+                }
+
+                .map-icon {
+                    color: var(--primary-color);
+                }
+
+                .map-container {
+                    background: var(--surface-color);
+                    border-radius: var(--radius-lg);
+                    overflow: hidden;
+                }
+
+                .map-wrapper {
+                    border-radius: var(--radius-lg);
+                    overflow: hidden;
+                }
+
+                .location-map {
+                    display: block;
+                    transition: all var(--transition-base);
+                }
+
+                .location-map:hover {
+                    filter: brightness(1.05);
+                }
+
+                .map-info {
+                    padding: var(--spacing-md);
+                    background: var(--surface-color);
+                }
+
+                .map-description {
+                    font-size: var(--font-size-sm);
+                    color: var(--text-muted);
+                    margin: 0;
+                    text-align: center;
+                }
+
                 .background-elements {
                     position: absolute;
                     top: 0;
@@ -917,6 +1007,10 @@ const Contact = () => {
                     .social-link {
                         min-width: calc(50% - var(--spacing-sm));
                     }
+
+                    .location-map {
+                        height: 200px;
+                    }
                 }
 
                 @media (max-width: 576px) {
@@ -942,6 +1036,10 @@ const Contact = () => {
                     .contact-info-card,
                     .contact-form-card {
                         padding: var(--spacing-md);
+                    }
+
+                    .location-map {
+                        height: 180px;
                     }
                 }
             `}</style>
