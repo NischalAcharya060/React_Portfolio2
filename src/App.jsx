@@ -14,6 +14,7 @@ import Blog from './components/Blog';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
+import Chatbot from "./components/ChatBot.jsx";
 
 const MainLayout = ({ children }) => {
     const location = useLocation();
@@ -88,6 +89,7 @@ function AppContent() {
                             <Experience />
                             <Blog/>
                             <Contact />
+                            <Chatbot/>
                         </MainLayout>
                     } />
                     <Route path="/projects" element={
