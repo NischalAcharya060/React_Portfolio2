@@ -1,5 +1,4 @@
-// src/components/Loader.jsx
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Loader = ({ onLoadingComplete }) => {
@@ -7,7 +6,8 @@ const Loader = ({ onLoadingComplete }) => {
     const [progress, setProgress] = useState(0);
     const [currentText, setCurrentText] = useState('');
     const [textIndex, setTextIndex] = useState(0);
-    const [isMounted, setIsMounted] = useState(false);
+
+    const textIntervalRef = useRef(null);
 
     const loadingTexts = [
         "Crafting digital experiences...",
@@ -17,7 +17,6 @@ const Loader = ({ onLoadingComplete }) => {
         "Final touches..."
     ];
 
-    // Advanced progress simulation with realistic timing
     const simulateProgress = useCallback(() => {
         const steps = [
             { progress: 10, delay: 300 },
@@ -32,69 +31,83 @@ const Loader = ({ onLoadingComplete }) => {
         ];
 
         let currentStep = 0;
+        let timeoutIds = [];
 
         const executeStep = () => {
             if (currentStep < steps.length) {
                 const step = steps[currentStep];
-                setTimeout(() => {
+                const timeoutId = setTimeout(() => {
                     setProgress(step.progress);
                     currentStep++;
                     executeStep();
                 }, step.delay);
+                timeoutIds.push(timeoutId);
+            } else {
+                const completionDelay = 800;
+                const finalTimeoutId = setTimeout(() => {
+                    setIsLoading(false);
+                }, completionDelay);
+                timeoutIds.push(finalTimeoutId);
             }
         };
 
         executeStep();
+
+        return () => {
+            timeoutIds.forEach(clearTimeout);
+        };
     }, []);
 
-    // Text animation with smooth transitions
     useEffect(() => {
-        setIsMounted(true);
+        const cleanupProgress = simulateProgress();
 
-        const textInterval = setInterval(() => {
+        textIntervalRef.current = setInterval(() => {
             setTextIndex((prev) => (prev + 1) % loadingTexts.length);
         }, 2000);
 
-        return () => clearInterval(textInterval);
-    }, [loadingTexts.length]);
+        return () => {
+            cleanupProgress();
+            if (textIntervalRef.current) {
+                clearInterval(textIntervalRef.current);
+            }
+        };
+    }, [simulateProgress, loadingTexts.length]);
 
-    // Typewriter effect with improved timing
+
     useEffect(() => {
+        if (!isLoading) return;
+
         setCurrentText('');
         let currentIndex = 0;
         const fullText = loadingTexts[textIndex];
 
-        const typeInterval = setInterval(() => {
+        let typeInterval;
+
+        const typeChar = () => {
             if (currentIndex <= fullText.length) {
                 setCurrentText(fullText.slice(0, currentIndex));
                 currentIndex++;
+                typeInterval = setTimeout(typeChar, 40);
             } else {
-                clearInterval(typeInterval);
             }
-        }, 40);
+        };
 
-        return () => clearInterval(typeInterval);
-    }, [textIndex, loadingTexts]);
-
-    // Main loading sequence
-    useEffect(() => {
-        simulateProgress();
-
-        const totalTimer = setTimeout(() => {
-            setIsLoading(false);
-            setTimeout(() => {
-                if (onLoadingComplete) {
-                    onLoadingComplete();
-                }
-            }, 800);
-        }, 4500);
+        typeChar();
 
         return () => {
-            clearTimeout(totalTimer);
+            clearTimeout(typeInterval);
         };
-    }, [onLoadingComplete, simulateProgress]);
+    }, [textIndex, isLoading]);
 
-    // Animation variants
+    useEffect(() => {
+        let completionTimeout;
+        if (!isLoading && onLoadingComplete) {
+            completionTimeout = setTimeout(onLoadingComplete, 800);
+        }
+        return () => clearTimeout(completionTimeout);
+    }, [isLoading, onLoadingComplete]);
+
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -167,7 +180,6 @@ const Loader = ({ onLoadingComplete }) => {
                     animate="visible"
                     exit="exit"
                 >
-                    {/* Animated Gradient Background */}
                     <div className="gradient-background">
                         <motion.div
                             className="gradient-layer-1"
@@ -195,7 +207,6 @@ const Loader = ({ onLoadingComplete }) => {
                         />
                     </div>
 
-                    {/* Animated Background Orbits */}
                     <div className="orbits-container">
                         {floatingOrbits.map((orbit, index) => (
                             <motion.div
@@ -231,9 +242,7 @@ const Loader = ({ onLoadingComplete }) => {
                         ))}
                     </div>
 
-                    {/* Central Content */}
                     <div className="loader-content">
-                        {/* Animated Logo with Holographic Effect */}
                         <motion.div
                             className="logo-container"
                             variants={logoVariants}
@@ -263,7 +272,6 @@ const Loader = ({ onLoadingComplete }) => {
                             >
                                 <span className="logo-text">N</span>
 
-                                {/* Holographic Effect Layers */}
                                 <motion.div
                                     className="holographic-layer-1"
                                     animate={{
@@ -305,7 +313,6 @@ const Loader = ({ onLoadingComplete }) => {
                             </motion.div>
                         </motion.div>
 
-                        {/* Text Content */}
                         <div className="text-content">
                             <motion.h1
                                 className="loader-title"
@@ -348,7 +355,6 @@ const Loader = ({ onLoadingComplete }) => {
                                 Full Stack Developer & Digital Creator
                             </motion.p>
 
-                            {/* Animated Loading Text */}
                             <motion.div
                                 className="loading-text-container"
                                 initial={{ opacity: 0 }}
@@ -372,7 +378,6 @@ const Loader = ({ onLoadingComplete }) => {
                             </motion.div>
                         </div>
 
-                        {/* Advanced Progress Bar */}
                         <motion.div
                             className="progress-section"
                             initial={{ opacity: 0, y: 20 }}
@@ -415,7 +420,6 @@ const Loader = ({ onLoadingComplete }) => {
                                     />
                                 </motion.div>
 
-                                {/* Progress Particles */}
                                 {progress > 0 && progress < 100 && (
                                     <motion.div
                                         className="progress-particles"
@@ -449,7 +453,6 @@ const Loader = ({ onLoadingComplete }) => {
                         </motion.div>
                     </div>
 
-                    {/* Floating Particles */}
                     <div className="particles-container">
                         {particleConfigs.map((particle) => (
                             <motion.div
@@ -478,7 +481,6 @@ const Loader = ({ onLoadingComplete }) => {
                         ))}
                     </div>
 
-                    {/* Corner Accents with Animation */}
                     <motion.div
                         className="corner-accent top-left"
                         initial={{ opacity: 0, scale: 0 }}
