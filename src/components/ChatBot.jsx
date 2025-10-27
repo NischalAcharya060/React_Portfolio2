@@ -564,7 +564,7 @@ const Chatbot = () => {
                 /* Responsive Design */
                 @media (max-width: 768px) {
                     .chatbot-toggle {
-                        bottom: 1rem;
+                        bottom: 5rem;
                         right: 1rem;
                         width: 50px;
                         height: 50px;
