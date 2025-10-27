@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSun, FaMoon, FaCode, FaHome, FaUser, FaTools, FaProjectDiagram, FaBriefcase, FaEnvelope } from 'react-icons/fa';
+import { FaSun, FaMoon, FaCode, FaHome, FaUser, FaTools, FaProjectDiagram, FaBriefcase, FaEnvelope, FaBlog } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 
 const Navigation = () => {
@@ -17,7 +17,7 @@ const Navigation = () => {
             const scrollY = window.scrollY;
             setScrolled(scrollY > 50);
 
-            const sections = ['home', 'about', 'skills', 'projects', 'experience', 'contact'];
+            const sections = ['home', 'about', 'skills', 'projects', 'experience', 'blog', 'contact'];
             const current = sections.find(section => {
                 const element = document.getElementById(section);
                 if (element) {
@@ -50,6 +50,7 @@ const Navigation = () => {
         { name: 'Skills', href: '#skills', icon: FaTools },
         { name: 'Projects', href: '#projects', icon: FaProjectDiagram },
         { name: 'Experience', href: '#experience', icon: FaBriefcase },
+        { name: 'Blog', href: '#blog', icon: FaBlog },
         { name: 'Contact', href: '#contact', icon: FaEnvelope }
     ];
 
