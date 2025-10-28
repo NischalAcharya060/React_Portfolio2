@@ -349,14 +349,6 @@ const Navigation = () => {
                         </motion.div>
                     )}
                 </AnimatePresence>
-
-                {/* Scroll Progress Bar */}
-                <motion.div
-                    className="scroll-progress"
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: scrolled ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                />
             </Navbar>
 
             <style jsx>{`
@@ -702,18 +694,7 @@ const Navigation = () => {
                     font-weight: 500;
                     font-size: 1rem;
                 }
-
-                /* Progress Bar */
-                .scroll-progress {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 2px;
-                    background: var(--gradient-primary);
-                    transform-origin: left;
-                }
-
+                
                 /* Responsive Design */
                 @media (max-width: 991px) {
                     .desktop-navigation {
