@@ -9,6 +9,7 @@ const Navigation = () => {
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('home');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
     const { isDark, toggleTheme } = useTheme();
     const navRef = useRef(null);
 
@@ -16,6 +17,12 @@ const Navigation = () => {
         const handleScroll = () => {
             const scrollY = window.scrollY;
             setScrolled(scrollY > 50);
+
+            // Calculate scroll progress
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight - windowHeight;
+            const progress = (scrollY / documentHeight) * 100;
+            setScrollProgress(progress);
 
             const sections = ['home', 'about', 'skills', 'projects', 'experience', 'blog', 'contact'];
             const current = sections.find(section => {
@@ -270,6 +277,16 @@ const Navigation = () => {
                             />
                         </motion.div>
                     </motion.button>
+                    {/* Scroll Progress Bar */}
+                    <motion.div
+                        className="scroll-progress-bar"
+                        style={{
+                            width: `${scrollProgress}%`,
+                            opacity: scrollProgress > 0 ? 1 : 0
+                        }}
+                        initial={false}
+                        transition={{ duration: 0.1 }}
+                    />
                 </Container>
 
                 {/* Mobile Menu Overlay */}
@@ -364,6 +381,19 @@ const Navigation = () => {
                 .custom-navbar.scrolled {
                     background: var(--navbar-bg-scrolled);
                     box-shadow: var(--shadow);
+                }
+
+                /* Scroll Progress Bar */
+                .scroll-progress-bar {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    height: 3px;
+                    background: var(--gradient-primary);
+                    z-index: 1031;
+                    transition: width 0.1s ease;
+                    border-radius: 0 2px 2px 0;
+                    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
                 }
 
                 /* Logo Styles */
