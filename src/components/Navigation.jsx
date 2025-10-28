@@ -45,13 +45,13 @@ const Navigation = () => {
     }, []);
 
     const navItems = [
-        { name: 'Home', href: '#home', icon: FaHome },
-        { name: 'About', href: '#about', icon: FaUser },
-        { name: 'Skills', href: '#skills', icon: FaTools },
-        { name: 'Projects', href: '#projects', icon: FaProjectDiagram },
-        { name: 'Experience', href: '#experience', icon: FaBriefcase },
-        { name: 'Blog', href: '#blog', icon: FaBlog },
-        { name: 'Contact', href: '#contact', icon: FaEnvelope }
+        { name: 'Home', href: '#home', icon: FaHome, id: 'home' },
+        { name: 'About', href: '#about', icon: FaUser, id: 'about' },
+        { name: 'Skills', href: '#skills', icon: FaTools, id: 'skills' },
+        { name: 'Projects', href: '#projects', icon: FaProjectDiagram, id: 'projects' },
+        { name: 'Experience', href: '#experience', icon: FaBriefcase, id: 'experience' },
+        { name: 'Blog', href: '#blog', icon: FaBlog, id: 'blog' },
+        { name: 'Contact', href: '#contact', icon: FaEnvelope, id: 'contact' }
     ];
 
     const scrollToSection = (href) => {
@@ -153,7 +153,7 @@ const Navigation = () => {
                     </motion.div>
 
                     {/* Desktop Navigation */}
-                    <Navbar.Collapse id="basic-navbar-nav" className="desktop-navigation">
+                    <Navbar.Collapse in={true} className="desktop-navigation">
                         <motion.div
                             variants={containerVariants}
                             initial="hidden"
@@ -168,7 +168,7 @@ const Navigation = () => {
                                     >
                                         <Nav.Link
                                             href={item.href}
-                                            className={`nav-link-custom ${activeSection === item.name.toLowerCase() ? 'active' : ''} ${isDark ? 'dark-mode' : ''}`}
+                                            className={`nav-link-custom ${activeSection === item.id ? 'active' : ''} ${isDark ? 'dark-mode' : ''}`}
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 scrollToSection(item.href);
@@ -179,11 +179,11 @@ const Navigation = () => {
                                                 whileHover={{ y: -2 }}
                                                 whileTap={{ y: 0 }}
                                             >
-                                                <item.icon className={`nav-link-icon ${activeSection === item.name.toLowerCase() ? 'active-icon' : ''}`} />
-                                                <span className={`nav-link-text ${activeSection === item.name.toLowerCase() ? 'active-text' : ''}`}>
+                                                <item.icon className={`nav-link-icon ${activeSection === item.id ? 'active-icon' : ''}`} />
+                                                <span className={`nav-link-text ${activeSection === item.id ? 'active-text' : ''}`}>
                                                     {item.name}
                                                 </span>
-                                                {activeSection === item.name.toLowerCase() && (
+                                                {activeSection === item.id && (
                                                     <motion.div
                                                         layoutId="activeIndicator"
                                                         className="active-indicator"
@@ -291,7 +291,7 @@ const Navigation = () => {
                                     >
                                         <Nav.Link
                                             href={item.href}
-                                            className={`mobile-nav-link ${activeSection === item.name.toLowerCase() ? 'active' : ''} ${isDark ? 'dark-mode' : ''}`}
+                                            className={`mobile-nav-link ${activeSection === item.id ? 'active' : ''} ${isDark ? 'dark-mode' : ''}`}
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 scrollToSection(item.href);
@@ -302,14 +302,14 @@ const Navigation = () => {
                                                 whileHover={{ x: 10 }}
                                                 whileTap={{ x: 0 }}
                                             >
-                                                <item.icon className={`mobile-nav-icon ${activeSection === item.name.toLowerCase() ? 'active-icon' : ''}`} />
-                                                <span className={`mobile-nav-text ${activeSection === item.name.toLowerCase() ? 'active-text' : ''}`}>
+                                                <item.icon className={`mobile-nav-icon ${activeSection === item.id ? 'active-icon' : ''}`} />
+                                                <span className={`mobile-nav-text ${activeSection === item.id ? 'active-text' : ''}`}>
                                                     {item.name}
                                                 </span>
                                                 <motion.div
                                                     className="mobile-active-indicator"
                                                     animate={{
-                                                        scale: activeSection === item.name.toLowerCase() ? 1 : 0
+                                                        scale: activeSection === item.id ? 1 : 0
                                                     }}
                                                     transition={{ duration: 0.2 }}
                                                 />
@@ -358,10 +358,11 @@ const Navigation = () => {
                     border-bottom: 1px solid var(--border-color);
                     transition: all var(--transition-base);
                     padding: 0.75rem 0;
+                    z-index: 1030;
                 }
 
                 .custom-navbar.scrolled {
-                    background: var(--navbar-bg);
+                    background: var(--navbar-bg-scrolled);
                     box-shadow: var(--shadow);
                 }
 
@@ -381,6 +382,7 @@ const Navigation = () => {
                     position: relative;
                     padding: 0.5rem 0;
                     margin: 0;
+                    cursor: pointer;
                 }
 
                 .navbar-brand-custom:hover {
@@ -436,6 +438,8 @@ const Navigation = () => {
                     border-radius: var(--radius-lg);
                     transition: all var(--transition-base);
                     position: relative;
+                    border: none;
+                    background: transparent;
                 }
 
                 .nav-link-custom:hover {
@@ -520,6 +524,7 @@ const Navigation = () => {
                     justify-content: center;
                     transition: all var(--transition-base);
                     cursor: pointer;
+                    padding: 0;
                 }
 
                 .theme-toggle-btn:hover {
@@ -549,6 +554,7 @@ const Navigation = () => {
                     gap: 4px;
                     cursor: pointer;
                     transition: all var(--transition-base);
+                    padding: 0;
                 }
 
                 .mobile-toggle-btn:hover {
@@ -591,6 +597,7 @@ const Navigation = () => {
                     flex-direction: column;
                     gap: 0.5rem;
                     height: 100%;
+                    overflow-y: auto;
                 }
 
                 .mobile-nav-link {
@@ -599,6 +606,8 @@ const Navigation = () => {
                     padding: 1rem 0;
                     border-bottom: 1px solid var(--border-color);
                     transition: all var(--transition-base);
+                    border: none;
+                    background: transparent;
                 }
 
                 .mobile-nav-link:hover,
@@ -614,6 +623,7 @@ const Navigation = () => {
                     border-radius: var(--radius-lg);
                     padding: 1rem;
                     margin: 0 -1rem;
+                    border-bottom: none;
                 }
 
                 .mobile-nav-link.active.dark-mode .mobile-nav-text.active-text {
@@ -677,6 +687,7 @@ const Navigation = () => {
                     color: var(--text-color);
                     transition: all var(--transition-base);
                     cursor: pointer;
+                    border: none;
                 }
 
                 .mobile-theme-btn:hover {
@@ -694,7 +705,7 @@ const Navigation = () => {
                     font-weight: 500;
                     font-size: 1rem;
                 }
-                
+
                 /* Responsive Design */
                 @media (max-width: 991px) {
                     .desktop-navigation {
@@ -718,6 +729,11 @@ const Navigation = () => {
                 @media (max-width: 576px) {
                     .logo-text {
                         font-size: 1rem;
+                        display: inline-block;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 150px;
                     }
 
                     .logo-icon {

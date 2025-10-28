@@ -17,7 +17,8 @@ import {
     FaRocket,
     FaWordpress,
     FaCheck,
-    FaStar
+    FaStar,
+    FaClock
 } from 'react-icons/fa';
 
 const Hero = () => {
@@ -26,10 +27,14 @@ const Hero = () => {
     const [showCursor, setShowCursor] = useState(true);
     const [isHovered, setIsHovered] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [downloadState, setDownloadState] = useState('idle'); // 'idle', 'downloading', 'completed'
+    const [downloadState, setDownloadState] = useState('idle'); // 'idle', 'downloading', 'completed', 'cooldown'
+    const [cooldownTime, setCooldownTime] = useState(0);
+    const [showCooldownToast, setShowCooldownToast] = useState(false);
+    const [hasDownloaded, setHasDownloaded] = useState(false);
     const sectionRef = useRef(null);
     const typingTimeoutRef = useRef(null);
     const cursorIntervalRef = useRef(null);
+    const cooldownIntervalRef = useRef(null);
 
     const roles = [
         "Frontend Developer",
@@ -61,8 +66,35 @@ const Hero = () => {
         }
     }, []);
 
-    // Optimized download function
+    // Start cooldown timer
+    const startCooldown = useCallback(() => {
+        const COOLDOWN_DURATION = 30; // 30 seconds cooldown
+        setCooldownTime(COOLDOWN_DURATION);
+        setDownloadState('cooldown');
+        setShowCooldownToast(true);
+
+        cooldownIntervalRef.current = setInterval(() => {
+            setCooldownTime(prev => {
+                if (prev <= 1) {
+                    clearInterval(cooldownIntervalRef.current);
+                    setDownloadState('idle');
+                    setShowCooldownToast(false);
+                    setHasDownloaded(false); // Reset download flag when cooldown ends
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+    }, []);
+
+    // Optimized download function with cooldown
     const handleDownloadResume = useCallback(async () => {
+        // If user has already downloaded and tries again, show cooldown
+        if (hasDownloaded) {
+            startCooldown();
+            return;
+        }
+
         setDownloadState('downloading');
 
         try {
@@ -79,8 +111,9 @@ const Hero = () => {
             document.body.removeChild(link);
 
             setDownloadState('completed');
+            setHasDownloaded(true); // Mark that user has downloaded
 
-            // Reset after 3 seconds
+            // Reset to idle after 3 seconds
             setTimeout(() => {
                 setDownloadState('idle');
             }, 3000);
@@ -91,7 +124,7 @@ const Hero = () => {
             // Fallback: open in new tab
             window.open('/resume/Nischal_Acharya_CV.pdf', '_blank');
         }
-    }, []);
+    }, [hasDownloaded, startCooldown]);
 
     // Optimized mouse move handler
     const handleMouseMove = useCallback((e) => {
@@ -172,6 +205,9 @@ const Hero = () => {
             if (cursorIntervalRef.current) {
                 clearInterval(cursorIntervalRef.current);
             }
+            if (cooldownIntervalRef.current) {
+                clearInterval(cooldownIntervalRef.current);
+            }
         };
     }, []);
 
@@ -210,6 +246,91 @@ const Hero = () => {
                 repeat: Infinity,
                 ease: "easeInOut"
             }
+        }
+    };
+
+    const getDownloadButtonContent = () => {
+        switch (downloadState) {
+            case 'downloading':
+                return (
+                    <>
+                        <Spinner
+                            animation="border"
+                            size="sm"
+                            className="me-2"
+                            style={{ width: '1rem', height: '1rem' }}
+                        />
+                        Downloading...
+                    </>
+                );
+            case 'completed':
+                return (
+                    <>
+                        <FaCheck className="me-2" />
+                        Downloaded!
+                    </>
+                );
+            case 'cooldown':
+                return (
+                    <>
+                        <FaClock className="me-2" />
+                        Try Again ({cooldownTime}s)
+                    </>
+                );
+            default:
+                return (
+                    <>
+                        <FaDownload className="me-2" />
+                        Download CV
+                    </>
+                );
+        }
+    };
+
+    // Get button styles based on download state
+    const getDownloadButtonStyles = () => {
+        const baseStyles = {
+            background: 'transparent',
+            padding: '0.875rem 1.75rem',
+            borderRadius: '50px',
+            fontWeight: 600,
+            minWidth: '160px',
+            position: 'relative',
+            overflow: 'hidden'
+        };
+
+        switch (downloadState) {
+            case 'completed':
+                return {
+                    ...baseStyles,
+                    border: '2px solid #00ff88',
+                    color: '#00ff88',
+                    background: 'rgba(0, 255, 136, 0.05)'
+                };
+            case 'downloading':
+                return {
+                    ...baseStyles,
+                    border: '2px solid var(--primary-color)',
+                    color: 'var(--primary-color)',
+                    background: 'rgba(var(--primary-rgb), 0.05)',
+                    opacity: 0.8
+                };
+            case 'cooldown':
+                return {
+                    ...baseStyles,
+                    border: '2px solid var(--text-muted)',
+                    color: 'var(--text-muted)',
+                    background: 'rgba(128, 128, 128, 0.05)',
+                    cursor: 'not-allowed',
+                    opacity: 0.6
+                };
+            default:
+                return {
+                    ...baseStyles,
+                    border: '2px solid var(--border-color)',
+                    color: 'var(--text-muted)',
+                    background: 'transparent'
+                };
         }
     };
 
@@ -551,53 +672,17 @@ const Hero = () => {
                                     </motion.div>
 
                                     <motion.div
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
+                                        whileHover={downloadState !== 'downloading' && downloadState !== 'cooldown' ? { scale: 1.02 } : {}}
+                                        whileTap={downloadState !== 'downloading' && downloadState !== 'cooldown' ? { scale: 0.98 } : {}}
                                     >
                                         <Button
                                             variant="outline"
                                             size="lg"
-                                            style={{
-                                                background: 'transparent',
-                                                border: `2px solid ${
-                                                    downloadState === 'completed'
-                                                        ? '#00ff88'
-                                                        : downloadState === 'downloading'
-                                                            ? 'var(--primary-color)'
-                                                            : 'var(--border-color)'
-                                                }`,
-                                                color: downloadState === 'completed' ? '#00ff88' : 'var(--text-muted)',
-                                                padding: '0.875rem 1.75rem',
-                                                borderRadius: '50px',
-                                                fontWeight: 600,
-                                                minWidth: '160px',
-                                                position: 'relative',
-                                                overflow: 'hidden'
-                                            }}
+                                            style={getDownloadButtonStyles()}
                                             onClick={handleDownloadResume}
-                                            disabled={downloadState === 'downloading'}
+                                            disabled={downloadState === 'downloading' || downloadState === 'cooldown'}
                                         >
-                                            {downloadState === 'downloading' ? (
-                                                <>
-                                                    <Spinner
-                                                        animation="border"
-                                                        size="sm"
-                                                        className="me-2"
-                                                        style={{ width: '1rem', height: '1rem' }}
-                                                    />
-                                                    Downloading...
-                                                </>
-                                            ) : downloadState === 'completed' ? (
-                                                <>
-                                                    <FaCheck className="me-2" />
-                                                    Downloaded!
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <FaDownload className="me-2" />
-                                                    Download CV
-                                                </>
-                                            )}
+                                            {getDownloadButtonContent()}
                                         </Button>
                                     </motion.div>
                                 </div>
@@ -709,6 +794,49 @@ const Hero = () => {
                 )}
             </AnimatePresence>
 
+            {/* Cooldown Warning Toast */}
+            <AnimatePresence>
+                {showCooldownToast && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.8 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 50, scale: 0.8 }}
+                        style={{
+                            position: 'fixed',
+                            bottom: '2rem',
+                            left: '2rem',
+                            background: 'var(--card-bg)',
+                            border: '1px solid var(--border-color)',
+                            borderRadius: '12px',
+                            padding: '1rem 1.5rem',
+                            boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                            zIndex: 1000,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                            backdropFilter: 'blur(10px)',
+                            maxWidth: '300px'
+                        }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", stiffness: 500 }}
+                        >
+                            <FaClock style={{ color: 'var(--warning-color)', fontSize: '1.25rem' }} />
+                        </motion.div>
+                        <div>
+                            <div style={{ fontWeight: 600, color: 'var(--text-color)' }}>
+                                Download Cooldown
+                            </div>
+                            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                                Please wait {cooldownTime} seconds before downloading again
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <style>
                 {`
                     .hero-section {
@@ -724,6 +852,17 @@ const Hero = () => {
                         height: 100%;
                         pointer-events: none;
                         z-index: -1;
+                    }
+                    
+                    /* Cooldown progress bar */
+                    .cooldown-progress {
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        height: 3px;
+                        background: linear-gradient(90deg, var(--text-muted), var(--border-color));
+                        border-radius: 0 0 50px 50px;
+                        transition: width 1s linear;
                     }
                     
                     /* Optimize animations for performance */
