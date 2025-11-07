@@ -166,7 +166,21 @@ export const projects = [
         featured: false,
         status: "Not completed",
         year: "2025"
-    }
+    },
+    {
+        id: 13,
+        title: "BillBuddy",
+        description: "BillBuddy helps you manage your monthly bills, track expenses, and set reminders — all in one clean, modern app.",
+        image: "https://i.postimg.cc/L6fxRJ3w/IMG-4360.jpg",
+        alt: "BillBuddy by Nischal Acharya",
+        technologies: ["React Native (Expo)", "CSS", "JavaScript", "Firebase Firestore", "EAS Build"],
+        github: "https://github.com/NischalAcharya060/BillBuddy.git",
+        live: "https://github.com/NischalAcharya060/BillBuddy.git",
+        category: "mobile",
+        featured: false,
+        status: "Not completed",
+        year: "2025"
+    },
 ];
 
 export const categories = [
