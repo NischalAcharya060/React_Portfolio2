@@ -1,11 +1,8 @@
 // src/components/About.jsx
-import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { motion, useInView } from 'framer-motion';
 import {
-    FaDownload,
     FaCode,
     FaRocket,
     FaAward,
@@ -13,60 +10,51 @@ import {
     FaUsers,
     FaCalendarAlt
 } from 'react-icons/fa';
+import LastFMNowPlaying from "./LastFMNowPlaying.jsx";
 
 const About = () => {
     const ref = useRef(null);
-    const isInView = useInView(ref, { once: true, threshold: 0.2 });
+    const isInView = useInView(ref, { once: true, threshold: 0.1 });
 
-    const containerVariants = {
+    // Memoized animation variants
+    const containerVariants = useMemo(() => ({
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.15
+                staggerChildren: 0.1
             }
         }
-    };
+    }), []);
 
-    const itemVariants = {
+    const itemVariants = useMemo(() => ({
         hidden: {
-            y: 60,
+            y: 40,
             opacity: 0,
-            scale: 0.95
         },
         visible: {
             y: 0,
             opacity: 1,
-            scale: 1,
             transition: {
-                duration: 0.8,
+                duration: 0.6,
                 ease: "easeOut"
             }
         }
-    };
+    }), []);
 
-    const stats = [
+    // Memoized stats data
+    const stats = useMemo(() => [
         { icon: FaAward, value: '2+', label: 'Years Experience' },
         { icon: FaProjectDiagram, value: '20+', label: 'Projects Completed' },
         { icon: FaUsers, value: '15+', label: 'Happy Clients' },
         { icon: FaCalendarAlt, value: '100%', label: 'Meeting Deadlines' }
-    ];
-
-    const handleDownloadResume = () => {
-        const resumeFile = '/resume/Nischal_Acharya_Resume.pdf';
-        const link = document.createElement('a');
-        link.href = resumeFile;
-        link.download = 'Nischal_Acharya_Resume.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
+    ], []);
 
     return (
         <section
             id="about"
             ref={ref}
-            className="about-section section-padding position-relative overflow-hidden"
+            className="about-section position-relative overflow-hidden"
         >
             {/* Background Elements */}
             <div className="background-elements">
@@ -83,16 +71,16 @@ const About = () => {
                     {/* Section Header */}
                     <motion.div
                         variants={itemVariants}
-                        className="section-header text-center mb-6"
+                        className="section-header text-center mb-5"
                     >
                         <motion.span
                             className="section-badge"
-                            whileHover={{ scale: 1.05 }}
+                            whileHover={{ scale: 1.02 }}
                             transition={{ type: "spring", stiffness: 400, damping: 10 }}
                         >
                             About Me
                         </motion.span>
-                        <h2 className="section-title gradient-heading mb-4">
+                        <h2 className="section-title mb-3">
                             Crafting Digital
                             <span className="gradient-text"> Experiences</span>
                         </h2>
@@ -102,7 +90,7 @@ const About = () => {
                         </p>
                     </motion.div>
 
-                    <Row className="align-items-center gy-5">
+                    <Row className="align-items-center gy-4">
                         {/* Profile Image Column */}
                         <Col lg={5} className="profile-column">
                             <motion.div
@@ -114,36 +102,37 @@ const About = () => {
                                         src="/api/placeholder/profile.jpeg"
                                         alt="Nischal Acharya"
                                         className="profile-image"
+                                        loading="lazy"
+                                        width={400}
+                                        height={400}
                                     />
                                     {/* Floating Elements */}
                                     <motion.div
                                         className="floating-element primary-float"
                                         animate={{
-                                            y: [-10, 10, -10],
-                                            rotate: [0, 5, 0]
+                                            y: [-8, 8, -8],
                                         }}
                                         transition={{
-                                            duration: 4,
+                                            duration: 3,
                                             repeat: Infinity,
                                             ease: "easeInOut"
                                         }}
                                     >
-                                        <FaCode size={24} />
+                                        <FaCode size={16} />
                                     </motion.div>
                                     <motion.div
                                         className="floating-element secondary-float"
                                         animate={{
-                                            y: [10, -10, 10],
-                                            rotate: [0, -5, 0]
+                                            y: [8, -8, 8],
                                         }}
                                         transition={{
-                                            duration: 4,
+                                            duration: 3,
                                             repeat: Infinity,
                                             ease: "easeInOut",
-                                            delay: 1
+                                            delay: 1.5
                                         }}
                                     >
-                                        <FaRocket size={24} />
+                                        <FaRocket size={16} />
                                     </motion.div>
                                 </div>
                             </motion.div>
@@ -153,16 +142,16 @@ const About = () => {
                         <Col lg={7}>
                             <motion.div variants={itemVariants}>
                                 {/* Stats Grid */}
-                                <Row className="stats-grid">
+                                <Row className="stats-grid mb-4">
                                     {stats.map((stat, index) => (
-                                        <Col key={index} sm={6}>
+                                        <Col key={index} xs={6} className="mb-3">
                                             <motion.div
                                                 className="stat-card"
-                                                whileHover={{ scale: 1.05, y: -5 }}
-                                                transition={{ type: "spring", stiffness: 300 }}
+                                                whileHover={{ scale: 1.02, y: -2 }}
+                                                transition={{ type: "spring", stiffness: 400 }}
                                             >
                                                 <stat.icon
-                                                    size={32}
+                                                    size={24}
                                                     className="stat-icon"
                                                 />
                                                 <h4 className="stat-value">{stat.value}</h4>
@@ -173,7 +162,7 @@ const About = () => {
                                 </Row>
 
                                 {/* Bio Text */}
-                                <div className="bio-section">
+                                <div className="bio-section mb-4">
                                     <p className="bio-text">
                                         I'm a passionate full-stack developer from <strong>Gauradaha-Jhapa, Nepal</strong>,
                                         specializing in creating digital experiences that blend cutting-edge technology
@@ -189,6 +178,9 @@ const About = () => {
                                         to open-source projects, or sharing knowledge with the developer community.
                                     </p>
                                 </div>
+
+                                {/* LastFM Now Playing */}
+                                <LastFMNowPlaying />
                             </motion.div>
                         </Col>
                     </Row>
@@ -202,7 +194,7 @@ const About = () => {
                     var(--surface-color) 50%,
                     var(--background-color) 100%);
                     position: relative;
-                    overflow: hidden;
+                    padding: 5rem 0;
                 }
 
                 .background-elements {
@@ -212,12 +204,14 @@ const About = () => {
                     width: 100%;
                     height: 100%;
                     pointer-events: none;
+                    z-index: 0;
                 }
 
                 .bg-blob {
                     position: absolute;
                     border-radius: 50%;
                     opacity: 0.03;
+                    filter: blur(40px);
                 }
 
                 .primary-blob {
@@ -225,7 +219,7 @@ const About = () => {
                     right: 5%;
                     width: 300px;
                     height: 300px;
-                    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+                    background: var(--primary-color);
                 }
 
                 .secondary-blob {
@@ -233,60 +227,56 @@ const About = () => {
                     left: 5%;
                     width: 200px;
                     height: 200px;
-                    background: radial-gradient(circle, var(--secondary-color) 0%, transparent 70%);
+                    background: var(--secondary-color);
                 }
 
                 .section-header {
                     position: relative;
-                    z-index: 2;
+                    z-index: 1;
                 }
 
                 .section-badge {
                     display: inline-block;
-                    background: linear-gradient(135deg,
-                    rgba(var(--primary-rgb), 0.15) 0%,
-                    rgba(var(--secondary-rgb), 0.15) 100%);
+                    background: rgba(var(--primary-rgb), 0.1);
                     color: var(--primary-color);
-                    padding: var(--spacing-sm) var(--spacing-xl);
-                    border-radius: 50px;
-                    font-size: var(--font-size-sm);
+                    padding: 0.5rem 1.5rem;
+                    border-radius: 2rem;
+                    font-size: 0.875rem;
                     font-weight: 600;
-                    margin-bottom: var(--spacing-lg);
+                    margin-bottom: 1rem;
                     text-transform: uppercase;
-                    letter-spacing: 1px;
+                    letter-spacing: 0.5px;
                     border: 1px solid rgba(var(--primary-rgb), 0.2);
                     backdrop-filter: blur(10px);
-                    cursor: default;
                 }
 
                 .section-title {
-                    font-size: var(--font-size-4xl);
+                    font-size: clamp(2rem, 5vw, 2.5rem);
                     font-weight: 800;
-                    margin-bottom: var(--spacing-md);
-                    background: linear-gradient(135deg, var(--text-color) 0%, var(--text-muted) 100%);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    background-clip: text;
+                    margin-bottom: 1rem;
+                    color: var(--text-color);
+                    line-height: 1.2;
                 }
 
                 .gradient-text {
-                    background: var(--gradient-primary);
+                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
+                    display: block;
                 }
 
                 .section-subtitle {
-                    font-size: var(--font-size-lg);
+                    font-size: clamp(1rem, 2.5vw, 1.125rem);
                     color: var(--text-muted);
                     max-width: 600px;
                     margin: 0 auto;
-                    line-height: 1.7;
+                    line-height: 1.6;
                 }
 
                 /* Profile Section */
                 .profile-column {
-                    margin-bottom: var(--spacing-xl);
+                    margin-bottom: 2rem;
                 }
 
                 @media (min-width: 992px) {
@@ -300,198 +290,228 @@ const About = () => {
                     text-align: center;
                 }
 
-                @media (min-width: 992px) {
-                    .profile-container {
-                        text-align: left;
-                    }
-                }
-
                 .profile-image-wrapper {
                     position: relative;
-                    padding: var(--spacing-md);
-                    background: var(--gradient-primary);
-                    border-radius: var(--radius-2xl);
+                    padding: 1rem;
+                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                    border-radius: 2rem;
                     display: inline-block;
+                    max-width: min(100%, 400px);
                 }
 
                 .profile-image {
-                    border-radius: var(--radius-xl);
-                    box-shadow: var(--shadow-xl);
-                    position: relative;
-                    z-index: 2;
+                    border-radius: 1.25rem;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
                     width: 100%;
-                    max-width: 400px;
                     height: auto;
+                    display: block;
                 }
 
                 .floating-element {
                     position: absolute;
-                    width: 60px;
-                    height: 60px;
-                    border-radius: var(--radius-lg);
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 0.75rem;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: var(--shadow-lg);
-                    z-index: 3;
+                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+                    z-index: 2;
                     color: white;
                 }
 
                 .primary-float {
                     top: 20%;
-                    right: -20px;
+                    right: -12px;
                     background: var(--primary-color);
                 }
 
                 .secondary-float {
                     bottom: 30%;
-                    left: -20px;
+                    left: -12px;
                     background: var(--secondary-color);
                 }
 
                 /* Stats Grid */
                 .stats-grid {
-                    margin-bottom: var(--spacing-xl);
+                    margin-bottom: 2rem;
                 }
 
                 .stat-card {
-                    background: var(--card-bg);
-                    border: 1px solid var(--border-color);
-                    border-radius: var(--radius-lg);
-                    padding: var(--spacing-lg);
+                    background: rgba(255, 255, 255, 0.02);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    border-radius: 0.75rem;
+                    padding: 1.25rem 1rem;
                     text-align: center;
-                    transition: all var(--transition-base);
+                    transition: all 0.2s ease;
                     backdrop-filter: blur(10px);
+                    height: 100%;
                 }
 
                 .stat-card:hover {
                     border-color: var(--primary-color);
-                    box-shadow: var(--shadow-lg);
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
                 }
 
                 .stat-icon {
                     color: var(--primary-color);
-                    margin-bottom: var(--spacing-sm);
+                    margin-bottom: 0.5rem;
                 }
 
                 .stat-value {
-                    font-size: var(--font-size-2xl);
+                    font-size: 1.375rem;
                     font-weight: 800;
                     color: var(--text-color);
-                    margin-bottom: var(--spacing-xs);
+                    margin-bottom: 0.25rem;
+                    line-height: 1;
                 }
 
                 .stat-label {
                     color: var(--text-muted);
-                    font-size: var(--font-size-sm);
+                    font-size: 0.8125rem;
                     margin: 0;
+                    line-height: 1.3;
                 }
 
                 /* Bio Section */
                 .bio-section {
-                    margin-bottom: var(--spacing-xl);
+                    margin-bottom: 2rem;
                 }
 
                 .bio-text {
                     color: var(--text-color);
                     line-height: 1.7;
-                    margin-bottom: var(--spacing-md);
+                    margin-bottom: 1rem;
+                    font-size: 1rem;
                 }
 
                 .bio-text strong {
                     color: var(--primary-color);
-                }
-
-                /* Action Buttons */
-                .action-buttons {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: var(--spacing-md);
-                }
-
-                .primary-button {
-                    background: var(--gradient-primary);
-                    border: none;
-                    color: white;
-                    padding: var(--spacing-md) var(--spacing-xl);
-                    border-radius: var(--radius-lg);
                     font-weight: 600;
-                    font-size: var(--font-size-base);
-                    transition: all var(--transition-base);
-                }
-
-                .primary-button:hover {
-                    transform: translateY(-2px);
-                    box-shadow: var(--shadow-lg);
-                }
-
-                .outline-button {
-                    border: 2px solid var(--primary-color);
-                    color: var(--primary-color);
-                    background: transparent;
-                    padding: var(--spacing-md) var(--spacing-xl);
-                    border-radius: var(--radius-lg);
-                    font-weight: 600;
-                    font-size: var(--font-size-base);
-                    transition: all var(--transition-base);
-                }
-
-                .outline-button:hover {
-                    background: var(--primary-color);
-                    color: white;
-                    transform: translateY(-2px);
-                    box-shadow: var(--shadow-lg);
-                }
-
-                .button-icon {
-                    margin-right: var(--spacing-sm);
                 }
 
                 /* Responsive Design */
                 @media (max-width: 768px) {
-                    .section-title {
-                        font-size: var(--font-size-3xl);
+                    .about-section {
+                        padding: 3rem 0;
+                    }
+
+                    .section-badge {
+                        padding: 0.375rem 1.25rem;
+                        font-size: 0.8rem;
                     }
 
                     .stats-grid {
-                        margin-bottom: var(--spacing-lg);
+                        margin-bottom: 1.5rem;
                     }
 
                     .stat-card {
-                        padding: var(--spacing-md);
+                        padding: 1rem 0.75rem;
+                    }
+
+                    .stat-value {
+                        font-size: 1.25rem;
                     }
 
                     .floating-element {
-                        width: 50px;
-                        height: 50px;
+                        width: 36px;
+                        height: 36px;
                     }
 
                     .primary-float {
-                        right: -10px;
+                        right: -8px;
                     }
 
                     .secondary-float {
-                        left: -10px;
+                        left: -8px;
                     }
 
-                    .action-buttons {
-                        justify-content: center;
+                    .profile-image-wrapper {
+                        padding: 0.75rem;
+                        border-radius: 1.5rem;
+                        max-width: min(100%, 300px);
+                        margin: 0 auto;
+                        display: block;
+                        text-align: center;
+                        width: fit-content;
+                        position: relative;
+                        left: 50%;
+                        transform: translateX(-50%);
+                    }
+
+                    .profile-image {
+                        border-radius: 1rem;
+                        width: 100%;
+                        max-width: 280px;
+                        height: auto;
                     }
                 }
 
                 @media (max-width: 576px) {
+                    .about-section {
+                        padding: 2rem 0;
+                    }
+
                     .section-title {
-                        font-size: var(--font-size-2xl);
+                        font-size: 1.75rem;
                     }
 
+                    .bio-text {
+                        font-size: 0.95rem;
+                        text-align: left;
+                        line-height: 1.6;
+                    }
+
+                    .stat-card {
+                        padding: 0.875rem 0.5rem;
+                        border-radius: 0.5rem;
+                        min-height: 100px;
+                    }
+
+                    .stat-icon {
+                        margin-bottom: 0.375rem;
+                    }
+
+                    .stat-value {
+                        font-size: 1.125rem;
+                    }
+
+                    .stat-label {
+                        font-size: 0.75rem;
+                    }
+                }
+
+                @media (max-width: 480px) {
                     .profile-image-wrapper {
-                        padding: var(--spacing-sm);
+                        max-width: min(100%, 260px);
+                        padding: 0.5rem;
                     }
 
-                    .primary-button,
-                    .outline-button {
-                        width: 100%;
-                        justify-content: center;
+                    .floating-element {
+                        width: 32px;
+                        height: 32px;
+                    }
+
+                    .primary-float,
+                    .secondary-float {
+                        display: none; /* Hide on very small screens */
+                    }
+
+                    .stats-grid .col-6 {
+                        padding-left: 0.375rem;
+                        padding-right: 0.375rem;
+                    }
+                }
+
+                /* Reduced motion for accessibility */
+                @media (prefers-reduced-motion: reduce) {
+                    .floating-element {
+                        animation: none;
+                    }
+
+                    .stat-card:hover {
+                        transform: none;
                     }
                 }
             `}</style>
@@ -499,4 +519,4 @@ const About = () => {
     );
 };
 
-export default About;
+export default React.memo(About);
