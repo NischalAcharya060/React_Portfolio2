@@ -400,15 +400,6 @@ const SpotifyNowPlaying = () => {
                         LIVE
                     </div>
                 )}
-                {lastUpdated && (
-                    <div className="update-indicator">
-                        <motion.div
-                            className="update-dot"
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                        />
-                    </div>
-                )}
             </div>
 
             <div className="widget-content">
@@ -573,12 +564,6 @@ const SpotifyNowPlaying = () => {
                     color: ${colors.primary};
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
-                }
-
-                .update-indicator {
-                    position: absolute;
-                    top: -2px;
-                    right: -2px;
                 }
 
                 .update-dot {
