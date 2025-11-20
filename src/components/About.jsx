@@ -10,7 +10,7 @@ import {
     FaUsers,
     FaCalendarAlt
 } from 'react-icons/fa';
-import LastFMNowPlaying from "./LastFMNowPlaying.jsx";
+import SpotifyNowPlaying from "./SpotifyNowPlaying.jsx";
 
 const About = () => {
     const ref = useRef(null);
@@ -28,17 +28,11 @@ const About = () => {
     }), []);
 
     const itemVariants = useMemo(() => ({
-        hidden: {
-            y: 40,
-            opacity: 0,
-        },
+        hidden: { y: 30, opacity: 0 },
         visible: {
             y: 0,
             opacity: 1,
-            transition: {
-                duration: 0.6,
-                ease: "easeOut"
-            }
+            transition: { duration: 0.6, ease: "easeOut" }
         }
     }), []);
 
@@ -62,7 +56,7 @@ const About = () => {
                 <div className="bg-blob secondary-blob" />
             </div>
 
-            <Container>
+            <Container className="position-relative z-2">
                 <motion.div
                     variants={containerVariants}
                     initial="hidden"
@@ -75,27 +69,26 @@ const About = () => {
                     >
                         <motion.span
                             className="section-badge"
-                            whileHover={{ scale: 1.02 }}
-                            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                            whileHover={{ scale: 1.05 }}
                         >
                             About Me
                         </motion.span>
-                        <h2 className="section-title mb-3">
-                            Crafting Digital
-                            <span className="gradient-text"> Experiences</span>
+                        <h2 className="section-title mt-3 mb-3">
+                            Crafting Digital{' '}
+                            <span className="gradient-text">Experiences</span>
                         </h2>
-                        <p className="section-subtitle">
+                        <p className="section-subtitle mx-auto">
                             Passionate full-stack developer with 2+ years of experience creating
-                            innovative digital solutions that drive business success
+                            innovative digital solutions that drive business success.
                         </p>
                     </motion.div>
 
-                    <Row className="align-items-center gy-4">
-                        {/* Profile Image Column */}
-                        <Col lg={5} className="profile-column">
+                    <Row className="align-items-center gy-5">
+                        {/* LEFT COLUMN: Profile Image + Spotify */}
+                        <Col lg={5} className="profile-column d-flex flex-column align-items-center">
                             <motion.div
                                 variants={itemVariants}
-                                className="profile-container"
+                                className="profile-container mb-4"
                             >
                                 <div className="profile-image-wrapper">
                                     <img
@@ -106,25 +99,23 @@ const About = () => {
                                         width={400}
                                         height={400}
                                     />
-                                    {/* Floating Elements */}
+
+                                    {/* Floating Icons */}
                                     <motion.div
                                         className="floating-element primary-float"
-                                        animate={{
-                                            y: [-8, 8, -8],
-                                        }}
+                                        animate={{ y: [-8, 8, -8] }}
                                         transition={{
                                             duration: 3,
                                             repeat: Infinity,
                                             ease: "easeInOut"
                                         }}
                                     >
-                                        <FaCode size={16} />
+                                        <FaCode size={18} />
                                     </motion.div>
+
                                     <motion.div
                                         className="floating-element secondary-float"
-                                        animate={{
-                                            y: [8, -8, 8],
-                                        }}
+                                        animate={{ y: [8, -8, 8] }}
                                         transition={{
                                             duration: 3,
                                             repeat: Infinity,
@@ -132,28 +123,33 @@ const About = () => {
                                             delay: 1.5
                                         }}
                                     >
-                                        <FaRocket size={16} />
+                                        <FaRocket size={18} />
                                     </motion.div>
                                 </div>
                             </motion.div>
+
+                            {/* Spotify Component - Centered and matched width */}
+                            <motion.div
+                                variants={itemVariants}
+                                className="spotify-wrapper"
+                            >
+                                <SpotifyNowPlaying/>
+                            </motion.div>
                         </Col>
 
-                        {/* Content Column */}
+                        {/* RIGHT COLUMN: Stats + Bio */}
                         <Col lg={7}>
-                            <motion.div variants={itemVariants}>
+                            <motion.div variants={itemVariants} className="content-wrapper">
                                 {/* Stats Grid */}
-                                <Row className="stats-grid mb-4">
+                                <Row className="stats-grid g-3 mb-4">
                                     {stats.map((stat, index) => (
-                                        <Col key={index} xs={6} className="mb-3">
+                                        <Col key={index} xs={6} sm={6}>
                                             <motion.div
-                                                className="stat-card"
-                                                whileHover={{ scale: 1.02, y: -2 }}
-                                                transition={{ type: "spring", stiffness: 400 }}
+                                                className="stat-card h-100"
+                                                whileHover={{ scale: 1.02, y: -5 }}
+                                                transition={{ type: "spring", stiffness: 300 }}
                                             >
-                                                <stat.icon
-                                                    size={24}
-                                                    className="stat-icon"
-                                                />
+                                                <stat.icon size={24} className="stat-icon" />
                                                 <h4 className="stat-value">{stat.value}</h4>
                                                 <p className="stat-label">{stat.label}</p>
                                             </motion.div>
@@ -162,7 +158,7 @@ const About = () => {
                                 </Row>
 
                                 {/* Bio Text */}
-                                <div className="bio-section mb-4">
+                                <div className="bio-section">
                                     <p className="bio-text">
                                         I'm a passionate full-stack developer from <strong>Gauradaha-Jhapa, Nepal</strong>,
                                         specializing in creating digital experiences that blend cutting-edge technology
@@ -171,16 +167,13 @@ const About = () => {
                                     <p className="bio-text">
                                         My expertise spans across modern web technologies, cloud platforms, and
                                         agile development methodologies. I believe in writing clean, maintainable
-                                        code and creating user-centric solutions that solve real-world problems.
+                                        code and creating user-centric solutions.
                                     </p>
                                     <p className="bio-text">
                                         When I'm not coding, you'll find me exploring new technologies, contributing
                                         to open-source projects, or sharing knowledge with the developer community.
                                     </p>
                                 </div>
-
-                                {/* LastFM Now Playing */}
-                                <LastFMNowPlaying />
                             </motion.div>
                         </Col>
                     </Row>
@@ -189,14 +182,15 @@ const About = () => {
 
             <style jsx>{`
                 .about-section {
-                    background: linear-gradient(135deg,
-                    var(--background-color) 0%,
-                    var(--surface-color) 50%,
-                    var(--background-color) 100%);
+                    background: var(--background-color, #0f0f0f);
                     position: relative;
                     padding: 5rem 0;
+                    overflow: hidden;
                 }
 
+                .z-2 { z-index: 2; }
+
+                /* Background Blobs */
                 .background-elements {
                     position: absolute;
                     top: 0;
@@ -210,208 +204,192 @@ const About = () => {
                 .bg-blob {
                     position: absolute;
                     border-radius: 50%;
-                    opacity: 0.03;
-                    filter: blur(40px);
+                    opacity: 0.04;
+                    filter: blur(60px);
                 }
 
                 .primary-blob {
-                    top: 10%;
-                    right: 5%;
-                    width: 300px;
-                    height: 300px;
-                    background: var(--primary-color);
+                    top: -10%;
+                    right: -5%;
+                    width: 400px;
+                    height: 400px;
+                    background: var(--primary-color, #6366f1);
                 }
 
                 .secondary-blob {
-                    bottom: 20%;
-                    left: 5%;
-                    width: 200px;
-                    height: 200px;
-                    background: var(--secondary-color);
+                    bottom: -10%;
+                    left: -5%;
+                    width: 300px;
+                    height: 300px;
+                    background: var(--secondary-color, #a855f7);
                 }
 
+                /* Header Styles */
                 .section-header {
                     position: relative;
-                    z-index: 1;
+                    z-index: 2;
                 }
 
                 .section-badge {
                     display: inline-block;
-                    background: rgba(var(--primary-rgb), 0.1);
-                    color: var(--primary-color);
-                    padding: 0.5rem 1.5rem;
+                    background: rgba(var(--primary-rgb, 99, 102, 241), 0.1);
+                    color: var(--primary-color, #6366f1);
+                    padding: 0.5rem 1.25rem;
                     border-radius: 2rem;
-                    font-size: 0.875rem;
+                    font-size: 0.85rem;
                     font-weight: 600;
-                    margin-bottom: 1rem;
                     text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                    border: 1px solid rgba(var(--primary-rgb), 0.2);
-                    backdrop-filter: blur(10px);
+                    letter-spacing: 1px;
+                    border: 1px solid rgba(var(--primary-rgb, 99, 102, 241), 0.2);
                 }
 
                 .section-title {
-                    font-size: clamp(2rem, 5vw, 2.5rem);
+                    font-size: clamp(2rem, 5vw, 2.75rem);
                     font-weight: 800;
-                    margin-bottom: 1rem;
-                    color: var(--text-color);
+                    color: var(--text-color, #ffffff);
                     line-height: 1.2;
                 }
 
                 .gradient-text {
-                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                    background: linear-gradient(135deg, var(--primary-color, #6366f1) 0%, var(--secondary-color, #a855f7) 100%);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
-                    display: block;
+                    display: inline-block;
                 }
 
                 .section-subtitle {
-                    font-size: clamp(1rem, 2.5vw, 1.125rem);
-                    color: var(--text-muted);
-                    max-width: 600px;
-                    margin: 0 auto;
+                    font-size: clamp(1rem, 2.5vw, 1.1rem);
+                    color: var(--text-muted, #9ca3af);
+                    max-width: 650px;
                     line-height: 1.6;
                 }
 
-                /* Profile Section */
-                .profile-column {
-                    margin-bottom: 2rem;
-                }
-
-                @media (min-width: 992px) {
-                    .profile-column {
-                        margin-bottom: 0;
-                    }
-                }
-
+                /* Profile Image Styles */
                 .profile-container {
                     position: relative;
-                    text-align: center;
+                    width: 100%;
+                    max-width: 400px;
+                    display: flex;
+                    justify-content: center;
                 }
 
                 .profile-image-wrapper {
                     position: relative;
-                    padding: 1rem;
-                    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+                    padding: 10px;
+                    background: linear-gradient(135deg, rgba(var(--primary-rgb, 99, 102, 241), 0.3), rgba(var(--secondary-rgb, 168, 85, 247), 0.3));
                     border-radius: 2rem;
-                    display: inline-block;
-                    max-width: min(100%, 400px);
+                    width: 100%;
                 }
 
                 .profile-image {
-                    border-radius: 1.25rem;
-                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                    border-radius: 1.5rem;
                     width: 100%;
                     height: auto;
+                    aspect-ratio: 1/1;
+                    object-fit: cover;
                     display: block;
+                    background: #1a1a1a;
                 }
 
+                .spotify-wrapper {
+                    width: 100%;
+                    max-width: 400px;
+                }
+
+                /* Floating Icons */
                 .floating-element {
                     position: absolute;
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 0.75rem;
+                    width: 45px;
+                    height: 45px;
+                    border-radius: 12px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-                    z-index: 2;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                    z-index: 3;
                     color: white;
+                    backdrop-filter: blur(5px);
                 }
 
                 .primary-float {
-                    top: 20%;
-                    right: -12px;
-                    background: var(--primary-color);
+                    top: 15%;
+                    right: -15px;
+                    background: var(--primary-color, #6366f1);
                 }
 
                 .secondary-float {
-                    bottom: 30%;
-                    left: -12px;
-                    background: var(--secondary-color);
+                    bottom: 15%;
+                    left: -15px;
+                    background: var(--secondary-color, #a855f7);
                 }
 
-                /* Stats Grid */
-                .stats-grid {
-                    margin-bottom: 2rem;
-                }
-
+                /* Stats Cards */
                 .stat-card {
-                    background: rgba(255, 255, 255, 0.02);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
-                    border-radius: 0.75rem;
-                    padding: 1.25rem 1rem;
+                    background: rgba(255, 255, 255, 0.03);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    border-radius: 1rem;
+                    padding: 1.5rem 1rem;
                     text-align: center;
-                    transition: all 0.2s ease;
-                    backdrop-filter: blur(10px);
-                    height: 100%;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
                 }
 
                 .stat-card:hover {
-                    border-color: var(--primary-color);
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                    background: rgba(255, 255, 255, 0.05);
+                    border-color: rgba(var(--primary-rgb, 99, 102, 241), 0.3);
+                    transform: translateY(-5px);
                 }
 
                 .stat-icon {
-                    color: var(--primary-color);
-                    margin-bottom: 0.5rem;
+                    color: var(--primary-color, #6366f1);
+                    margin-bottom: 0.75rem;
                 }
 
                 .stat-value {
-                    font-size: 1.375rem;
+                    font-size: 1.5rem;
                     font-weight: 800;
-                    color: var(--text-color);
+                    color: var(--text-color, #fff);
                     margin-bottom: 0.25rem;
-                    line-height: 1;
                 }
 
                 .stat-label {
-                    color: var(--text-muted);
-                    font-size: 0.8125rem;
+                    color: var(--text-muted, #9ca3af);
+                    font-size: 0.85rem;
                     margin: 0;
-                    line-height: 1.3;
+                    font-weight: 500;
                 }
 
-                /* Bio Section */
-                .bio-section {
-                    margin-bottom: 2rem;
-                }
-
+                /* Bio Text */
                 .bio-text {
-                    color: var(--text-color);
-                    line-height: 1.7;
+                    color: var(--text-muted, #d1d5db);
+                    line-height: 1.8;
                     margin-bottom: 1rem;
-                    font-size: 1rem;
+                    font-size: 1.05rem;
                 }
 
                 .bio-text strong {
-                    color: var(--primary-color);
+                    color: var(--text-color, #fff);
                     font-weight: 600;
                 }
 
-                /* Responsive Design */
-                @media (max-width: 768px) {
+                /* Responsive Adjustments */
+                @media (max-width: 991px) {
+                    .profile-column {
+                        margin-bottom: 1rem;
+                    }
+                }
+
+                @media (max-width: 576px) {
                     .about-section {
                         padding: 3rem 0;
                     }
 
-                    .section-badge {
-                        padding: 0.375rem 1.25rem;
-                        font-size: 0.8rem;
-                    }
-
-                    .stats-grid {
-                        margin-bottom: 1.5rem;
-                    }
-
-                    .stat-card {
-                        padding: 1rem 0.75rem;
-                    }
-
-                    .stat-value {
-                        font-size: 1.25rem;
+                    .profile-container, .spotify-wrapper {
+                        max-width: 320px;
                     }
 
                     .floating-element {
@@ -419,99 +397,19 @@ const About = () => {
                         height: 36px;
                     }
 
-                    .primary-float {
-                        right: -8px;
+                    .primary-float { right: -5px; }
+                    .secondary-float { left: -5px; }
+
+                    .stat-card {
+                        padding: 1rem 0.5rem;
                     }
 
-                    .secondary-float {
-                        left: -8px;
-                    }
-
-                    .profile-image-wrapper {
-                        padding: 0.75rem;
-                        border-radius: 1.5rem;
-                        max-width: min(100%, 300px);
-                        margin: 0 auto;
-                        display: block;
-                        text-align: center;
-                        width: fit-content;
-                        position: relative;
-                        left: 50%;
-                        transform: translateX(-50%);
-                    }
-
-                    .profile-image {
-                        border-radius: 1rem;
-                        width: 100%;
-                        max-width: 280px;
-                        height: auto;
-                    }
-                }
-
-                @media (max-width: 576px) {
-                    .about-section {
-                        padding: 2rem 0;
-                    }
-
-                    .section-title {
-                        font-size: 1.75rem;
+                    .stat-value {
+                        font-size: 1.25rem;
                     }
 
                     .bio-text {
                         font-size: 0.95rem;
-                        text-align: left;
-                        line-height: 1.6;
-                    }
-
-                    .stat-card {
-                        padding: 0.875rem 0.5rem;
-                        border-radius: 0.5rem;
-                        min-height: 100px;
-                    }
-
-                    .stat-icon {
-                        margin-bottom: 0.375rem;
-                    }
-
-                    .stat-value {
-                        font-size: 1.125rem;
-                    }
-
-                    .stat-label {
-                        font-size: 0.75rem;
-                    }
-                }
-
-                @media (max-width: 480px) {
-                    .profile-image-wrapper {
-                        max-width: min(100%, 260px);
-                        padding: 0.5rem;
-                    }
-
-                    .floating-element {
-                        width: 32px;
-                        height: 32px;
-                    }
-
-                    .primary-float,
-                    .secondary-float {
-                        display: none; /* Hide on very small screens */
-                    }
-
-                    .stats-grid .col-6 {
-                        padding-left: 0.375rem;
-                        padding-right: 0.375rem;
-                    }
-                }
-
-                /* Reduced motion for accessibility */
-                @media (prefers-reduced-motion: reduce) {
-                    .floating-element {
-                        animation: none;
-                    }
-
-                    .stat-card:hover {
-                        transform: none;
                     }
                 }
             `}</style>

@@ -1,19 +1,77 @@
-// src/components/LastFMNowPlaying.jsx
+// src/components/SpotifyNowPlaying.jsx
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { FaMusic, FaHeadphones, FaPlay, FaLastfm } from 'react-icons/fa';
+import { FaMusic, FaHeadphones, FaPlay, FaSpotify } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
-const LastFMNowPlaying = () => {
+const SpotifyNowPlaying = () => {
     const [trackData, setTrackData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [lastUpdated, setLastUpdated] = useState(null);
+    const [isDarkMode, setIsDarkMode] = useState(true);
     const intervalRef = useRef(null);
 
     const LASTFM_USERNAME = 'GrdhRavan';
     const LASTFM_API_KEY = '8c0907db11fdbc5a060a0a4d6f7271f1';
 
-    // Memoized fetch function with real-time updates
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        const getCurrentTheme = () => {
+            if (document.documentElement.classList.contains('dark')) return true;
+            if (document.documentElement.classList.contains('light')) return false;
+            if (document.documentElement.getAttribute('data-theme') === 'dark') return true;
+            if (document.documentElement.getAttribute('data-theme') === 'light') return false;
+            if (document.documentElement.getAttribute('data-mode') === 'dark') return true;
+            if (document.documentElement.getAttribute('data-mode') === 'light') return false;
+
+            const computedStyle = window.getComputedStyle(document.documentElement);
+            const bgColor = computedStyle.backgroundColor;
+            const isDark = bgColor && (
+                bgColor.includes('17, 24, 39') ||
+                bgColor.includes('25, 20, 20') ||
+                bgColor.includes('0, 0, 0') ||
+                parseInt(computedStyle.color?.split(',')[0]) > 128
+            );
+
+            return isDark ?? mediaQuery.matches;
+        };
+
+        const updateTheme = () => {
+            setIsDarkMode(getCurrentTheme());
+        };
+
+        updateTheme();
+
+        mediaQuery.addEventListener('change', updateTheme);
+
+        const observer = new MutationObserver(updateTheme);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class', 'data-theme', 'data-mode', 'style']
+        });
+
+        const handleStorageChange = (e) => {
+            if (e.key === 'theme' || e.key === 'color-scheme') {
+                updateTheme();
+            }
+        };
+        window.addEventListener('storage', handleStorageChange);
+
+        const handleThemeChange = () => updateTheme();
+        document.addEventListener('themeChange', handleThemeChange);
+
+        return () => {
+            mediaQuery.removeEventListener('change', updateTheme);
+            observer.disconnect();
+            window.removeEventListener('storage', handleStorageChange);
+            document.removeEventListener('themeChange', handleThemeChange);
+        };
+    }, []);
+
+    useEffect(() => {
+    }, [isDarkMode]);
+
     const fetchRecentTracks = useCallback(async (isPolling = false) => {
         try {
             if (!isPolling) {
@@ -59,7 +117,6 @@ const LastFMNowPlaying = () => {
                     timestamp: Date.now()
                 };
 
-                // Only update if data actually changed or it's a new song
                 setTrackData(prev => {
                     if (!prev) return newTrackData;
 
@@ -72,15 +129,14 @@ const LastFMNowPlaying = () => {
 
                 setLastUpdated(Date.now());
 
-                // Update cache
-                localStorage.setItem('lastfm-cache', JSON.stringify(newTrackData));
-                localStorage.setItem('lastfm-cache-time', Date.now().toString());
+                localStorage.setItem('spotify-cache', JSON.stringify(newTrackData));
+                localStorage.setItem('spotify-cache-time', Date.now().toString());
             } else {
                 setTrackData(null);
             }
         } catch (err) {
             if (err.name !== 'AbortError') {
-                console.error('Error fetching Last.fm data:', err);
+                console.error('Error fetching Spotify data:', err);
                 if (!isPolling) {
                     setError(err.message);
                 }
@@ -92,14 +148,12 @@ const LastFMNowPlaying = () => {
         }
     }, []);
 
-    // Smart polling based on current state
     const startPolling = useCallback(() => {
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
         }
 
-        // If currently playing, poll more frequently
-        const interval = trackData?.nowPlaying ? 10000 : 30000; // 10s for playing, 30s for not playing
+        const interval = trackData?.nowPlaying ? 10000 : 30000;
 
         intervalRef.current = setInterval(() => {
             fetchRecentTracks(true);
@@ -112,24 +166,19 @@ const LastFMNowPlaying = () => {
         };
     }, [trackData?.nowPlaying, fetchRecentTracks]);
 
-    // Initial load with cache and setup polling
     useEffect(() => {
-        const cachedData = localStorage.getItem('lastfm-cache');
-        const cacheTime = localStorage.getItem('lastfm-cache-time');
+        const cachedData = localStorage.getItem('spotify-cache');
+        const cacheTime = localStorage.getItem('spotify-cache-time');
 
-        // Use cache only if it's less than 2 minutes old
         if (cachedData && cacheTime && Date.now() - parseInt(cacheTime) < 120000) {
             const parsedData = JSON.parse(cachedData);
             setTrackData(parsedData);
             setLoading(false);
-
-            // Still fetch fresh data in background
             setTimeout(() => fetchRecentTracks(true), 1000);
         } else {
             fetchRecentTracks();
         }
 
-        // Start polling after initial load
         const cleanup = startPolling();
 
         return () => {
@@ -140,12 +189,10 @@ const LastFMNowPlaying = () => {
         };
     }, [fetchRecentTracks, startPolling]);
 
-    // Restart polling when track state changes
     useEffect(() => {
         startPolling();
     }, [startPolling]);
 
-    // Handle visibility change - refresh when tab becomes visible
     useEffect(() => {
         const handleVisibilityChange = () => {
             if (!document.hidden) {
@@ -159,7 +206,6 @@ const LastFMNowPlaying = () => {
         };
     }, [fetchRecentTracks]);
 
-    // Animation variants
     const containerVariants = {
         hidden: { opacity: 0, y: 10 },
         visible: {
@@ -183,21 +229,60 @@ const LastFMNowPlaying = () => {
         }
     };
 
+    const colors = {
+        primary: '#1DB954',
+        background: isDarkMode
+            ? 'rgba(25, 20, 20, 0.95)'
+            : 'rgba(255, 255, 255, 0.95)',
+        surface: isDarkMode
+            ? 'rgba(40, 40, 40, 0.8)'
+            : 'rgba(248, 248, 248, 0.8)',
+        text: {
+            primary: isDarkMode ? '#FFFFFF' : '#191414',
+            secondary: isDarkMode ? '#B3B3B3' : '#5A5A5A',
+            muted: isDarkMode ? '#7A7A7A' : '#8A8A8A'
+        },
+        border: isDarkMode
+            ? 'rgba(29, 185, 84, 0.3)'
+            : 'rgba(29, 185, 84, 0.2)',
+        error: isDarkMode
+            ? 'rgba(239, 68, 68, 0.3)'
+            : 'rgba(239, 68, 68, 0.2)',
+        skeleton: isDarkMode
+            ? 'rgba(255, 255, 255, 0.1)'
+            : 'rgba(0, 0, 0, 0.1)'
+    };
+
+    const manualThemeCheck = () => {
+        const html = document.documentElement;
+        const isDark = html.classList.contains('dark') ||
+            html.getAttribute('data-theme') === 'dark' ||
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setIsDarkMode(isDark);
+    };
+
     if (error) {
         return (
             <motion.div
-                className="music-widget error"
+                className="spotify-widget error"
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
             >
                 <div className="widget-header">
-                    <FaMusic className="header-icon" />
-                    <span>Music</span>
+                    <FaSpotify className="header-icon" />
+                    <span>Spotify</span>
+                    <button
+                        onClick={manualThemeCheck}
+                        className="theme-check-btn"
+                        title="Check current theme"
+                    >
+                        🔄
+                    </button>
                 </div>
                 <div className="error-state">
                     <FaHeadphones />
-                    <p>Unable to load music data</p>
+                    <p>Unable to load Spotify data</p>
                     <button
                         className="retry-btn"
                         onClick={() => fetchRecentTracks()}
@@ -205,27 +290,108 @@ const LastFMNowPlaying = () => {
                         Retry
                     </button>
                 </div>
+
+                <style jsx>{`
+                    .spotify-widget {
+                        background: ${colors.background};
+                        border: 1px solid ${colors.error};
+                        border-radius: 16px;
+                        padding: 1.25rem;
+                        backdrop-filter: blur(20px);
+                        max-width: 380px;
+                        margin: 0 auto;
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;
+                        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+                    }
+
+                    .widget-header {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.75rem;
+                        margin-bottom: 1rem;
+                    }
+
+                    .header-icon {
+                        color: ${colors.primary};
+                        font-size: 1.5rem;
+                    }
+
+                    .widget-header span {
+                        font-weight: 700;
+                        color: ${colors.text.primary};
+                        font-size: 1rem;
+                    }
+
+                    .theme-check-btn {
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                        font-size: 0.8rem;
+                        opacity: 0.6;
+                        margin-left: auto;
+                    }
+
+                    .error-state {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 0.75rem;
+                        padding: 1.5rem 1rem;
+                        text-align: center;
+                        color: ${colors.text.muted};
+                    }
+
+                    .error-state svg {
+                        font-size: 2rem;
+                        opacity: 0.5;
+                    }
+
+                    .error-state p {
+                        margin: 0;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        color: ${colors.text.secondary};
+                    }
+
+                    .retry-btn {
+                        background: rgba(29, 185, 84, 0.1);
+                        color: ${colors.primary};
+                        border: 1px solid rgba(29, 185, 84, 0.3);
+                        padding: 0.5rem 1rem;
+                        border-radius: 8px;
+                        font-size: 0.8rem;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    }
+
+                    .retry-btn:hover {
+                        background: ${colors.primary};
+                        color: ${isDarkMode ? '#191414' : '#FFFFFF'};
+                    }
+                `}</style>
             </motion.div>
         );
     }
 
     return (
         <motion.div
-            className="music-widget"
+            className="spotify-widget"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
             whileHover={{ y: -2 }}
+            key={`spotify-widget-${isDarkMode ? 'dark' : 'light'}`}
         >
-            {/* Header */}
             <div className="widget-header">
                 <div className="header-main">
-                    <FaHeadphones className="header-icon" />
+                    <FaSpotify className="header-icon" />
                     <div className="header-text">
                         <span className="title">
                             {trackData?.nowPlaying ? 'Now Playing' : 'Recently Played'}
                         </span>
-                        <span className="subtitle">Last.fm • Live</span>
                     </div>
                 </div>
                 {trackData?.nowPlaying && (
@@ -245,7 +411,6 @@ const LastFMNowPlaying = () => {
                 )}
             </div>
 
-            {/* Content */}
             <div className="widget-content">
                 {loading ? (
                     <div className="skeleton-loader">
@@ -259,7 +424,6 @@ const LastFMNowPlaying = () => {
                 ) : trackData ? (
                     <motion.a
                         key={`${trackData.name}-${trackData.artist}-${trackData.timestamp}`}
-                        href={trackData.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="track-card"
@@ -275,7 +439,13 @@ const LastFMNowPlaying = () => {
                                 alt={`${trackData.album} cover`}
                                 loading="lazy"
                                 onError={(e) => {
-                                    e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iMTIiIGZpbGw9IiMyQzJDMkMiLz4KPHBhdGggZD0iTTQwIDQ0QzQyLjIwOTEgNDQgNDQgNDIuMjA5MSA0NCA0MEM0NCAzNy43OTA5IDQyLjIwOTEgMzYgNDAgMzZDMzcuNzkwOSAzNiAzNiAzNy43OTA5IDM2IDQwQzM2IDQyLjIwOTEgMzcuNzkwOSA0NCA0MCA0NFoiIGZpbGw9IiM1QjVCNUMiLz4KPHBhdGggZD0iTTQ4IDQwTDM2IDMyVjQ4TDQ4IDQwWiIgZmlsbD0iIzlGOUY5RiIvPgo8L3N2Zz4K';
+                                    e.target.src = `data:image/svg+xml;base64,${btoa(`
+                                        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect width="80" height="80" rx="12" fill="${isDarkMode ? '#1D1B1B' : '#F0F0F0'}"/>
+                                            <path d="M40 44C42.2091 44 44 42.2091 44 40C44 37.7909 42.2091 36 40 36C37.7909 36 36 37.7909 36 40C36 42.2091 37.7909 44 40 44Z" fill="${isDarkMode ? '#333' : '#DDD'}"/>
+                                            <path d="M48 40L36 32V48L48 40Z" fill="${isDarkMode ? '#333' : '#DDD'}"/>
+                                        </svg>
+                                    `)}`;
                                 }}
                             />
                             {trackData.nowPlaying && (
@@ -295,8 +465,8 @@ const LastFMNowPlaying = () => {
                             <p className="album">{trackData.album}</p>
                             <div className="track-meta">
                                 <span className="source">
-                                    <FaLastfm />
-                                    Last.fm
+                                    <FaSpotify />
+                                    Spotify
                                 </span>
                                 {trackData.nowPlaying && (
                                     <span className="status-badge">Playing Now</span>
@@ -318,20 +488,10 @@ const LastFMNowPlaying = () => {
                 )}
             </div>
 
-            {/* Auto-sync indicator */}
-            <div className="sync-indicator">
-                <span className="sync-text">Auto-syncing</span>
-                <div className="sync-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </div>
-
             <style jsx>{`
-                .music-widget {
-                    background: rgba(255, 255, 255, 0.02);
-                    border: 1px solid rgba(255, 255, 255, 0.08);
+                .spotify-widget {
+                    background: ${colors.background};
+                    border: 1px solid ${colors.border};
                     border-radius: 16px;
                     padding: 1.25rem;
                     backdrop-filter: blur(20px);
@@ -340,29 +500,25 @@ const LastFMNowPlaying = () => {
                     transition: all 0.3s ease;
                     position: relative;
                     overflow: hidden;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
                 }
 
-                .music-widget::before {
+                .spotify-widget::before {
                     content: '';
                     position: absolute;
                     top: 0;
                     left: 0;
                     right: 0;
                     height: 1px;
-                    background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.3), transparent);
+                    background: linear-gradient(90deg, transparent, ${colors.primary}, transparent);
                 }
 
-                .music-widget:hover {
-                    border-color: rgba(var(--primary-rgb), 0.2);
+                .spotify-widget:hover {
+                    border-color: ${isDarkMode ? 'rgba(29, 185, 84, 0.5)' : 'rgba(29, 185, 84, 0.4)'};
                     transform: translateY(-2px);
-                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+                    box-shadow: 0 12px 40px rgba(29, 185, 84, 0.15);
                 }
 
-                .music-widget.error {
-                    border-color: rgba(239, 68, 68, 0.2);
-                }
-
-                /* Header */
                 .widget-header {
                     display: flex;
                     align-items: center;
@@ -382,7 +538,7 @@ const LastFMNowPlaying = () => {
                 .header-icon {
                     width: 32px;
                     height: 32px;
-                    color: var(--primary-color);
+                    color: ${colors.primary};
                     flex-shrink: 0;
                 }
 
@@ -393,14 +549,14 @@ const LastFMNowPlaying = () => {
 
                 .title {
                     font-weight: 700;
-                    color: var(--text-color);
+                    color: ${colors.text.primary};
                     font-size: 1rem;
                     line-height: 1.2;
                 }
 
                 .subtitle {
-                    font-size: 0.75rem;
-                    color: var(--text-muted);
+                    font-size: 0.7rem;
+                    color: ${colors.text.muted};
                     font-weight: 500;
                 }
 
@@ -408,13 +564,13 @@ const LastFMNowPlaying = () => {
                     display: flex;
                     align-items: center;
                     gap: 0.375rem;
-                    background: rgba(239, 68, 68, 0.1);
-                    border: 1px solid rgba(239, 68, 68, 0.3);
+                    background: rgba(29, 185, 84, 0.1);
+                    border: 1px solid rgba(29, 185, 84, 0.3);
                     border-radius: 12px;
                     padding: 0.25rem 0.5rem;
                     font-size: 0.7rem;
                     font-weight: 700;
-                    color: #ef4444;
+                    color: ${colors.primary};
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
                 }
@@ -428,14 +584,14 @@ const LastFMNowPlaying = () => {
                 .update-dot {
                     width: 6px;
                     height: 6px;
-                    background: #10b981;
+                    background: ${colors.primary};
                     border-radius: 50%;
                 }
 
                 .pulse {
                     width: 6px;
                     height: 6px;
-                    background: #ef4444;
+                    background: ${colors.primary};
                     border-radius: 50%;
                     animation: pulse 2s infinite;
                 }
@@ -445,12 +601,10 @@ const LastFMNowPlaying = () => {
                     50% { opacity: 0.7; transform: scale(1.1); }
                 }
 
-                /* Content */
                 .widget-content {
                     min-height: 80px;
                 }
 
-                /* Skeleton Loader */
                 .skeleton-loader {
                     display: flex;
                     align-items: center;
@@ -460,10 +614,10 @@ const LastFMNowPlaying = () => {
                 .skeleton-image {
                     width: 60px;
                     height: 60px;
-                    background: rgba(255, 255, 255, 0.1);
+                    background: ${colors.skeleton};
                     border-radius: 12px;
                     flex-shrink: 0;
-                    animation: pulse 2s infinite;
+                    animation: skeletonPulse 2s infinite;
                 }
 
                 .skeleton-text {
@@ -474,17 +628,21 @@ const LastFMNowPlaying = () => {
                 }
 
                 .skeleton-line {
-                    background: rgba(255, 255, 255, 0.1);
+                    background: ${colors.skeleton};
                     border-radius: 4px;
                     height: 0.75rem;
-                    animation: pulse 2s infinite;
+                    animation: skeletonPulse 2s infinite;
                 }
 
                 .skeleton-line.large { width: 80%; }
                 .skeleton-line.medium { width: 60%; }
                 .skeleton-line.small { width: 40%; }
 
-                /* Track Card */
+                @keyframes skeletonPulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                }
+
                 .track-card {
                     display: flex;
                     align-items: center;
@@ -506,7 +664,7 @@ const LastFMNowPlaying = () => {
                     height: 100%;
                     border-radius: 12px;
                     object-fit: cover;
-                    background: rgba(255, 255, 255, 0.05);
+                    background: ${isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'};
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
                     transition: all 0.3s ease;
                 }
@@ -521,7 +679,7 @@ const LastFMNowPlaying = () => {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background: rgba(0, 0, 0, 0.7);
+                    background: rgba(29, 185, 84, 0.8);
                     border-radius: 12px;
                     display: flex;
                     align-items: center;
@@ -548,9 +706,9 @@ const LastFMNowPlaying = () => {
                     gap: 2px;
                     height: 16px;
                     padding: 0.25rem;
-                    background: var(--primary-color);
+                    background: ${colors.primary};
                     border-radius: 8px;
-                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
                 }
 
                 .playing-indicator span {
@@ -577,7 +735,7 @@ const LastFMNowPlaying = () => {
                 .track-title {
                     font-size: 1rem;
                     font-weight: 700;
-                    color: var(--text-color);
+                    color: ${colors.text.primary};
                     margin: 0 0 0.25rem 0;
                     line-height: 1.3;
                     display: -webkit-box;
@@ -588,14 +746,15 @@ const LastFMNowPlaying = () => {
 
                 .artist {
                     font-size: 0.875rem;
-                    color: var(--text-color);
+                    color: ${colors.text.primary};
                     margin: 0 0 0.25rem 0;
                     font-weight: 500;
+                    opacity: 0.9;
                 }
 
                 .album {
                     font-size: 0.8rem;
-                    color: var(--text-muted);
+                    color: ${colors.text.muted};
                     margin: 0 0 0.5rem 0;
                     display: -webkit-box;
                     -webkit-line-clamp: 1;
@@ -614,8 +773,8 @@ const LastFMNowPlaying = () => {
                     display: flex;
                     align-items: center;
                     gap: 0.25rem;
-                    background: rgba(213, 16, 7, 0.1);
-                    color: #d51007;
+                    background: rgba(29, 185, 84, 0.1);
+                    color: ${colors.primary};
                     padding: 0.25rem 0.5rem;
                     border-radius: 6px;
                     font-size: 0.7rem;
@@ -623,77 +782,40 @@ const LastFMNowPlaying = () => {
                 }
 
                 .status-badge {
-                    background: rgba(34, 197, 94, 0.1);
-                    color: #22c55e;
+                    background: rgba(29, 185, 84, 0.1);
+                    color: ${colors.primary};
                     padding: 0.25rem 0.5rem;
                     border-radius: 6px;
                     font-size: 0.7rem;
                     font-weight: 600;
                 }
 
-                /* Sync Indicator */
-                .sync-indicator {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.5rem;
-                    margin-top: 1rem;
-                    padding-top: 1rem;
-                    border-top: 1px solid rgba(255, 255, 255, 0.05);
-                }
-
-                .sync-text {
-                    font-size: 0.7rem;
-                    color: var(--text-muted);
-                }
-
-                .sync-dots {
-                    display: flex;
-                    gap: 2px;
-                }
-
-                .sync-dots span {
-                    width: 3px;
-                    height: 3px;
-                    background: var(--text-muted);
-                    border-radius: 50%;
-                    animation: syncBounce 1.4s ease-in-out infinite both;
-                }
-
-                .sync-dots span:nth-child(1) { animation-delay: -0.32s; }
-                .sync-dots span:nth-child(2) { animation-delay: -0.16s; }
-
-                @keyframes syncBounce {
-                    0%, 80%, 100% { transform: scale(0); }
-                    40% { transform: scale(1); }
-                }
-
-                /* Empty & Error States */
-                .empty-state, .error-state {
+                .empty-state {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     gap: 0.75rem;
                     padding: 1.5rem 1rem;
                     text-align: center;
-                    color: var(--text-muted);
+                    color: ${colors.text.muted};
                 }
 
-                .empty-state svg, .error-state svg {
+                .empty-state svg {
                     font-size: 2rem;
                     opacity: 0.5;
                 }
 
-                .empty-state p, .error-state p {
+                .empty-state p {
                     margin: 0;
                     font-weight: 500;
                     font-size: 0.9rem;
+                    color: ${colors.text.secondary};
                 }
 
-                .retry-btn, .refresh-btn {
-                    background: rgba(var(--primary-rgb), 0.1);
-                    color: var(--primary-color);
-                    border: 1px solid rgba(var(--primary-rgb), 0.3);
+                .refresh-btn {
+                    background: rgba(29, 185, 84, 0.1);
+                    color: ${colors.primary};
+                    border: 1px solid rgba(29, 185, 84, 0.3);
                     padding: 0.5rem 1rem;
                     border-radius: 8px;
                     font-size: 0.8rem;
@@ -702,14 +824,13 @@ const LastFMNowPlaying = () => {
                     transition: all 0.3s ease;
                 }
 
-                .retry-btn:hover, .refresh-btn:hover {
-                    background: var(--primary-color);
-                    color: white;
+                .refresh-btn:hover {
+                    background: ${colors.primary};
+                    color: ${isDarkMode ? '#191414' : '#FFFFFF'};
                 }
 
-                /* Responsive */
                 @media (max-width: 768px) {
-                    .music-widget {
+                    .spotify-widget {
                         max-width: 100%;
                         padding: 1rem;
                     }
@@ -728,28 +849,15 @@ const LastFMNowPlaying = () => {
                     }
                 }
 
-                @media (max-width: 480px) {
-                    .widget-header {
-                        flex-direction: column;
-                        align-items: flex-start;
-                        gap: 0.5rem;
-                    }
-
-                    .live-badge {
-                        align-self: flex-start;
-                    }
-                }
-
-                /* Reduced motion support */
                 @media (prefers-reduced-motion: reduce) {
-                    .music-widget,
+                    .spotify-widget,
                     .track-card {
                         transition: none;
                     }
 
                     .pulse,
                     .playing-indicator span,
-                    .sync-dots span {
+                    .update-dot {
                         animation: none;
                     }
                 }
@@ -758,4 +866,4 @@ const LastFMNowPlaying = () => {
     );
 };
 
-export default React.memo(LastFMNowPlaying);
+export default React.memo(SpotifyNowPlaying);
