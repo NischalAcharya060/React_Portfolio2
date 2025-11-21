@@ -1,7 +1,7 @@
 // src/components/Hero.jsx
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Container, Row, Col, Button, Spinner, Toast } from 'react-bootstrap';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Container, Row, Col, Button, Spinner, Toast } from "react-bootstrap";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     FaChevronDown,
     FaGithub,
@@ -18,16 +18,17 @@ import {
     FaWordpress,
     FaCheck,
     FaStar,
-    FaClock
-} from 'react-icons/fa';
+    FaClock,
+} from "react-icons/fa";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 const Hero = () => {
     const [currentRole, setCurrentRole] = useState(0);
-    const [displayText, setDisplayText] = useState('');
+    const [displayText, setDisplayText] = useState("");
     const [showCursor, setShowCursor] = useState(true);
     const [isHovered, setIsHovered] = useState(false);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [downloadState, setDownloadState] = useState('idle'); // 'idle', 'downloading', 'completed', 'cooldown'
+    const [downloadState, setDownloadState] = useState("idle"); // 'idle', 'downloading', 'completed', 'cooldown'
     const [cooldownTime, setCooldownTime] = useState(0);
     const [showCooldownToast, setShowCooldownToast] = useState(false);
     const [hasDownloaded, setHasDownloaded] = useState(false);
@@ -45,12 +46,42 @@ const Hero = () => {
     ];
 
     const socialLinks = [
-        { Icon: FaGithub, href: 'https://github.com/NischalAcharya060', label: 'GitHub', color: '#333' },
-        { Icon: FaLinkedin, href: 'https://www.linkedin.com/in/nischal-acharya101/', label: 'LinkedIn', color: '#0077B5' },
-        { Icon: FaInstagram, href: 'https://www.instagram.com/its_nischalacharya/', label: 'Instagram', color: '#E4405F' },
-        { Icon: FaTwitter, href: 'https://x.com/nischalacharya_', label: 'Twitter', color: '#1DA1F2' },
-        { Icon: FaFacebook, href: 'https://www.facebook.com/GrdhRavan', label: 'Facebook', color: '#1877F2' },
-        { Icon: FaEnvelope, href: 'mailto:Nischal060@gmail.com', label: 'Email', color: '#D44638' }
+        {
+            Icon: FaGithub,
+            href: "https://github.com/NischalAcharya060",
+            label: "GitHub",
+            color: "#333",
+        },
+        {
+            Icon: FaLinkedin,
+            href: "https://www.linkedin.com/in/nischal-acharya101/",
+            label: "LinkedIn",
+            color: "#0077B5",
+        },
+        {
+            Icon: FaInstagram,
+            href: "https://www.instagram.com/its_nischalacharya/",
+            label: "Instagram",
+            color: "#E4405F",
+        },
+        {
+            Icon: FaTwitter,
+            href: "https://x.com/nischalacharya_",
+            label: "Twitter",
+            color: "#1DA1F2",
+        },
+        {
+            Icon: FaFacebook,
+            href: "https://www.facebook.com/GrdhRavan",
+            label: "Facebook",
+            color: "#1877F2",
+        },
+        {
+            Icon: FaEnvelope,
+            href: "mailto:Nischal060@gmail.com",
+            label: "Email",
+            color: "#D44638",
+        },
     ];
 
     // Memoized scroll function
@@ -61,7 +92,7 @@ const Hero = () => {
             const elementPosition = element.offsetTop - offset;
             window.scrollTo({
                 top: elementPosition,
-                behavior: 'smooth'
+                behavior: "smooth",
             });
         }
     }, []);
@@ -70,14 +101,14 @@ const Hero = () => {
     const startCooldown = useCallback(() => {
         const COOLDOWN_DURATION = 30; // 30 seconds cooldown
         setCooldownTime(COOLDOWN_DURATION);
-        setDownloadState('cooldown');
+        setDownloadState("cooldown");
         setShowCooldownToast(true);
 
         cooldownIntervalRef.current = setInterval(() => {
-            setCooldownTime(prev => {
+            setCooldownTime((prev) => {
                 if (prev <= 1) {
                     clearInterval(cooldownIntervalRef.current);
-                    setDownloadState('idle');
+                    setDownloadState("idle");
                     setShowCooldownToast(false);
                     setHasDownloaded(false); // Reset download flag when cooldown ends
                     return 0;
@@ -95,34 +126,33 @@ const Hero = () => {
             return;
         }
 
-        setDownloadState('downloading');
+        setDownloadState("downloading");
 
         try {
             // Simulate download process
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            await new Promise((resolve) => setTimeout(resolve, 1500));
 
-            const link = document.createElement('a');
-            link.href = '/resume/Nischal_Acharya_CV.pdf';
-            link.download = 'Nischal_Acharya_CV.pdf';
-            link.style.display = 'none';
+            const link = document.createElement("a");
+            link.href = "/resume/Nischal_Acharya_CV.pdf";
+            link.download = "Nischal_Acharya_CV.pdf";
+            link.style.display = "none";
 
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
-            setDownloadState('completed');
+            setDownloadState("completed");
             setHasDownloaded(true); // Mark that user has downloaded
 
             // Reset to idle after 3 seconds
             setTimeout(() => {
-                setDownloadState('idle');
+                setDownloadState("idle");
             }, 3000);
-
         } catch (error) {
-            console.error('Download failed:', error);
-            setDownloadState('idle');
+            console.error("Download failed:", error);
+            setDownloadState("idle");
             // Fallback: open in new tab
-            window.open('/resume/Nischal_Acharya_CV.pdf', '_blank');
+            window.open("/resume/Nischal_Acharya_CV.pdf", "_blank");
         }
     }, [hasDownloaded, startCooldown]);
 
@@ -130,7 +160,8 @@ const Hero = () => {
     const handleMouseMove = useCallback((e) => {
         if (!sectionRef.current) return;
 
-        const { left, top, width, height } = sectionRef.current.getBoundingClientRect();
+        const { left, top, width, height } =
+            sectionRef.current.getBoundingClientRect();
         const x = ((e.clientX - left) / width) * 100;
         const y = ((e.clientY - top) / height) * 100;
         setMousePosition({ x, y });
@@ -138,7 +169,7 @@ const Hero = () => {
 
     // Optimized typewriter effect with proper cleanup
     useEffect(() => {
-        let currentText = '';
+        let currentText = "";
         let currentIndex = 0;
         let isDeleting = false;
         let typingSpeed = 100;
@@ -186,7 +217,7 @@ const Hero = () => {
     // Optimized cursor effect
     useEffect(() => {
         cursorIntervalRef.current = setInterval(() => {
-            setShowCursor(prev => !prev);
+            setShowCursor((prev) => !prev);
         }, 530);
 
         return () => {
@@ -218,9 +249,9 @@ const Hero = () => {
             opacity: 1,
             transition: {
                 delayChildren: 0.2,
-                staggerChildren: 0.08
-            }
-        }
+                staggerChildren: 0.08,
+            },
+        },
     };
 
     const itemVariants = {
@@ -233,9 +264,9 @@ const Hero = () => {
             opacity: 1,
             transition: {
                 duration: 0.5,
-                ease: "easeOut"
-            }
-        }
+                ease: "easeOut",
+            },
+        },
     };
 
     const floatingVariants = {
@@ -244,33 +275,33 @@ const Hero = () => {
             transition: {
                 duration: 4,
                 repeat: Infinity,
-                ease: "easeInOut"
-            }
-        }
+                ease: "easeInOut",
+            },
+        },
     };
 
     const getDownloadButtonContent = () => {
         switch (downloadState) {
-            case 'downloading':
+            case "downloading":
                 return (
                     <>
                         <Spinner
                             animation="border"
                             size="sm"
                             className="me-2"
-                            style={{ width: '1rem', height: '1rem' }}
+                            style={{ width: "1rem", height: "1rem" }}
                         />
                         Downloading...
                     </>
                 );
-            case 'completed':
+            case "completed":
                 return (
                     <>
                         <FaCheck className="me-2" />
                         Downloaded!
                     </>
                 );
-            case 'cooldown':
+            case "cooldown":
                 return (
                     <>
                         <FaClock className="me-2" />
@@ -290,46 +321,46 @@ const Hero = () => {
     // Get button styles based on download state
     const getDownloadButtonStyles = () => {
         const baseStyles = {
-            background: 'transparent',
-            padding: '0.875rem 1.75rem',
-            borderRadius: '50px',
+            background: "transparent",
+            padding: "0.875rem 1.75rem",
+            borderRadius: "50px",
             fontWeight: 600,
-            minWidth: '160px',
-            position: 'relative',
-            overflow: 'hidden'
+            minWidth: "160px",
+            position: "relative",
+            overflow: "hidden",
         };
 
         switch (downloadState) {
-            case 'completed':
+            case "completed":
                 return {
                     ...baseStyles,
-                    border: '2px solid #00ff88',
-                    color: '#00ff88',
-                    background: 'rgba(0, 255, 136, 0.05)'
+                    border: "2px solid #00ff88",
+                    color: "#00ff88",
+                    background: "rgba(0, 255, 136, 0.05)",
                 };
-            case 'downloading':
+            case "downloading":
                 return {
                     ...baseStyles,
-                    border: '2px solid var(--primary-color)',
-                    color: 'var(--primary-color)',
-                    background: 'rgba(var(--primary-rgb), 0.05)',
-                    opacity: 0.8
+                    border: "2px solid var(--primary-color)",
+                    color: "var(--primary-color)",
+                    background: "rgba(var(--primary-rgb), 0.05)",
+                    opacity: 0.8,
                 };
-            case 'cooldown':
+            case "cooldown":
                 return {
                     ...baseStyles,
-                    border: '2px solid var(--text-muted)',
-                    color: 'var(--text-muted)',
-                    background: 'rgba(128, 128, 128, 0.05)',
-                    cursor: 'not-allowed',
-                    opacity: 0.6
+                    border: "2px solid var(--text-muted)",
+                    color: "var(--text-muted)",
+                    background: "rgba(128, 128, 128, 0.05)",
+                    cursor: "not-allowed",
+                    opacity: 0.6,
                 };
             default:
                 return {
                     ...baseStyles,
-                    border: '2px solid var(--border-color)',
-                    color: 'var(--text-muted)',
-                    background: 'transparent'
+                    border: "2px solid var(--border-color)",
+                    color: "var(--text-muted)",
+                    background: "transparent",
                 };
         }
     };
@@ -343,8 +374,13 @@ const Hero = () => {
             size: Math.random() * 4 + 2,
             duration: 6 + Math.random() * 4,
             delay: Math.random() * 2,
-            color: i % 3 === 0 ? 'var(--primary-color)' : i % 3 === 1 ? 'var(--secondary-color)' : 'var(--accent-color)'
-        }))
+            color:
+                i % 3 === 0
+                    ? "var(--primary-color)"
+                    : i % 3 === 1
+                        ? "var(--secondary-color)"
+                        : "var(--accent-color)",
+        })),
     ).current;
 
     const shapes = useRef(
@@ -354,8 +390,8 @@ const Hero = () => {
             top: Math.random() * 100,
             size: Math.random() * 100 + 50,
             duration: 12 + Math.random() * 8,
-            delay: Math.random() * 3
-        }))
+            delay: Math.random() * 3,
+        })),
     ).current;
 
     return (
@@ -364,8 +400,9 @@ const Hero = () => {
             id="home"
             className="hero-section min-vh-100 d-flex align-items-center position-relative overflow-hidden"
             style={{
-                background: 'linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%)',
-                paddingTop: '6rem'
+                background:
+                    "linear-gradient(135deg, var(--background-color) 0%, var(--surface-color) 100%)",
+                paddingTop: "6rem",
             }}
             onMouseMove={handleMouseMove}
             onMouseEnter={() => setIsHovered(true)}
@@ -375,18 +412,18 @@ const Hero = () => {
             <motion.div
                 className="hero-background"
                 style={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: 0,
                     left: 0,
-                    width: '100%',
-                    height: '100%',
+                    width: "100%",
+                    height: "100%",
                     background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
                                 rgba(100, 100, 255, 0.08) 0%, 
                                 rgba(255, 100, 255, 0.04) 30%, 
                                 transparent 70%)`,
                     opacity: isHovered ? 1 : 0.7,
-                    transition: 'opacity 0.2s ease',
-                    zIndex: -2
+                    transition: "opacity 0.2s ease",
+                    zIndex: -2,
                 }}
             />
 
@@ -394,15 +431,16 @@ const Hero = () => {
             <div
                 className="animated-gradient"
                 style={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: 0,
                     left: 0,
-                    width: '100%',
-                    height: '100%',
-                    background: 'linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--primary-color) 100%)',
-                    backgroundSize: '200% 200%',
+                    width: "100%",
+                    height: "100%",
+                    background:
+                        "linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--primary-color) 100%)",
+                    backgroundSize: "200% 200%",
                     opacity: 0.02,
-                    zIndex: -1
+                    zIndex: -1,
                 }}
             />
 
@@ -413,13 +451,13 @@ const Hero = () => {
                         key={particle.id}
                         className="floating-particle"
                         style={{
-                            position: 'absolute',
+                            position: "absolute",
                             left: `${particle.left}%`,
                             top: `${particle.top}%`,
                             width: `${particle.size}px`,
                             height: `${particle.size}px`,
                             background: particle.color,
-                            borderRadius: '50%',
+                            borderRadius: "50%",
                             opacity: 0.3,
                         }}
                         animate={{
@@ -429,7 +467,7 @@ const Hero = () => {
                             duration: particle.duration,
                             repeat: Infinity,
                             ease: "easeInOut",
-                            delay: particle.delay
+                            delay: particle.delay,
                         }}
                     />
                 ))}
@@ -441,14 +479,14 @@ const Hero = () => {
                     <motion.div
                         key={shape.id}
                         style={{
-                            position: 'absolute',
+                            position: "absolute",
                             left: `${shape.left}%`,
                             top: `${shape.top}%`,
                             width: `${shape.size}px`,
                             height: `${shape.size}px`,
                             background: `rgba(100, 100, 255, 0.02)`,
-                            borderRadius: '30%',
-                            filter: 'blur(15px)',
+                            borderRadius: "30%",
+                            filter: "blur(15px)",
                         }}
                         animate={{
                             y: [-50, 50, -50],
@@ -459,14 +497,17 @@ const Hero = () => {
                             duration: shape.duration,
                             repeat: Infinity,
                             ease: "linear",
-                            delay: shape.delay
+                            delay: shape.delay,
                         }}
                     />
                 ))}
             </div>
 
             <Container>
-                <Row className="align-items-center justify-content-center" style={{ minHeight: '80vh' }}>
+                <Row
+                    className="align-items-center justify-content-center"
+                    style={{ minHeight: "80vh" }}
+                >
                     <Col xl={10} className="text-center">
                         <motion.div
                             variants={containerVariants}
@@ -477,16 +518,17 @@ const Hero = () => {
                             <motion.div
                                 variants={itemVariants}
                                 className="mb-4"
-                                style={{ display: 'flex', justifyContent: 'center' }}
+                                style={{ display: "flex", justifyContent: "center" }}
                             >
                                 <motion.div
                                     style={{
-                                        position: 'relative',
-                                        width: '160px',
-                                        height: '160px',
-                                        borderRadius: '50%',
-                                        padding: '3px',
-                                        background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
+                                        position: "relative",
+                                        width: "160px",
+                                        height: "160px",
+                                        borderRadius: "50%",
+                                        padding: "3px",
+                                        background:
+                                            "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
                                     }}
                                     whileHover={{ scale: 1.03 }}
                                     whileTap={{ scale: 0.98 }}
@@ -495,31 +537,31 @@ const Hero = () => {
                                         src="/api/placeholder/profile.jpeg"
                                         alt="Nischal Acharya"
                                         style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            borderRadius: '50%',
-                                            objectFit: 'cover',
-                                            border: '3px solid var(--background-color)'
+                                            width: "100%",
+                                            height: "100%",
+                                            borderRadius: "50%",
+                                            objectFit: "cover",
+                                            border: "3px solid var(--background-color)",
                                         }}
                                     />
                                     <motion.div
                                         style={{
-                                            position: 'absolute',
-                                            bottom: '12px',
-                                            right: '12px',
-                                            width: '14px',
-                                            height: '14px',
-                                            background: '#00ff88',
-                                            border: '2px solid var(--background-color)',
-                                            borderRadius: '50%',
+                                            position: "absolute",
+                                            bottom: "12px",
+                                            right: "12px",
+                                            width: "14px",
+                                            height: "14px",
+                                            background: "#00ff88",
+                                            border: "2px solid var(--background-color)",
+                                            borderRadius: "50%",
                                         }}
                                         animate={{
                                             scale: [1, 1.2, 1],
-                                            opacity: [0.7, 1, 0.7]
+                                            opacity: [0.7, 1, 0.7],
                                         }}
                                         transition={{
                                             duration: 2,
-                                            repeat: Infinity
+                                            repeat: Infinity,
                                         }}
                                     />
                                 </motion.div>
@@ -527,72 +569,86 @@ const Hero = () => {
 
                             {/* Main Heading */}
                             <motion.div variants={itemVariants} className="mb-3">
-                                <h1 style={{
-                                    fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-                                    fontWeight: 800,
-                                    lineHeight: 1.1,
-                                    marginBottom: '1rem'
-                                }}>
-                                    Hi, I'm{' '}
-                                    <span style={{
-                                        background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
-                                        WebkitBackgroundClip: 'text',
-                                        WebkitTextFillColor: 'transparent',
-                                        backgroundClip: 'text'
-                                    }}>
-                                        Nischal Acharya
-                                    </span>
+                                <h1
+                                    style={{
+                                        fontSize: "clamp(2.5rem, 5vw, 4rem)",
+                                        fontWeight: 800,
+                                        lineHeight: 1.1,
+                                        marginBottom: "1rem",
+                                    }}
+                                >
+                                    Hi, I'm{" "}
+                                    <span
+                                        style={{
+                                            background:
+                                                "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
+                                            WebkitBackgroundClip: "text",
+                                            WebkitTextFillColor: "transparent",
+                                            backgroundClip: "text",
+                                        }}
+                                    >
+                    Nischal Acharya
+                  </span>
                                 </h1>
                             </motion.div>
 
                             {/* Optimized Role Text */}
                             <motion.div variants={itemVariants} className="mb-4">
-                                <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    gap: '1rem'
-                                }}>
-                                    <h2 style={{
-                                        fontSize: 'clamp(1.5rem, 3vw, 2.2rem)',
-                                        fontWeight: 600,
-                                        color: 'var(--text-color)',
-                                        marginBottom: '0.5rem',
-                                        minHeight: '60px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <span style={{
-                                            fontFamily: "'Monaco', 'Consolas', monospace",
-                                            background: 'linear-gradient(135deg, var(--text-color), var(--text-muted))',
-                                            WebkitBackgroundClip: 'text',
-                                            WebkitTextFillColor: 'transparent',
-                                            backgroundClip: 'text'
-                                        }}>
-                                            {displayText}
-                                            <span style={{
-                                                color: 'var(--primary-color)',
-                                                fontWeight: 300,
-                                                opacity: showCursor ? 1 : 0,
-                                                transition: 'opacity 0.1s ease'
-                                            }}>
-                                                |
-                                            </span>
-                                        </span>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        gap: "1rem",
+                                    }}
+                                >
+                                    <h2
+                                        style={{
+                                            fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
+                                            fontWeight: 600,
+                                            color: "var(--text-color)",
+                                            marginBottom: "0.5rem",
+                                            minHeight: "60px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                    <span
+                        style={{
+                            fontFamily: "'Monaco', 'Consolas', monospace",
+                            background:
+                                "linear-gradient(135deg, var(--text-color), var(--text-muted))",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            backgroundClip: "text",
+                        }}
+                    >
+                      {displayText}
+                        <span
+                            style={{
+                                color: "var(--primary-color)",
+                                fontWeight: 300,
+                                opacity: showCursor ? 1 : 0,
+                                transition: "opacity 0.1s ease",
+                            }}
+                        >
+                        |
+                      </span>
+                    </span>
                                     </h2>
                                     <motion.div
                                         style={{
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '0.5rem',
-                                            background: 'rgba(0, 255, 136, 0.1)',
-                                            color: '#00ff88',
-                                            padding: '0.5rem 1rem',
-                                            borderRadius: '25px',
-                                            fontSize: '0.9rem',
+                                            display: "inline-flex",
+                                            alignItems: "center",
+                                            gap: "0.5rem",
+                                            background: "rgba(0, 255, 136, 0.1)",
+                                            color: "#00ff88",
+                                            padding: "0.5rem 1rem",
+                                            borderRadius: "25px",
+                                            fontSize: "0.9rem",
                                             fontWeight: 500,
-                                            border: '1px solid rgba(0, 255, 136, 0.2)',
+                                            border: "1px solid rgba(0, 255, 136, 0.2)",
                                         }}
                                         variants={floatingVariants}
                                         animate="float"
@@ -605,26 +661,31 @@ const Hero = () => {
 
                             {/* Description */}
                             <motion.div variants={itemVariants} className="mb-5">
-                                <p style={{
-                                    fontSize: '1.1rem',
-                                    lineHeight: 1.6,
-                                    color: 'var(--text-muted)',
-                                    maxWidth: '600px',
-                                    margin: '0 auto'
-                                }}>
-                                    I'm a passionate developer from <span style={{
-                                    color: 'var(--primary-color)',
-                                    fontWeight: 600
-                                }}>Gauradaha-Jhapa, Nepal</span>,
-                                    specializing in creating digital experiences that blend creativity with functionality.
+                                <p
+                                    style={{
+                                        fontSize: "1.1rem",
+                                        lineHeight: 1.6,
+                                        color: "var(--text-muted)",
+                                        maxWidth: "600px",
+                                        margin: "0 auto",
+                                    }}
+                                >
+                                    I'm a passionate developer from{" "}
+                                    <span
+                                        style={{
+                                            color: "var(--primary-color)",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                    Gauradaha-Jhapa, Nepal
+                  </span>
+                                    , specializing in creating digital experiences that blend
+                                    creativity with functionality.
                                 </p>
                             </motion.div>
 
                             {/* Action Buttons */}
-                            <motion.div
-                                variants={itemVariants}
-                                className="mb-5"
-                            >
+                            <motion.div variants={itemVariants} className="mb-5">
                                 <div className="d-flex gap-3 justify-content-center flex-wrap">
                                     <motion.div
                                         whileHover={{ scale: 1.02 }}
@@ -633,15 +694,16 @@ const Hero = () => {
                                         <Button
                                             size="lg"
                                             style={{
-                                                background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
-                                                border: 'none',
-                                                color: 'white',
-                                                padding: '0.875rem 1.75rem',
-                                                borderRadius: '50px',
+                                                background:
+                                                    "linear-gradient(135deg, var(--primary-color), var(--secondary-color))",
+                                                border: "none",
+                                                color: "white",
+                                                padding: "0.875rem 1.75rem",
+                                                borderRadius: "50px",
                                                 fontWeight: 600,
-                                                minWidth: '160px'
+                                                minWidth: "160px",
                                             }}
-                                            onClick={() => scrollToSection('projects')}
+                                            onClick={() => scrollToSection("projects")}
                                         >
                                             <FaCode className="me-2" />
                                             View My Work
@@ -656,15 +718,15 @@ const Hero = () => {
                                             variant="outline"
                                             size="lg"
                                             style={{
-                                                background: 'transparent',
-                                                border: '2px solid var(--primary-color)',
-                                                color: 'var(--primary-color)',
-                                                padding: '0.875rem 1.75rem',
-                                                borderRadius: '50px',
+                                                background: "transparent",
+                                                border: "2px solid var(--primary-color)",
+                                                color: "var(--primary-color)",
+                                                padding: "0.875rem 1.75rem",
+                                                borderRadius: "50px",
                                                 fontWeight: 600,
-                                                minWidth: '160px'
+                                                minWidth: "160px",
                                             }}
-                                            onClick={() => scrollToSection('contact')}
+                                            onClick={() => scrollToSection("contact")}
                                         >
                                             <FaRocket className="me-2" />
                                             Start Project
@@ -672,15 +734,28 @@ const Hero = () => {
                                     </motion.div>
 
                                     <motion.div
-                                        whileHover={downloadState !== 'downloading' && downloadState !== 'cooldown' ? { scale: 1.02 } : {}}
-                                        whileTap={downloadState !== 'downloading' && downloadState !== 'cooldown' ? { scale: 0.98 } : {}}
+                                        whileHover={
+                                            downloadState !== "downloading" &&
+                                            downloadState !== "cooldown"
+                                                ? { scale: 1.02 }
+                                                : {}
+                                        }
+                                        whileTap={
+                                            downloadState !== "downloading" &&
+                                            downloadState !== "cooldown"
+                                                ? { scale: 0.98 }
+                                                : {}
+                                        }
                                     >
                                         <Button
                                             variant="outline"
                                             size="lg"
                                             style={getDownloadButtonStyles()}
                                             onClick={handleDownloadResume}
-                                            disabled={downloadState === 'downloading' || downloadState === 'cooldown'}
+                                            disabled={
+                                                downloadState === "downloading" ||
+                                                downloadState === "cooldown"
+                                            }
                                         >
                                             {getDownloadButtonContent()}
                                         </Button>
@@ -690,63 +765,78 @@ const Hero = () => {
 
                             {/* Social Links */}
                             <motion.div variants={itemVariants}>
-                                <div style={{ textAlign: 'center' }}>
-                                    <p style={{
-                                        color: 'var(--text-muted)',
-                                        fontSize: '0.9rem',
-                                        textTransform: 'uppercase',
-                                        letterSpacing: '2px',
-                                        fontWeight: 500,
-                                        marginBottom: '1rem'
-                                    }}>Follow my journey</p>
-                                    <div style={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        gap: '0.75rem',
-                                        flexWrap: 'wrap'
-                                    }}>
+                                <div style={{ textAlign: "center" }}>
+                                    <p
+                                        style={{
+                                            color: "var(--text-muted)",
+                                            fontSize: "0.9rem",
+                                            textTransform: "uppercase",
+                                            letterSpacing: "2px",
+                                            fontWeight: 500,
+                                            marginBottom: "1rem",
+                                        }}
+                                    >
+                                        Follow my journey
+                                    </p>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            gap: "0.75rem",
+                                            flexWrap: "wrap",
+                                        }}
+                                    >
                                         {socialLinks.map((social, index) => (
-                                            <motion.a
+                                            <OverlayTrigger
                                                 key={social.label}
-                                                href={social.href}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    width: '48px',
-                                                    height: '48px',
-                                                    borderRadius: '50%',
-                                                    background: 'var(--card-bg)',
-                                                    border: '1px solid var(--border-color)',
-                                                    textDecoration: 'none',
-                                                    color: 'var(--text-muted)',
-                                                }}
-                                                whileHover={{
-                                                    scale: 1.15,
-                                                    y: -3,
-                                                    color: social.color,
-                                                    borderColor: social.color,
-                                                }}
-                                                whileTap={{ scale: 0.95 }}
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                transition={{
-                                                    delay: 1 + index * 0.08,
-                                                    type: "spring",
-                                                    stiffness: 300,
-                                                    damping: 20
-                                                }}
-                                                aria-label={social.label}
+                                                placement="top"
+                                                overlay={
+                                                    <Tooltip id={`tooltip-${social.label}`}>
+                                                        {social.label}
+                                                    </Tooltip>
+                                                }
                                             >
-                                                <social.Icon size={18} />
-                                            </motion.a>
+                        <span style={{ display: "inline-block" }}>
+                          <motion.a
+                              href={social.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  width: "48px",
+                                  height: "48px",
+                                  borderRadius: "50%",
+                                  background: "var(--card-bg)",
+                                  border: "1px solid var(--border-color)",
+                                  textDecoration: "none",
+                                  color: "var(--text-muted)",
+                              }}
+                              whileHover={{
+                                  scale: 1.15,
+                                  y: -3,
+                                  color: social.color,
+                                  borderColor: social.color,
+                              }}
+                              whileTap={{ scale: 0.95 }}
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              transition={{
+                                  type: "spring",
+                                  stiffness: 300,
+                                  damping: 20,
+                              }}
+                              aria-label={social.label}
+                          >
+                            <social.Icon size={18} />
+                          </motion.a>
+                        </span>
+                                            </OverlayTrigger>
                                         ))}
                                     </div>
                                 </div>
                             </motion.div>
-
                         </motion.div>
                     </Col>
                 </Row>
@@ -754,25 +844,25 @@ const Hero = () => {
 
             {/* Download Success Toast */}
             <AnimatePresence>
-                {downloadState === 'completed' && (
+                {downloadState === "completed" && (
                     <motion.div
                         initial={{ opacity: 0, y: 50, scale: 0.8 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 50, scale: 0.8 }}
                         style={{
-                            position: 'fixed',
-                            bottom: '2rem',
-                            right: '2rem',
-                            background: 'var(--card-bg)',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '12px',
-                            padding: '1rem 1.5rem',
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                            position: "fixed",
+                            bottom: "2rem",
+                            right: "2rem",
+                            background: "var(--card-bg)",
+                            border: "1px solid var(--border-color)",
+                            borderRadius: "12px",
+                            padding: "1rem 1.5rem",
+                            boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
                             zIndex: 1000,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.75rem',
-                            backdropFilter: 'blur(10px)'
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.75rem",
+                            backdropFilter: "blur(10px)",
                         }}
                     >
                         <motion.div
@@ -780,13 +870,13 @@ const Hero = () => {
                             animate={{ scale: 1 }}
                             transition={{ type: "spring", stiffness: 500 }}
                         >
-                            <FaCheck style={{ color: '#00ff88', fontSize: '1.25rem' }} />
+                            <FaCheck style={{ color: "#00ff88", fontSize: "1.25rem" }} />
                         </motion.div>
                         <div>
-                            <div style={{ fontWeight: 600, color: 'var(--text-color)' }}>
+                            <div style={{ fontWeight: 600, color: "var(--text-color)" }}>
                                 Download Complete!
                             </div>
-                            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                            <div style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
                                 CV downloaded successfully
                             </div>
                         </div>
@@ -802,20 +892,20 @@ const Hero = () => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 50, scale: 0.8 }}
                         style={{
-                            position: 'fixed',
-                            bottom: '2rem',
-                            left: '2rem',
-                            background: 'var(--card-bg)',
-                            border: '1px solid var(--border-color)',
-                            borderRadius: '12px',
-                            padding: '1rem 1.5rem',
-                            boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+                            position: "fixed",
+                            bottom: "2rem",
+                            left: "2rem",
+                            background: "var(--card-bg)",
+                            border: "1px solid var(--border-color)",
+                            borderRadius: "12px",
+                            padding: "1rem 1.5rem",
+                            boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
                             zIndex: 1000,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.75rem',
-                            backdropFilter: 'blur(10px)',
-                            maxWidth: '300px'
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.75rem",
+                            backdropFilter: "blur(10px)",
+                            maxWidth: "300px",
                         }}
                     >
                         <motion.div
@@ -823,13 +913,15 @@ const Hero = () => {
                             animate={{ scale: 1 }}
                             transition={{ type: "spring", stiffness: 500 }}
                         >
-                            <FaClock style={{ color: 'var(--warning-color)', fontSize: '1.25rem' }} />
+                            <FaClock
+                                style={{ color: "var(--warning-color)", fontSize: "1.25rem" }}
+                            />
                         </motion.div>
                         <div>
-                            <div style={{ fontWeight: 600, color: 'var(--text-color)' }}>
+                            <div style={{ fontWeight: 600, color: "var(--text-color)" }}>
                                 Download Cooldown
                             </div>
-                            <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+                            <div style={{ fontSize: "0.875rem", color: "var(--text-muted)" }}>
                                 Please wait {cooldownTime} seconds before downloading again
                             </div>
                         </div>

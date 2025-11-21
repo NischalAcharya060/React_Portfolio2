@@ -1,10 +1,16 @@
 ::selection {
-    background: #646cff;
-    color: white;
-    text-shadow: none;
+    background: #646cff !important;
+    color: white !important;
+    text-shadow: none !important;
 }
 
 ::-moz-selection {
+    background: #646cff !important;
+    color: white !important;
+    text-shadow: none !important;
+}
+
+::-webkit-selection {
     background: #646cff;
     color: white;
     text-shadow: none;

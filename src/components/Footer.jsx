@@ -1,6 +1,6 @@
 // src/components/Footer.jsx
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import {Container, Row, Col, Tooltip, OverlayTrigger} from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     FaHeart,
@@ -142,26 +142,35 @@ const Footer = () => {
                                     that make a difference. Let's build something amazing together!
                                 </p>
                                 <div className="social-links">
-                                    {socialLinks.map((social, index) => (
-                                        <motion.a
+                                    {socialLinks.map((social) => (
+                                        <OverlayTrigger
                                             key={social.label}
-                                            href={social.href}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="social-icon"
-                                            whileHover={{
-                                                scale: 1.1,
-                                                y: -3,
-                                                color: social.color,
-                                                borderColor: social.color,
-                                                background: `${social.color}15`
-                                            }}
-                                            whileTap={{ scale: 0.9 }}
-                                            variants={itemVariants}
-                                            aria-label={social.label}
+                                            placement="top"
+                                            overlay={
+                                                <Tooltip id={`tooltip-${social.label}`}>
+                                                    {social.label}
+                                                </Tooltip>
+                                            }
                                         >
-                                            <social.icon size={18} />
-                                        </motion.a>
+                                            <motion.a
+                                                href={social.href}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="social-icon"
+                                                whileHover={{
+                                                    scale: 1.1,
+                                                    y: -3,
+                                                    color: social.color,
+                                                    borderColor: social.color,
+                                                    background: `${social.color}15`,
+                                                }}
+                                                whileTap={{ scale: 0.9 }}
+                                                variants={itemVariants}
+                                                aria-label={social.label}
+                                            >
+                                                <social.icon size={18} />
+                                            </motion.a>
+                                        </OverlayTrigger>
                                     ))}
                                 </div>
                             </motion.div>
