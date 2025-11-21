@@ -285,6 +285,8 @@ const Skills = () => {
                     </Row>
                 </motion.div>
 
+                <div style={{ height: '2rem', width: '100%' }}></div>
+
                 {/* Category Tabs */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}

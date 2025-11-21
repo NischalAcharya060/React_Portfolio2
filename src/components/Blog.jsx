@@ -133,6 +133,9 @@ const Blog = () => {
                     </p>
                 </motion.div>
 
+                <div style={{ height: '2rem', width: '100%' }}></div>
+
+                {/* Card */}
                 <motion.div
                     variants={containerVariants}
                     initial="hidden"

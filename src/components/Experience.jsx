@@ -222,6 +222,8 @@ const Experience = () => {
                     </Row>
                 </motion.div>
 
+                <div style={{ height: '2rem', width: '100%' }}></div>
+
                 {/* Timeline */}
                 <motion.div
                     variants={containerVariants}

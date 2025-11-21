@@ -222,6 +222,8 @@ const Projects = () => {
                     </div>
                 </motion.div>
 
+                <div style={{ height: '2rem', width: '100%' }}></div>
+
                 {/* Projects Grid */}
                 <motion.div
                     variants={containerVariants}

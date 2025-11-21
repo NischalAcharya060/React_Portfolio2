@@ -262,13 +262,16 @@ const Footer = () => {
                         <Row className="bottom-content">
                             <Col md={6} className="copyright-section">
                                 <p className="copyright-text">
-                                    © {currentYear} Nischal Acharya. Crafted with{' '}
+                                    Design & Developed by{' '}
                                     <motion.span
-                                        whileHover={{ scale: 1.3 }}
-                                        transition={{ type: "spring", stiffness: 300 }}
+                                        style={{ color: '#646cff', display: 'inline-block', fontWeight: 'bold' }}
+                                        whileHover={{ scale: 1.1, rotate: 2 }}
+                                        transition={{ duration: 0.3 }}
                                     >
-                                        <FaHeart className="heart-icon" />
+                                        Nischal Acharya
                                     </motion.span>
+                                    <br />
+                                    © {currentYear} All rights reserved.
                                 </p>
                             </Col>
 
