@@ -2,7 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSun, FaMoon, FaCode, FaHome, FaUser, FaTools, FaProjectDiagram, FaBriefcase, FaEnvelope, FaBlog } from 'react-icons/fa';
+import {
+    FaSun, FaMoon, FaCode, FaHome, FaUser, FaTools, FaProjectDiagram, FaBriefcase, FaEnvelope, FaBlog,
+    FaAward
+} from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 
 const Navigation = () => {
@@ -57,6 +60,7 @@ const Navigation = () => {
         { name: 'Skills', href: '#skills', icon: FaTools, id: 'skills' },
         { name: 'Projects', href: '#projects', icon: FaProjectDiagram, id: 'projects' },
         { name: 'Experience', href: '#experience', icon: FaBriefcase, id: 'experience' },
+        { name: 'Certification', href: '#certification', icon: FaAward, id: 'certification' },
         { name: 'Blog', href: '#blog', icon: FaBlog, id: 'blog' },
         { name: 'Contact', href: '#contact', icon: FaEnvelope, id: 'contact' }
     ];

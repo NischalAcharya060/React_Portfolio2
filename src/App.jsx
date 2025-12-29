@@ -15,6 +15,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
 import Chatbot from "./components/ChatBot.jsx";
+import Certifications from "./components/Certifications.jsx";
 
 const MainLayout = ({ children }) => {
     const location = useLocation();
@@ -87,6 +88,7 @@ function AppContent() {
                             <Skills />
                             <Projects />
                             <Experience />
+                            <Certifications/>
                             <Blog/>
                             <Contact />
                             <Chatbot/>

@@ -665,7 +665,7 @@ const Experience = () => {
 
                 .role-type {
                     background: rgba(var(--primary-rgb), 0.1);
-                    color: var(--text-color);
+                    color: #ffffff;
                     border: none;
                     font-size: var(--font-size-xs);
                     font-weight: 600;
