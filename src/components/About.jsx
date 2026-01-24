@@ -1,6 +1,6 @@
 // src/components/About.jsx
 import React, { useRef, useMemo } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
+import {Container, Row, Col} from 'react-bootstrap';
 import { motion, useInView } from 'framer-motion';
 import {
     FaCode,
@@ -8,7 +8,9 @@ import {
     FaAward,
     FaProjectDiagram,
     FaUsers,
-    FaCalendarAlt
+    FaCalendarAlt,
+    FaFilePdf,
+    FaExternalLinkAlt
 } from 'react-icons/fa';
 import SpotifyNowPlaying from "./SpotifyNowPlaying.jsx";
 
@@ -16,7 +18,6 @@ const About = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.1 });
 
-    // Memoized animation variants
     const containerVariants = useMemo(() => ({
         hidden: { opacity: 0 },
         visible: {
@@ -36,7 +37,6 @@ const About = () => {
         }
     }), []);
 
-    // Memoized stats data
     const stats = useMemo(() => [
         { icon: FaAward, value: '2+', label: 'Years Experience' },
         { icon: FaProjectDiagram, value: '20+', label: 'Projects Completed' },
@@ -44,13 +44,15 @@ const About = () => {
         { icon: FaCalendarAlt, value: '100%', label: 'Meeting Deadlines' }
     ], []);
 
+    const atsCvLink = "https://drive.google.com/file/d/13Hpnc1T2HXvxL-lyV54t3M7jbtFD3tC3/view?usp=sharing";
+    const normalCvLink = "https://drive.google.com/file/d/1koGD_UgyC7B-edJr0ODyna0KpFiOQ70n/view?usp=sharing";
+
     return (
         <section
             id="about"
             ref={ref}
             className="about-section position-relative overflow-hidden"
         >
-            {/* Background Elements */}
             <div className="background-elements">
                 <div className="bg-blob primary-blob" />
                 <div className="bg-blob secondary-blob" />
@@ -62,7 +64,6 @@ const About = () => {
                     initial="hidden"
                     animate={isInView ? "visible" : "hidden"}
                 >
-                    {/* Section Header */}
                     <motion.div
                         variants={itemVariants}
                         className="section-header text-center mb-5"
@@ -84,7 +85,6 @@ const About = () => {
                     </motion.div>
 
                     <Row className="align-items-center gy-5">
-                        {/* LEFT COLUMN: Profile Image + Spotify */}
                         <Col lg={5} className="profile-column d-flex flex-column align-items-center">
                             <motion.div
                                 variants={itemVariants}
@@ -100,7 +100,6 @@ const About = () => {
                                         height={400}
                                     />
 
-                                    {/* Floating Icons */}
                                     <motion.div
                                         className="floating-element primary-float"
                                         animate={{ y: [-8, 8, -8] }}
@@ -128,7 +127,6 @@ const About = () => {
                                 </div>
                             </motion.div>
 
-                            {/* Spotify Component - Centered and matched width */}
                             <motion.div
                                 variants={itemVariants}
                                 className="spotify-wrapper"
@@ -137,10 +135,8 @@ const About = () => {
                             </motion.div>
                         </Col>
 
-                        {/* RIGHT COLUMN: Stats + Bio */}
                         <Col lg={7}>
                             <motion.div variants={itemVariants} className="content-wrapper">
-                                {/* Stats Grid */}
                                 <Row className="stats-grid g-3 mb-4">
                                     {stats.map((stat, index) => (
                                         <Col key={index} xs={6} sm={6}>
@@ -157,8 +153,7 @@ const About = () => {
                                     ))}
                                 </Row>
 
-                                {/* Bio Text */}
-                                <div className="bio-section">
+                                <div className="bio-section mb-4">
                                     <p className="bio-text">
                                         I'm a passionate full-stack developer from <strong>Gauradaha-Jhapa, Nepal</strong>,
                                         specializing in creating digital experiences that blend cutting-edge technology
@@ -173,6 +168,67 @@ const About = () => {
                                         When I'm not coding, you'll find me exploring new technologies, contributing
                                         to open-source projects, or sharing knowledge with the developer community.
                                     </p>
+                                </div>
+
+                                <div className="cv-buttons-section mt-5">
+                                    <div className="cv-header d-flex align-items-center mb-3">
+                                        <FaFilePdf className="me-2" style={{ color: '#FF6B6B', fontSize: '1.25rem' }} />
+                                        <h4 className="mb-0" style={{ color: 'var(--text-color, #fff)' }}>
+                                            View My Resume
+                                        </h4>
+                                    </div>
+                                    <p className="mb-4" style={{ fontSize: '0.9rem'}}>
+                                        Choose the resume format that best suits your needs
+                                    </p>
+
+                                    <div className="d-flex flex-wrap gap-3">
+                                        <motion.div
+                                            whileHover={{ scale: 1.03, y: -2 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            transition={{ type: "spring", stiffness: 300 }}
+                                        >
+                                            <button
+                                                className="cv-btn cv-btn-primary"
+                                                onClick={() => window.open(normalCvLink, "_blank")}
+                                            >
+                                                <FaFilePdf className="me-2" />
+                                                View Standard CV
+                                                <FaExternalLinkAlt className="ms-2" size={12} />
+                                            </button>
+                                        </motion.div>
+
+                                        <motion.div
+                                            whileHover={{ scale: 1.03, y: -2 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            transition={{ type: "spring", stiffness: 300 }}
+                                        >
+                                            <button
+                                                className="cv-btn cv-btn-secondary"
+                                                onClick={() => window.open(atsCvLink, "_blank")}
+                                            >
+                                                <FaFilePdf className="me-2" />
+                                                View ATS Optimized CV
+                                                <FaExternalLinkAlt className="ms-2" size={12} />
+                                            </button>
+                                        </motion.div>
+                                    </div>
+
+                                    <div className="cv-tips mt-3">
+                                        <div className="row g-2">
+                                            <div className="col-md-6">
+                                                <div className="d-flex align-items-center" style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                                                    <div className="tip-dot me-2" style={{ backgroundColor: 'var(--primary-color)' }} />
+                                                    <span>Standard CV: Visual & detailed</span>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="d-flex align-items-center" style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                                                    <div className="tip-dot me-2" style={{ backgroundColor: '#10B981' }} />
+                                                    <span>ATS CV: Keyword optimized</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </motion.div>
                         </Col>
@@ -190,7 +246,6 @@ const About = () => {
 
                 .z-2 { z-index: 2; }
 
-                /* Background Blobs */
                 .background-elements {
                     position: absolute;
                     top: 0;
@@ -224,7 +279,6 @@ const About = () => {
                     background: var(--secondary-color, #a855f7);
                 }
 
-                /* Header Styles */
                 .section-header {
                     position: relative;
                     z-index: 2;
@@ -265,7 +319,6 @@ const About = () => {
                     line-height: 1.6;
                 }
 
-                /* Profile Image Styles */
                 .profile-container {
                     position: relative;
                     width: 100%;
@@ -297,7 +350,6 @@ const About = () => {
                     max-width: 400px;
                 }
 
-                /* Floating Icons */
                 .floating-element {
                     position: absolute;
                     width: 45px;
@@ -324,7 +376,6 @@ const About = () => {
                     background: var(--secondary-color, #a855f7);
                 }
 
-                /* Stats Cards */
                 .stat-card {
                     background: rgba(255, 255, 255, 0.03);
                     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -363,7 +414,6 @@ const About = () => {
                     font-weight: 500;
                 }
 
-                /* Bio Text */
                 .bio-text {
                     color: var(--text-muted, #d1d5db);
                     line-height: 1.8;
@@ -376,10 +426,82 @@ const About = () => {
                     font-weight: 600;
                 }
 
-                /* Responsive Adjustments */
+                .cv-buttons-section {
+                    background: rgba(255, 255, 255, 0.02);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    border-radius: 16px;
+                    padding: 2rem;
+                    transition: all 0.3s ease;
+                }
+
+                .cv-buttons-section:hover {
+                    background: rgba(255, 255, 255, 0.03);
+                    border-color: rgba(var(--primary-rgb, 99, 102, 241), 0.2);
+                }
+
+                .cv-btn {
+                    padding: 0.875rem 1.75rem;
+                    border-radius: 12px;
+                    border: none;
+                    font-weight: 600;
+                    font-size: 0.95rem;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    min-width: 200px;
+                }
+
+                .cv-btn-primary {
+                    background: linear-gradient(135deg, var(--primary-color, #6366f1), var(--secondary-color, #a855f7));
+                    color: white;
+                    box-shadow: 0 4px 15px rgba(var(--primary-rgb, 99, 102, 241), 0.2);
+                }
+
+                .cv-btn-primary:hover {
+                    background: linear-gradient(135deg, var(--primary-color-dark, #4f46e5), var(--secondary-color-dark, #9333ea));
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(var(--primary-rgb, 99, 102, 241), 0.3);
+                }
+
+                .cv-btn-secondary {
+                    background: linear-gradient(135deg, #10B981, #059669);
+                    color: white;
+                    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+                }
+
+                .cv-btn-secondary:hover {
+                    background: linear-gradient(135deg, #0DA271, #047857);
+                    transform: translateY(-2px);
+                    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+                }
+
+                .tip-dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    display: inline-block;
+                }
+
                 @media (max-width: 991px) {
                     .profile-column {
                         margin-bottom: 1rem;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .cv-buttons-section {
+                        padding: 1.5rem;
+                    }
+
+                    .cv-btn {
+                        min-width: 100%;
+                    }
+
+                    .d-flex.flex-wrap {
+                        flex-direction: column;
+                        gap: 1rem !important;
                     }
                 }
 
@@ -410,6 +532,15 @@ const About = () => {
 
                     .bio-text {
                         font-size: 0.95rem;
+                    }
+
+                    .cv-buttons-section {
+                        padding: 1.25rem;
+                    }
+
+                    .cv-btn {
+                        padding: 0.75rem 1.5rem;
+                        font-size: 0.9rem;
                     }
                 }
             `}</style>
