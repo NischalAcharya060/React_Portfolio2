@@ -21,6 +21,7 @@ import {
     FaClock,
 } from "react-icons/fa";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import Scene3D from './Scene3D';
 
 const Hero = () => {
     const [currentRole, setCurrentRole] = useState(0);
@@ -408,6 +409,20 @@ const Hero = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
+            {/* 3D Background Scene */}
+            <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 0,
+                opacity: 0.4,
+                pointerEvents: 'none',
+            }}>
+                <Scene3D />
+            </div>
+
             {/* Optimized Background */}
             <motion.div
                 className="hero-background"
