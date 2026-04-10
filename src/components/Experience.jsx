@@ -359,6 +359,7 @@ const Experience = () => {
                                                 <button
                                                     className="expand-btn"
                                                     onClick={() => toggleExpanded(exp.id)}
+                                                    aria-expanded={!!expandedItems[exp.id]}
                                                 >
                                                     <FaChevronDown
                                                         className={`expand-icon ${expandedItems[exp.id] ? 'expanded' : ''}`}

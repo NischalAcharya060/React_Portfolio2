@@ -1,5 +1,5 @@
 // src/components/Hero.jsx
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, Suspense, lazy } from "react";
 import { Container, Row, Col, Button, Spinner, Toast } from "react-bootstrap";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -21,9 +21,12 @@ import {
     FaClock,
 } from "react-icons/fa";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
-import Scene3D from './Scene3D';
+import { useTheme } from '../context/ThemeContext';
+
+const Scene3D = lazy(() => import('./Scene3D'));
 
 const Hero = () => {
+    const { isDark } = useTheme();
     const [currentRole, setCurrentRole] = useState(0);
     const [displayText, setDisplayText] = useState("");
     const [showCursor, setShowCursor] = useState(true);
@@ -409,19 +412,23 @@ const Hero = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {/* 3D Background Scene */}
-            <div style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: 0,
-                opacity: 0.4,
-                pointerEvents: 'none',
-            }}>
-                <Scene3D />
-            </div>
+            {/* 3D Background Scene - only loaded in dark mode */}
+            {isDark && (
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    zIndex: 0,
+                    opacity: 0.4,
+                    pointerEvents: 'none',
+                }}>
+                    <Suspense fallback={null}>
+                        <Scene3D />
+                    </Suspense>
+                </div>
+            )}
 
             {/* Optimized Background */}
             <motion.div

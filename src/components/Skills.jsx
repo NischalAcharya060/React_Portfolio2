@@ -294,7 +294,7 @@ const Skills = () => {
                     transition={{ duration: 0.6, delay: 0.3 }}
                     className="category-tabs-container mb-6"
                 >
-                    <div className="category-tabs">
+                    <div className="category-tabs" role="tablist">
                         {skillCategories.map((category, index) => {
                             const CategoryIcon = category.icon;
                             return (
@@ -302,6 +302,8 @@ const Skills = () => {
                                     key={category.id}
                                     onClick={() => setActiveCategory(index)}
                                     className={`category-tab ${activeCategory === index ? 'active' : ''}`}
+                                    role="tab"
+                                    aria-selected={activeCategory === index}
                                     whileHover={{ scale: 1.05, y: -2 }}
                                     whileTap={{ scale: 0.95 }}
                                 >
@@ -328,6 +330,7 @@ const Skills = () => {
                 {/* Skills Grid */}
                 <motion.div
                     key={activeCategory}
+                    role="tabpanel"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}

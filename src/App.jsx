@@ -1,21 +1,23 @@
 // App.jsx
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ThemeProvider } from './context/ThemeContext';
 import CustomCursor from './components/CustomCursor';
-import Loader from './components/Loader';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Experience from './components/Experience';
-import Blog from './components/Blog';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
-import Chatbot from "./components/ChatBot.jsx";
-import Certifications from "./components/Certifications.jsx";
+
+// Lazy load below-the-fold and heavy components
+const About = lazy(() => import('./components/About'));
+const Skills = lazy(() => import('./components/Skills'));
+const Projects = lazy(() => import('./components/Projects'));
+const Experience = lazy(() => import('./components/Experience'));
+const Blog = lazy(() => import('./components/Blog'));
+const Contact = lazy(() => import('./components/Contact'));
+const Chatbot = lazy(() => import('./components/ChatBot'));
+const Certifications = lazy(() => import('./components/Certifications'));
 
 const MainLayout = ({ children }) => {
     const location = useLocation();
@@ -28,7 +30,7 @@ const MainLayout = ({ children }) => {
     return (
         <>
             <Navigation />
-            <main>{children}</main>
+            <main id="main-content">{children}</main>
             <Footer />
         </>
     );
@@ -41,22 +43,7 @@ const useIs404Route = () => {
 };
 
 function AppContent() {
-    const [isLoading, setIsLoading] = useState(true);
     const is404Route = useIs404Route();
-
-    useEffect(() => {
-        // Don't show loader for 404 routes
-        if (is404Route) {
-            setIsLoading(false);
-            return;
-        }
-
-        const timer = setTimeout(() => {
-            setIsLoading(false);
-        }, 3000);
-
-        return () => clearTimeout(timer);
-    }, [is404Route]);
 
     if (is404Route) {
         return (
@@ -71,15 +58,10 @@ function AppContent() {
 
     return (
         <div className="App">
-            <Loader onLoadingComplete={() => setIsLoading(false)} />
+            <a href="#main-content" className="skip-to-content">Skip to content</a>
+            <CustomCursor />
 
-            <div style={{
-                display: isLoading ? 'none' : 'block',
-                opacity: isLoading ? 0 : 1,
-                transition: 'opacity 0.5s ease-in-out'
-            }}>
-                <CustomCursor />
-
+            <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
                 <Routes>
                     <Route path="/" element={
                         <MainLayout>
@@ -96,17 +78,27 @@ function AppContent() {
                     } />
                     <Route path="/projects" element={
                         <MainLayout>
+                            <Helmet>
+                                <title>Projects - Nischal Acharya | Full-Stack Developer</title>
+                                <meta name="description" content="Browse my portfolio of web development projects built with React, Node.js, and modern technologies." />
+                                <link rel="canonical" href="https://acharyanischal.com.np/projects" />
+                            </Helmet>
                             <Projects />
                         </MainLayout>
                     } />
                     <Route path="/contact" element={
                         <MainLayout>
+                            <Helmet>
+                                <title>Contact - Nischal Acharya | Full-Stack Developer</title>
+                                <meta name="description" content="Get in touch for web development services. Available for remote projects worldwide." />
+                                <link rel="canonical" href="https://acharyanischal.com.np/contact" />
+                            </Helmet>
                             <Contact />
                         </MainLayout>
                     } />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
-            </div>
+            </Suspense>
         </div>
     );
 }

@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Modal } from 'react-bootstrap';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import DOMPurify from 'dompurify';
 import { FaCalendar, FaClock, FaArrowRight, FaTimes, FaChevronDown } from 'react-icons/fa';
 import { blogPosts } from '../data/blog';
 import { useTheme } from '../context/ThemeContext';
@@ -278,7 +279,7 @@ const Blog = () => {
 
                             <div
                                 className={`blog-full-content ${isDark ? 'dark-mode' : ''}`}
-                                dangerouslySetInnerHTML={{ __html: selectedPost.fullContent }}
+                                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedPost.fullContent) }}
                             />
                         </Modal.Body>
                     </>

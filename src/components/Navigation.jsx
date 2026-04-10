@@ -45,12 +45,20 @@ const Navigation = () => {
             }
         };
 
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                setIsMobileMenuOpen(false);
+            }
+        };
+
         window.addEventListener('scroll', handleScroll, { passive: true });
         document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleKeyDown);
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
             document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
 
@@ -256,6 +264,7 @@ const Navigation = () => {
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         whileTap={{ scale: 0.9 }}
                         aria-label="Toggle menu"
+                        aria-expanded={isMobileMenuOpen}
                     >
                         <motion.div
                             className="hamburger-menu"
@@ -298,6 +307,8 @@ const Navigation = () => {
                     {isMobileMenuOpen && (
                         <motion.div
                             className="mobile-menu-overlay"
+                            role="dialog"
+                            aria-label="Navigation menu"
                             initial="closed"
                             animate="open"
                             exit="closed"

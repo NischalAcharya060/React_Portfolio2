@@ -17,10 +17,10 @@ import emailjs from '@emailjs/browser';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { contactInfo, socialLinks, formFields } from '../data/contact.js';
 
-const SERVICE_ID = 'service_elk86vl';
-const TEMPLATE_ID = 'template_864nhk9';
-const PUBLIC_KEY = '-qiVxTcSYDKmI-Zkf';
-const RECAPTCHA_SITE_KEY = '6Leu0q4nAAAAAA6B5LZvGfCbM432JKOtvgCtiUCO';
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 
 const Contact = () => {
     const ref = useRef(null);

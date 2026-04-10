@@ -1,4 +1,22 @@
 /* index.css */
+
+/* Skip to content link - visible only on focus for keyboard users */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color, #646cff);
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 10000;
+    transition: top 0.3s;
+    text-decoration: none;
+    font-weight: 600;
+}
+.skip-to-content:focus {
+    top: 0;
+}
+
 :root {
     /* Light Theme Colors */
     --primary-color: #646cff;
@@ -88,7 +106,7 @@
 
     /* Text Colors */
     --text-color: #ffffff;
-    --text-muted: #a0a0a0;
+    --text-muted: #b0b0b0;
     --text-light: #8b949e;
 
     /* Border & Shadow */

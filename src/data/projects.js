@@ -164,7 +164,7 @@ export const projects = [
         live: "https://khanepani-86760.wasmer.app/",
         category: "web",
         featured: false,
-        status: "Not completed",
+        status: "completed",
         year: "2025"
     },
     {
@@ -178,9 +178,31 @@ export const projects = [
         live: "https://github.com/NischalAcharya060/BillBuddy.git",
         category: "mobile",
         featured: false,
-        status: "Not completed",
+        status: "completed",
         year: "2025"
     },
+    {
+        id: 14,
+        title: "Wavify",
+        description: "Wavify — a Spotify-like music streaming web app that plays audio via YouTube. Built with Next.js (App Router), React, TypeScript, Tailwind CSS, Supabase (Auth + PostgreSQL), and Zustand for state management.",
+        image: "https://i.postimg.cc/QNSjpWg9/Wavify.png",
+        alt: "Wavify by Nischal Acharya",
+        technologies: [
+            "Next.js",
+            "React",
+            "TypeScript",
+            "Tailwind CSS",
+            "Supabase",
+            "PostgreSQL",
+            "Zustand"
+        ],
+        github: "https://github.com/NischalAcharya060/Wavify",
+        live: "https://wavify-grdhravan.vercel.app/login",
+        category: "web",
+        featured: true,
+        status: "completed",
+        year: 2026
+    }
 ];
 
 export const categories = [
