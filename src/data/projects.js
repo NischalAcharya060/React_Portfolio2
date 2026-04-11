@@ -184,7 +184,7 @@ export const projects = [
     {
         id: 14,
         title: "Wavify",
-        description: "Wavify — a Spotify-like music streaming web app that plays audio via YouTube. Built with Next.js (App Router), React, TypeScript, Tailwind CSS, Supabase (Auth + PostgreSQL), and Zustand for state management.",
+        description: "Wavify — a Spotify-like music streaming web app that plays audio via YouTube. Built with Next.js, React, TypeScript, Tailwind CSS, Supabase, Google Gemini AI and Zustand for state management.",
         image: "https://i.postimg.cc/QNSjpWg9/Wavify.png",
         alt: "Wavify by Nischal Acharya",
         technologies: [
@@ -193,7 +193,7 @@ export const projects = [
             "TypeScript",
             "Tailwind CSS",
             "Supabase",
-            "PostgreSQL",
+            "Google Gemini AI",
             "Zustand"
         ],
         github: "https://github.com/NischalAcharya060/Wavify",
