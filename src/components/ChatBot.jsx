@@ -1,7 +1,7 @@
 // src/components/Chatbot.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaRobot, FaTimes, FaPaperPlane, FaUser, FaComments } from 'react-icons/fa';
+import { FaTimes, FaPaperPlane, FaUser, FaComments } from 'react-icons/fa';
 import { getBotResponse } from '/src/data/chatbot.js';
 import { useTheme } from '../context/ThemeContext';
 
@@ -13,38 +13,36 @@ const Chatbot = () => {
     const messagesEndRef = useRef(null);
     const { isDark } = useTheme();
 
-    // Initial greeting
+    // Initial greeting when chat opens
     useEffect(() => {
         if (isOpen && messages.length === 0) {
             const greeting = getBotResponse('hello');
             setMessages([{ text: greeting, isBot: true }]);
         }
-    }, [isOpen, messages.length]);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
+    }, [isOpen]);
 
     useEffect(() => {
-        scrollToBottom();
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
-    const handleSendMessage = async (e) => {
-        e.preventDefault();
-        if (!inputMessage.trim()) return;
+    const sendMessage = (text) => {
+        if (!text.trim() || isTyping) return;
 
-        // Add user message
-        const userMessage = { text: inputMessage, isBot: false };
-        setMessages(prev => [...prev, userMessage]);
+        setMessages(prev => [...prev, { text, isBot: false }]);
         setInputMessage('');
         setIsTyping(true);
 
-        // Simulate typing delay
+        // Simulate natural typing delay
         setTimeout(() => {
-            const botResponse = getBotResponse(inputMessage);
-            setMessages(prev => [...prev, { text: botResponse, isBot: true }]);
+            const botText = getBotResponse(text);
+            setMessages(prev => [...prev, { text: botText, isBot: true }]);
             setIsTyping(false);
-        }, 1000 + Math.random() * 1000);
+        }, 600 + Math.random() * 600);
+    };
+
+    const handleSendMessage = (e) => {
+        e.preventDefault();
+        sendMessage(inputMessage.trim());
     };
 
     const quickQuestions = [
@@ -52,24 +50,8 @@ const Chatbot = () => {
         "Tell me about your projects",
         "What's your experience?",
         "How can I contact you?",
-        "Where are you from?"
+        "What are your goals?",
     ];
-
-    const handleQuickQuestion = (question) => {
-        setInputMessage(question);
-        // Auto-send after setting the question
-        setTimeout(() => {
-            const userMessage = { text: question, isBot: false };
-            setMessages(prev => [...prev, userMessage]);
-            setIsTyping(true);
-
-            setTimeout(() => {
-                const botResponse = getBotResponse(question);
-                setMessages(prev => [...prev, { text: botResponse, isBot: true }]);
-                setIsTyping(false);
-            }, 1000 + Math.random() * 1000);
-        }, 100);
-    };
 
     return (
         <>
@@ -144,7 +126,7 @@ const Chatbot = () => {
                                         )}
                                     </div>
                                     <div className="message-content">
-                                        {message.text.split('\n').map((line, i) => (
+                                        {String(message.text).split('\n').map((line, i) => (
                                             <p key={i}>{line}</p>
                                         ))}
                                     </div>
@@ -179,13 +161,13 @@ const Chatbot = () => {
                         {/* Quick Questions */}
                         {messages.length <= 2 && (
                             <div className="quick-questions">
-                                <p>Quick questions you can ask:</p>
+                                <p>Quick questions:</p>
                                 <div className="question-chips">
                                     {quickQuestions.map((question, index) => (
                                         <motion.button
                                             key={index}
                                             className="question-chip"
-                                            onClick={() => handleQuickQuestion(question)}
+                                            onClick={() => sendMessage(question)}
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                             initial={{ opacity: 0, x: -20 }}
@@ -206,15 +188,16 @@ const Chatbot = () => {
                                     type="text"
                                     value={inputMessage}
                                     onChange={(e) => setInputMessage(e.target.value)}
-                                    placeholder="Ask me about Nischal's skills, projects, or experience..."
-                                    className="chat-input"
+                                    placeholder="Ask me about Nischal..."
+                                    className={`chat-input ${isDark ? 'dark-mode' : ''}`}
+                                    disabled={isTyping}
                                 />
                                 <motion.button
                                     type="submit"
                                     className="send-btn"
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
-                                    disabled={!inputMessage.trim()}
+                                    disabled={!inputMessage.trim() || isTyping}
                                 >
                                     <FaPaperPlane size={16} />
                                 </motion.button>
@@ -246,11 +229,6 @@ const Chatbot = () => {
 
                 .chatbot-toggle.dark-mode {
                     box-shadow: 0 8px 30px rgba(var(--primary-rgb), 0.3);
-                }
-
-                .chatbot-toggle:hover {
-                    transform: scale(1.1);
-                    box-shadow: 0 12px 40px rgba(var(--primary-rgb), 0.4);
                 }
 
                 .pulse-dot {
@@ -300,47 +278,12 @@ const Chatbot = () => {
                     justify-content: space-between;
                     align-items: center;
                     background: var(--surface-color);
+                    flex-shrink: 0;
                 }
 
                 .chat-header.dark-mode {
                     background: #2d2d2d;
                     border-color: #3d3d3d;
-                }
-
-                .message-avatar {
-                    width: 32px;
-                    height: 32px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    flex-shrink: 0;
-                    overflow: hidden;
-                }
-
-                .bot-avatar-image {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
-                    border: 2px solid var(--primary-color);
-                }
-
-                .user-message .message-avatar {
-                    background: var(--surface-color);
-                    color: var(--text-color);
-                    border: 1px solid var(--border-color);
-                }
-
-                .bot-message .message-avatar {
-                    border: 2px solid var(--primary-color);
-                }
-
-                .avatar-image {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
                 }
 
                 .chat-title {
@@ -369,6 +312,14 @@ const Chatbot = () => {
                     align-items: center;
                     justify-content: center;
                     color: white;
+                    overflow: hidden;
+                }
+
+                .avatar-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
                 }
 
                 .close-btn {
@@ -395,6 +346,10 @@ const Chatbot = () => {
                     gap: 1rem;
                 }
 
+                .chat-messages::-webkit-scrollbar { width: 4px; }
+                .chat-messages::-webkit-scrollbar-track { background: transparent; }
+                .chat-messages::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 2px; }
+
                 .message {
                     display: flex;
                     gap: 0.75rem;
@@ -413,6 +368,15 @@ const Chatbot = () => {
                     align-items: center;
                     justify-content: center;
                     flex-shrink: 0;
+                    overflow: hidden;
+                }
+
+                .bot-avatar-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    border: 2px solid var(--primary-color);
                 }
 
                 .bot-message .message-avatar {
@@ -431,7 +395,15 @@ const Chatbot = () => {
                     padding: 0.75rem 1rem;
                     border-radius: var(--radius-lg);
                     font-size: 0.875rem;
-                    line-height: 1.4;
+                    line-height: 1.5;
+                }
+
+                .message-content p {
+                    margin: 0 0 0.2rem 0;
+                }
+
+                .message-content p:last-child {
+                    margin-bottom: 0;
                 }
 
                 .bot-message .message-content {
@@ -446,14 +418,15 @@ const Chatbot = () => {
                 }
 
                 .typing-indicator .message-content {
-                    background: transparent;
-                    border: none;
-                    padding: 0.5rem 1rem;
+                    background: var(--surface-color);
+                    border: 1px solid var(--border-color);
+                    padding: 0.75rem 1rem;
                 }
 
                 .typing-dots {
                     display: flex;
                     gap: 4px;
+                    align-items: center;
                 }
 
                 .typing-dots span {
@@ -473,34 +446,35 @@ const Chatbot = () => {
                 }
 
                 .quick-questions {
-                    padding: 1rem;
+                    padding: 0.75rem 1rem;
                     border-top: 1px solid var(--border-color);
                     background: var(--surface-color);
+                    flex-shrink: 0;
                 }
 
                 .quick-questions p {
-                    margin: 0 0 0.75rem 0;
-                    font-size: 0.875rem;
+                    margin: 0 0 0.5rem 0;
+                    font-size: 0.8rem;
                     color: var(--text-muted);
                     font-weight: 500;
                 }
 
                 .question-chips {
                     display: flex;
-                    flex-direction: column;
-                    gap: 0.5rem;
+                    flex-wrap: wrap;
+                    gap: 0.4rem;
                 }
 
                 .question-chip {
                     background: transparent;
                     border: 1px solid var(--border-color);
                     color: var(--text-color);
-                    padding: 0.5rem 0.75rem;
-                    border-radius: var(--radius-lg);
-                    font-size: 0.8rem;
+                    padding: 0.35rem 0.65rem;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
                     cursor: pointer;
                     transition: all var(--transition-base);
-                    text-align: left;
+                    white-space: nowrap;
                 }
 
                 .question-chip:hover {
@@ -512,6 +486,7 @@ const Chatbot = () => {
                 .chat-input-form {
                     padding: 1rem;
                     border-top: 1px solid var(--border-color);
+                    flex-shrink: 0;
                 }
 
                 .input-container {
@@ -537,6 +512,11 @@ const Chatbot = () => {
                     box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
                 }
 
+                .chat-input:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
+
                 .send-btn {
                     width: 44px;
                     height: 44px;
@@ -549,6 +529,7 @@ const Chatbot = () => {
                     justify-content: center;
                     cursor: pointer;
                     transition: all var(--transition-base);
+                    flex-shrink: 0;
                 }
 
                 .send-btn:disabled {
@@ -561,7 +542,6 @@ const Chatbot = () => {
                     box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
                 }
 
-                /* Responsive Design */
                 @media (max-width: 768px) {
                     .chatbot-toggle {
                         bottom: 5rem;
@@ -569,7 +549,6 @@ const Chatbot = () => {
                         width: 50px;
                         height: 50px;
                     }
-
                     .chatbot-modal {
                         width: calc(100vw - 2rem);
                         height: 70vh;
@@ -580,13 +559,8 @@ const Chatbot = () => {
                 }
 
                 @media (max-width: 480px) {
-                    .chatbot-modal {
-                        height: 80vh;
-                    }
-
-                    .message-content {
-                        max-width: 85%;
-                    }
+                    .chatbot-modal { height: 80vh; }
+                    .message-content { max-width: 85%; }
                 }
             `}</style>
         </>

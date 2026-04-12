@@ -1,209 +1,238 @@
 // src/data/chatbot.js
-const chatbotData = {
-    context: {
-        name: "Nischal Acharya ChatBot",
-        personality: "friendly, helpful, and enthusiastic assistant",
-        role: "I'm an AI assistant representing Nischal Acharya - a passionate developer from Nepal.",
+
+const knowledge = {
+    personal: {
+        name: "Nischal Acharya",
+        location: "Gauradaha, Jhapa, Nepal",
+        email: "Nischal060@gmail.com",
+        phone: "+977 9806081469",
+        hobbies: ["coding", "learning new technologies", "building projects", "problem solving"],
+        passions: ["web development", "mobile apps", "IoT projects", "open source"],
+    },
+    skills: {
+        frontend: ["React", "Vue.js", "JavaScript", "TypeScript", "Next.js", "Tailwind CSS", "HTML5", "CSS3"],
+        backend: ["Laravel", "Node.js", "Python", "Express.js", "PHP"],
+        databases: ["PostgreSQL", "MySQL", "MongoDB", "SQL", "Supabase"],
+        mobile: ["React Native", "Expo"],
+        tools: ["Git", "Docker", "AWS", "Firebase", "Figma", "VS Code"],
+        other: ["REST APIs", "IoT", "Arduino", "Google APIs", "AI Integration", "Chrome Extensions", "UI/UX Design"],
+    },
+    projects: [
+        {
+            name: "VS Code Theme",
+            description: "A custom VS Code theme published on the VS Code Marketplace.",
+            tech: "VS Code Extension",
+            status: "Published ✅",
+        },
+        {
+            name: "Kick Up Futsal",
+            description: "A full futsal court booking system built with Laravel.",
+            tech: "Laravel, PHP, MySQL",
+            status: "Completed",
+        },
+        {
+            name: "Food Delivery App",
+            description: "A mobile food delivery app built with React Native and Firebase.",
+            tech: "React Native, Expo, Firebase",
+            status: "Completed",
+        },
+        {
+            name: "Bus Management System",
+            description: "An IoT project using Arduino and sensors to manage bus tracking.",
+            tech: "Arduino, IoT, Sensors",
+            status: "Completed",
+        },
+        {
+            name: "Resume Builder",
+            description: "A React app that helps you build a professional resume.",
+            tech: "React, JavaScript",
+            status: "Completed",
+        },
+    ],
+    experience: [
+        {
+            role: "Full-stack Developer Intern",
+            company: "Shangrila Microsystem",
+            duration: "3 months",
+            description: "Worked with Laravel and Vue.js to build and maintain web applications.",
+        },
+        {
+            role: "Freelance Web Developer",
+            company: "Self-Employed",
+            duration: "2+ years",
+            description: "Built 20+ projects for clients across web, mobile, and IoT domains.",
+        },
+    ],
+    education: {
+        degree: "BSc (Hons) Computing",
+        institution: "Itahari International College",
+        university: "London Metropolitan University",
+        status: "Currently pursuing",
+        goal: "Planning to study abroad for higher education",
+    },
+};
+
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const contains = (msg, keywords) => keywords.some((k) => msg.includes(k));
+
+const responses = {
+    greeting: () => pick([
+        "Hey there! 👋 I'm Nischal's AI assistant. Ask me anything about his skills, projects, or how to reach him!",
+        "Hello! 😊 Welcome to Nischal's portfolio. What would you like to know?",
+        "Hi! Great to see you here. 🚀 I can tell you all about Nischal's work.",
+        "Namaste! 🙏 I'm Nischal's personal assistant. Feel free to ask about his work!",
+        "Hlo! 👋 Ready to explore some cool projects? Just ask!",
+        "Hyy! 😊 How can I help you today?"
+    ]),
+
+    farewell: () => pick([
+        "Bye! 👋 Thanks for stopping by. Have a great day!",
+        "Goodbye! 😊 Feel free to come back if you have more questions.",
+        "See ya! 🚀 It was fun chatting with you!",
+        "Okk bye! Take care! ✨",
+        "Byee! Catch you later!"
+    ]),
+
+    casualOk: () => pick([
+        "Okk! 👍 What else would you like to know?",
+        "Got it! 😊",
+        "Cool! 🚀",
+        "Alright! Let me know if there's anything else.",
+        "Nice! 😄"
+    ]),
+
+    howAreYou: () => pick([
+        "Doing great, thanks for asking! 😄 Always happy to talk about Nischal's work.",
+        "I'm fantastic! Ready to help you explore Nischal's portfolio.",
+        "I'm running smooth — no bugs today! 😂 How can I help you?"
+    ]),
+
+    whoAreYou: () =>
+        `I'm the AI assistant representing **Nischal Acharya** — a passionate full-stack developer from Nepal. 🇳🇵`,
+
+    about: () =>
+        `👨‍💻 **Nischal Acharya** is a passionate full-stack developer from **${knowledge.personal.location}**.\n\nHe is currently pursuing his **${knowledge.education.degree}** at ${knowledge.education.institution}.`,
+
+    skills: () =>
+        `💻 Here's Nischal's tech stack:\n\n` +
+        `🎨 **Frontend:** ${knowledge.skills.frontend.join(", ")}\n` +
+        `⚙️ **Backend:** ${knowledge.skills.backend.join(", ")}\n` +
+        `🗄️ **Databases:** ${knowledge.skills.databases.join(", ")}\n` +
+        `📱 **Mobile:** ${knowledge.skills.mobile.join(", ")}\n` +
+        `🛠️ **Tools:** ${knowledge.skills.tools.join(", ")}\n` +
+        `🔧 **Other:** ${knowledge.skills.other.join(", ")}`,
+
+    projects: () => {
+        const list = knowledge.projects
+            .map((p) => `🔹 **${p.name}** — ${p.description}\n   _Tech: ${p.tech}_`)
+            .join("\n\n");
+        return `🚀 Here are some of Nischal's projects:\n\n${list}`;
     },
 
-    knowledge: {
-        personal: {
-            name: "Nischal Acharya",
-            location: "Gauradaha, Jhapa, Nepal",
-            email: "Nischal060@gmail.com",
-            phone: "+977 9806081469",
-            hobbies: ["coding", "learning new technologies", "building projects", "problem solving"],
-            passions: ["web development", "mobile apps", "IoT projects", "open source"]
-        },
-        skills: {
-            frontend: ["React", "Vue.js", "JavaScript", "TypeScript", "Next.js", "Tailwind CSS", "HTML5", "CSS3"],
-            backend: ["Laravel", "Node.js", "Python", "Express.js", "PHP"],
-            databases: ["PostgreSQL", "MySQL", "MongoDB", "SQL"],
-            mobile: ["React Native", "Expo"],
-            tools: ["Git", "Docker", "AWS", "Firebase", "Figma", "VS Code"],
-            technologies: ["REST APIs", "IoT", "Arduino", "Google APIs"]
-        },
-        projects: [
-            {
-                name: "VS Code Theme",
-                description: "Custom theme published on VS Code Marketplace",
-                status: "Published"
-            },
-            {
-                name: "Kick Up Futsal",
-                description: "Futsal booking system with Laravel",
-                status: "Completed"
-            },
-            {
-                name: "Food Delivery App",
-                description: "Mobile app with React Native and Firebase",
-                status: "Completed"
-            },
-            {
-                name: "Bus Management System",
-                description: "IoT project with Arduino and sensors",
-                status: "Completed"
-            },
-            {
-                name: "Resume Builder",
-                description: "React application for creating resumes",
-                status: "Completed"
-            }
-        ],
-        experience: [
-            {
-                role: "Full-stack Developer Intern",
-                company: "Shangrila Microsystem",
-                duration: "3 months",
-                description: "Worked with Laravel and Vue.js"
-            },
-            {
-                role: "Freelance Web Developer",
-                company: "Self-Employed",
-                duration: "2+ years",
-                description: "Built 20+ projects for clients"
-            }
-        ],
-        education: {
-            degree: "BSc (Hons) Computing",
-            institution: "Itahari International College",
-            university: "London Metropolitan University",
-            status: "Currently pursuing"
-        }
-    }
+    experience: () => {
+        const list = knowledge.experience
+            .map((e) => `💼 **${e.role}** at ${e.company} _(${e.duration})_\n   ${e.description}`)
+            .join("\n\n");
+        return `Here's Nischal's professional journey so far:\n\n${list}`;
+    },
+
+    education: () =>
+        `🎓 Nischal is currently pursuing a **${knowledge.education.degree}** at **${knowledge.education.institution}**.`,
+
+    contact: () =>
+        `📬 Want to reach Nischal?\n\n` +
+        `📧 **Email:** ${knowledge.personal.email}\n` +
+        `📱 **Phone:** ${knowledge.personal.phone}\n` +
+        `📍 **Location:** ${knowledge.personal.location}`,
+
+    hobbies: () =>
+        `Outside of work, Nischal enjoys:\n\n` +
+        `🎯 ${knowledge.personal.hobbies.join("\n🎯 ")}`,
+
+    goals: () =>
+        `🌟 Nischal's goals:\n\n` +
+        `✈️ Study abroad for higher education\n` +
+        `🏗️ Build impactful software products\n` +
+        `🤖 Work on AI-integrated applications`,
+
+    thanks: () => pick([
+        "You're welcome! 😊",
+        "No problem at all! 👍",
+        "Glad I could help! 🌟",
+        "Anytime! 😄"
+    ]),
+
+    unknown: () => pick([
+        "Hmm, I'm not sure about that one! 🤔",
+        "I didn't quite catch that! Could you rephrase? 😊",
+        "Try asking about Nischal's skills, projects, or experience!"
+    ]),
 };
 
-// Fun responses and variations
-const responseVariations = {
-    greetings: [
-        "Hello! I'm Nischal Acharya ChatBot 👋 How can I help you learn about Nischal today?",
-        "Hi there! I'm here to tell you about Nischal's amazing work and skills! 😊",
-        "Hey! Ready to explore Nischal's portfolio? I'm excited to share his journey with you! 🚀",
-        "Greetings! I'm NischalBot, your guide to all things Nischal Acharya. What would you like to know? 💫"
-    ],
-
-    howAreYou: [
-        "I'm doing great! Thanks for asking! I'm always excited to talk about Nischal's work. 😄",
-        "I'm wonderful! Ready to help you discover Nischal's skills and projects. How can I assist you?",
-        "I'm fantastic! Eager to share Nischal's journey in tech with you. What's on your mind?",
-        "I'm doing awesome! It's always a good day to talk about coding and cool projects! 💻"
-    ],
-
-    thanks: [
-        "You're welcome! 😊 Happy to help you learn about Nischal!",
-        "No problem at all! Feel free to ask anything else about Nischal's work!",
-        "Glad I could help! Don't hesitate to ask more questions! 👍",
-        "Anytime! I'm here whenever you want to know more about Nischal's journey! 🌟"
-    ],
-
-    funFacts: [
-        "Did you know? Nischal published his own VS Code theme in the marketplace! 🎨",
-        "Fun fact: Nischal loves working on IoT projects with Arduino and sensors! ⚡",
-        "Interesting: He started with Python and fell in love with web development! 🐍",
-        "Cool fact: Nischal has built over 20 projects across web, mobile, and IoT! 🏗️",
-        "Amazing: He's always learning new technologies and frameworks! 📚"
-    ],
-
-    compliments: [
-        "That's a great question! I'm impressed by your curiosity! 🤔",
-        "You're asking all the right questions! Nischal would appreciate your interest! 🌟",
-        "Awesome question! Let me tell you all about that! 💡",
-        "I love your enthusiasm for learning about tech! 🚀"
-    ],
-
-    unknown: [
-        "That's an interesting question! I specialize in Nischal's tech journey. Want to know about his skills or projects instead? 💻",
-        "Hmm, I'm not sure about that one. I'm your go-to for Nischal's development work! Try asking about his projects or experience? 🛠️",
-        "I'd love to help with that, but I'm designed to focus on Nischal's professional background. How about his tech stack or recent work? 😊",
-        "Great question! While I focus on Nischal's coding journey, I can tell you about his skills, projects, or how to contact him! 📞"
-    ]
-};
-
-// Response handler function
 export const getBotResponse = (userMessage) => {
-    const message = userMessage.toLowerCase().trim();
-    const { personal, skills, projects, experience, education } = chatbotData.knowledge;
+    const msg = userMessage.toLowerCase().trim();
 
-    // Helper function to get random response
-    const getRandom = (array) => array[Math.floor(Math.random() * array.length)];
-
-    // Greetings
-    if (message.includes('hi') || message.includes('hello') || message.includes('hey') || message.includes('greetings')) {
-        return getRandom(responseVariations.greetings);
+    if (contains(msg, ["hi", "hello", "hlw", "hlo", "hey", "namaste", "yo", "hyy", "hii"])) {
+        return responses.greeting();
     }
 
-    // How are you
-    if (message.includes('how are you') || message.includes('how do you do') || message.includes('how you doing')) {
-        return getRandom(responseVariations.howAreYou);
+    if (contains(msg, ["bye", "byee", "goodbye", "see ya", "tata"])) {
+        return responses.farewell();
     }
 
-    // Thanks
-    if (message.includes('thank') || message.includes('thanks') || message.includes('appreciate')) {
-        return getRandom(responseVariations.thanks);
+    if (msg === "ok" || msg === "okk" || msg === "kk" || msg === "okay" || msg === "alright" || msg === "nice") {
+        return responses.casualOk();
     }
 
-    // Compliments
-    if (message.includes('good') || message.includes('great') || message.includes('awesome') || message.includes('amazing')) {
-        if (message.includes('bot') || message.includes('you') || message.includes('help')) {
-            return getRandom(responseVariations.compliments);
-        }
+    if (msg === "nothing" || msg === "none") {
+        return "No problem! Let me know if you have any questions later. 😊";
     }
 
-    // Fun facts
-    if (message.includes('fun fact') || message.includes('interesting') || message.includes('tell me something') || message.includes('cool')) {
-        return getRandom(responseVariations.funFacts);
+    if (contains(msg, ["how are you", "how r u", "how you doing"])) {
+        return responses.howAreYou();
     }
 
-    // Projects
-    if (message.includes('project') || message.includes('portfolio') || message.includes('built') || message.includes('work') || message.includes('application') || message.includes('app')) {
-        const projectsText = projects.map(proj => `• ${proj.name}: ${proj.description}`).join('\n');
-        return `🚀 Nischal has built ${projects.length}+ amazing projects! Here are some highlights:\n\n${projectsText}\n\nHe's always working on something new and exciting! 💫`;
+    if (contains(msg, ["who are you", "your name", "introduce"])) {
+        return responses.whoAreYou();
     }
 
-    // Location
-    if (message.includes('where') && (message.includes('from') || message.includes('live') || message.includes('location') || message.includes('based'))) {
-        return `📍 Nischal is from ${personal.location}. He's currently based there and available for remote work worldwide! 🌍`;
+    if (contains(msg, ["about", "who is nischal"])) {
+        return responses.about();
     }
 
-    // Who are you
-    if (message.includes('who are you') || message.includes('what is your name') || message.includes('introduce') || message.includes('tell me about you')) {
-        return `👋 ${getRandom(responseVariations.greetings.split('!')[0])}! I'm Nischal Acharya ChatBot, your friendly guide to Nischal's amazing tech journey!`;
+    if (contains(msg, ["thank", "thanks", "ty"])) {
+        return responses.thanks();
     }
 
-    // Skills
-    if (message.includes('skill') || message.includes('technology') || message.includes('tech') || message.includes('stack') || message.includes('framework') || message.includes('language')) {
-        return `💻 Nischal's Awesome Skills:\n\n• Frontend: ${skills.frontend.join(', ')}\n• Backend: ${skills.backend.join(', ')}\n• Databases: ${skills.databases.join(', ')}\n• Mobile: ${skills.mobile.join(', ')}\n• Tools: ${skills.tools.join(', ')}\n\nHe's always learning and expanding his tech stack! 📚`;
+    if (contains(msg, ["project", "portfolio", "work"])) {
+        return responses.projects();
     }
 
-    // Experience
-    if (message.includes('experience') || message.includes('work') || message.includes('job') || message.includes('career') || message.includes('professional') || message.includes('intern')) {
-        const experienceText = experience.map(exp => `• ${exp.role} at ${exp.company} (${exp.duration})\n  ${exp.description}`).join('\n\n');
-        return `💼 Nischal's Professional Journey:\n\n${experienceText}\n\nHe's gained valuable experience across different domains! 🌟`;
+    if (contains(msg, ["skill", "stack", "language", "tech"])) {
+        return responses.skills();
     }
 
-    // Education
-    if (message.includes('education') || message.includes('study') || message.includes('degree') || message.includes('college') || message.includes('university') || message.includes('learn')) {
-        return `🎓 Education: ${education.status} ${education.degree} at ${education.institution} (affiliated with ${education.university})\n\nNischal believes in continuous learning and growth! 📖`;
+    if (contains(msg, ["experience", "job", "intern"])) {
+        return responses.experience();
     }
 
-    // Contact
-    if (message.includes('contact') || message.includes('email') || message.includes('phone') || message.includes('reach') || message.includes('get in touch') || message.includes('hire') || message.includes('available')) {
-        return `📞 Let's Connect with Nischal!\n\n📧 Email: ${personal.email}\n📱 Phone: ${personal.phone}\n📍 Location: ${personal.location}\n\nHe's open to new opportunities and collaborations! 🤝`;
+    if (contains(msg, ["education", "college", "degree"])) {
+        return responses.education();
     }
 
-    // Hobbies/Passions
-    if (message.includes('hobby') || message.includes('passion') || message.includes('interest') || message.includes('like to do') || message.includes('free time')) {
-        return `🎯 Nischal's Passions:\n\n• ${personal.hobbies.join('\n• ')}\n\nHe's particularly passionate about:\n• ${personal.passions.join('\n• ')}\n\nWhen he's not coding, he's probably learning something new! 🌱`;
+    if (contains(msg, ["contact", "email", "phone", "number", "reach", "call"])) {
+        return responses.contact();
     }
 
-    // Help
-    if (message.includes('help') || message.includes('what can you do') || message.includes('capabilities') || message.includes('support')) {
-        return `🤖 I can help you learn about:\n\n• Nischal's Skills & Technologies 💻\n• Projects & Portfolio 🚀\n• Work Experience 💼\n• Education & Learning 🎓\n• Contact Information 📞\n• Fun Facts & Passions 🎯\n\nJust ask me anything! I'm here to help! 😊`;
+    if (contains(msg, ["hobby", "interest", "passion"])) {
+        return responses.hobbies();
     }
 
-    // Default response with more personality
-    return getRandom(responseVariations.unknown);
+    if (contains(msg, ["goal", "future", "plan"])) {
+        return responses.goals();
+    }
+
+    return responses.unknown();
 };
 
-// Export everything if needed
-export default chatbotData;
+export default { getBotResponse };
